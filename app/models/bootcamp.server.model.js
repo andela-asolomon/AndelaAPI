@@ -20,17 +20,21 @@ var mongoose = require('mongoose'),
  		type: Date,
  		default: ''
  	},
- 	stundent_data:{
+ 	applicantId:{
  		type: Schema.ObjectId,
- 		ref: 'User' //stundent id
+ 		ref: 'Applicant' //stundent id
  	},
- 	assessment_instructor:{
+ 	instructorId:{
  		type: Schema.ObjectId,
- 		ref: 'User' /**Instructor**/
+ 		ref: 'Instructor' /**Instructor**/
  	},
  	created:{
  		type: Date,
  		default:  Date.now
+ 	},
+ 	score: {
+ 		type: Number,
+ 		required: 'The Applicant score is compulsory'
  	}
 
  });
@@ -65,7 +69,7 @@ var BootcampSchema = new Schema({
 	},
 	user: {
 		type: Schema.ObjectId,
-		ref: 'User' 
+		ref: 'Applicant' 
 	}
 });
 
