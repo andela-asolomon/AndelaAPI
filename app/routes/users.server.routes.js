@@ -14,7 +14,7 @@ module.exports = function(app) {
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
 
 	// Setting up the users api
-	app.route('/auth/signup').post(users.signup);
+	app.route('/auth/:campId/signup').post(users.signup);
 	app.route('/auth/signin').post(users.signin);
 	app.route('/auth/signout').get(users.signout);
 
@@ -43,4 +43,8 @@ module.exports = function(app) {
 
 	// Finish by binding the user middleware
 	app.param('userId', users.userByID);
+
+	// Finish by binding the bootcamp middleware
+	app.param('campId', users.campByID);
+
 };

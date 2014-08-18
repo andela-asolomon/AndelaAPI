@@ -98,12 +98,10 @@ var SkillsetSchema = new Schema({
  */
  var ApplicantSchema = UserSchema.extend({
  	score: {
- 		type: Number,
- 		required: 'The Test is Compulsory'
+ 		type: Number
  	},
  	cv_path: {
  		type: String,
- 		required: 'You need to upload to CV'
  	},
  	photo_path: String,
  	roles: {
@@ -354,6 +352,7 @@ InstructorSchema.statics.findUniqueUsername = function(username, suffix, callbac
 	});
 };
 
-var User = mongoose.model('User', UserSchema),
-	mongoose.model('Applicant', ApplicantSchema),
+mongoose.model('User', UserSchema);
+	mongoose.model('Applicant', ApplicantSchema);
 		mongoose.model('Instructor', InstructorSchema);
+			mongoose.model('Bootcamp', BootcampSchema);
