@@ -65,13 +65,6 @@ var UserSchema = new Schema({
 	},
 	providerData: {},
 	additionalProvidersData: {},
-	roles: {
-		type: [{
-			type: String,
-			enum: ['user', 'admin']
-		}],
-		default: ['user']
-	},
 	updated: {
 		type: Date
 	},
@@ -94,14 +87,14 @@ var SkillsetSchema = new Schema({
 });
 
 /**
- * Applicant Schema
+ * Applicant Schema, Trainee and Fellow
  */
  var ApplicantSchema = UserSchema.extend({
  	score: {
  		type: Number
  	},
  	cv_path: {
- 		type: String,
+ 		type: String
  	},
  	photo_path: String,
  	roles: {
