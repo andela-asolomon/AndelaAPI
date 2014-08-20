@@ -47,7 +47,6 @@ var UserSchema = new Schema({
 	},
 	username: {
 		type: String,
-		unique: true,
 		required: 'Please fill in a username',
 		trim: true
 	},
@@ -65,13 +64,6 @@ var UserSchema = new Schema({
 	},
 	providerData: {},
 	additionalProvidersData: {},
-	roles: {
-		type: [{
-			type: String,
-			enum: ['user', 'admin']
-		}],
-		default: ['user']
-	},
 	updated: {
 		type: Date
 	},
@@ -104,13 +96,18 @@ var SkillsetSchema = new Schema({
  		type: String,
  	},
  	photo_path: String,
- 	roles: {
+ 	role: {
  		type: String,
  		enum: ['applicant', 'trainee', 'fellow']
  	},
  	status: {
- 		type: Schema.ObjectId,
- 		ref: 'Status'
+ 		name: {
+ 			type: String,
+ 			enum: ['pending', 'rejected', 'selectedCamp', 'selectedInterview']
+ 		},
+ 		reason: {
+            type: String
+ 		}
  	},
  	portfolio: {
  		type: String
@@ -128,22 +125,22 @@ var SkillsetSchema = new Schema({
 /**
  * Status Schema
  */
-var StatusSchema = new Schema({
-	pending: {
-		type: String
-	},
-	rejected: {
-		description: {
-			type: String
-		}
-	},
-	selectedCamp: {
-		type: String
-	},
-	selectedInterview: {
-		type: String
-	}
-});
+// var StatusSchema = new Schema({
+// 	pending: {
+// 		type: String
+// 	},
+// 	rejected: {
+// 		description: {
+// 			type: String
+// 		}
+// 	},
+// 	selectedCamp: {
+// 		type: String
+// 	},
+// 	selectedInterview: {
+// 		type: String
+// 	}
+// });
 
 /**
  * Instructor Schema
@@ -156,7 +153,7 @@ var StatusSchema = new Schema({
  	photo: {
  		type: String
  	},
- 	roles: {
+ 	role: {
  		type: String,
  		enum: ['instructor', 'admin']
  	}
@@ -197,9 +194,6 @@ var BootcampSchema = new Schema({
 		required: 'Please fill in the Bootcamp name',
 		trim: true
 	},
-	assessments:{
-		type:[AssessmentSchema]
-	},
 	start_date: {
 		type: Date
 	},
@@ -209,10 +203,6 @@ var BootcampSchema = new Schema({
 	created: {
 		type: Date,
 		default: Date.now
-	},
-	user: {
-		type: Schema.ObjectId,
-		ref: 'Applicant' 
 	},
 	applicants: [ApplicantSchema]
 });

@@ -45,7 +45,7 @@ exports.signup = function(req, res) {
 
 	if (type === 'applicant') {
 		user = req.body;
-		user.roles = type;
+		user.role = type;
 		user = new Applicant(user);
 	}
 	// Init Variables
@@ -70,7 +70,7 @@ exports.signup = function(req, res) {
            	req.camp.save(function(err) {
            		if (err) {
            			return res.send(400, {
-           				message: 'Could not save to Bootcamp Schema'
+           				message: 'Error occurred. Couldn\'t sign you up'
            			});
            		} else {
            			req.login(user, function(err) {

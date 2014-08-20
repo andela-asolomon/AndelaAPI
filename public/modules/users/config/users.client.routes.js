@@ -24,10 +24,6 @@ angular.module('users').config(['$stateProvider',
 		state('signin', {
 			url: '/signin',
 			templateUrl: 'modules/users/views/signin.client.view.html'
-		}).
-		state('user_account', {
-			url: '/user_account',
-			templateUrl: 'modules/users/views/user_account.client.view.html'
 		});
 	}
 ]);
