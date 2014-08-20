@@ -85,6 +85,31 @@ var SkillsetSchema = new Schema({
 	}
 });
 
+ var AssessmentSchema = new Schema({
+ 	assessment_name:{
+ 		type: String,
+ 		trim: true,
+        required: 'Name of assessment is important'
+ 	},
+ 	assessment_date:{
+ 		type: Date,
+        required: 'Date of assessment is important'
+ 	},
+ 	applicantId:{
+ 		type: Schema.ObjectId,
+ 		ref: 'Applicant' 
+ 	},
+ 	instructorId:{
+ 		type: Schema.ObjectId,
+ 		ref: 'Instructor'
+ 	},
+ 	score: {
+ 		type: Number,
+ 		required: 'The Applicant score is compulsory'
+ 	}
+
+ });
+
 /**
  * Applicant Schema
  */
@@ -109,6 +134,7 @@ var SkillsetSchema = new Schema({
             type: String
  		}
  	},
+ 	assessments: [AssessmentSchema],
  	portfolio: {
  		type: String
  	},
@@ -157,31 +183,6 @@ var SkillsetSchema = new Schema({
  		type: String,
  		enum: ['instructor', 'admin']
  	}
- });
-
- var AssessmentSchema = new Schema({
- 	assessment_name:{
- 		type: String,
- 		trim: true,
-        required: 'Name of assessment is important'
- 	},
- 	assessment_date:{
- 		type: Date,
-        required: 'Date of assessment is important'
- 	},
- 	applicantId:{
- 		type: Schema.ObjectId,
- 		ref: 'Applicant' 
- 	},
- 	instructorId:{
- 		type: Schema.ObjectId,
- 		ref: 'Instructor'
- 	},
- 	score: {
- 		type: Number,
- 		required: 'The Applicant score is compulsory'
- 	}
-
  });
 
 
@@ -346,3 +347,4 @@ mongoose.model('User', UserSchema);
 	mongoose.model('Applicant', ApplicantSchema);
 		mongoose.model('Instructor', InstructorSchema);
 			mongoose.model('Bootcamp', BootcampSchema);
+				mongoose.model('Assessment', AssessmentSchema);

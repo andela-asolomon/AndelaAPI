@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Applicant = mongoose.model('Applicant'),
 	Bootcamp = mongoose.model('Bootcamp'),
+	Assessment = mongoose.model('Assessment'),
 	_ = require('lodash');
 
 /**
@@ -148,6 +149,7 @@ exports.delete_applicant = function(req, res){
 	*read an applicant*
 */
 exports.read_applicant = function(req, res){
+	/**get the profile assessment**/
 	res.jsonp(req.applicant);
 };
 
