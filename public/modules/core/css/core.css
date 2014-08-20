@@ -29,11 +29,3 @@ body{
 footer{
 	text-align: center;
 }
-
-#name_div, #form_div, #profile_div{
-	vertical-align: top;
-}
- #form_div{
- 	padding: 1%;
- 	color: black;
- }
