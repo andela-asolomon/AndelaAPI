@@ -54,7 +54,7 @@ exports.updateAssmt = function(req, res){
 };
 
 /*
-*delete an assessment*
+*delete an assessment
 */
 exports.deleteAssmt = function(req, res){
 	//var camp = req.camp;
@@ -76,19 +76,25 @@ exports.deleteAssmt = function(req, res){
 *Select a fellow
 */
 exports.selectFellow = function(req, res){
-	var assessment = req.assessment,
-	    trainee = req.trainee;
+	var trainee = req.trainee,
+	    role = req.body.role;
+      trainee = _.extend(trainee, req.body);
 
-	assessment = _.extend(assessment , req.body);
-	trainee.save(function(err) {
-		if (err) {
-			return res.send(400, {
-			   message: "Error: update failed"
-		    });
-		} else {
-		    res.jsonp(trainee);
-		}
-	});
+      if (role === "applicant" || role === "admin" || role === "instructor") {
+         return res.send(400, {
+              message: "Error: action couldn't be carried out"
+         });
+      } else {
+           trainee.save(function(err) {
+	          if (err) {
+	              return res.send(400, {
+	                  message: "could not change applicant role"
+	              });
+	          } else {
+	              res.jsonp(trainee);
+	          }
+	      });
+     }
 };
 
 
@@ -96,7 +102,7 @@ exports.selectFellow = function(req, res){
 * Particular trainee middleware
 */
 exports.traineeByID = function(req, res, next, id){   
-    Applicant.findById(id).where({role: "trainee"}).exec(function(err, trainee) {
+    Applicant.findById(id).where({role: "trainee"}).populate('campId','camp_name').exec(function(err, trainee) {
 		if (err) return next(err);
 		if (!trainee) return next(new Error('Failed to load trainee ' + id));
 		req.trainee = trainee;

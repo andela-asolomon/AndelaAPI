@@ -86,6 +86,34 @@ var SkillsetSchema = new Schema({
 });
 
 /**
+ * Assessment Schema
+ */
+var AssessmentSchema = new Schema({
+ 	assessment_name:{
+ 		type: String,
+ 		trim: true,
+        required: 'Name of assessment is important'
+ 	},
+ 	assessment_date:{
+ 		type: Date,
+        required: 'Date of assessment is important'
+ 	},
+ 	applicantId:{
+ 		type: Schema.ObjectId,
+ 		ref: 'Applicant' 
+ 	},
+ 	instructorId:{
+ 		type: Schema.ObjectId,
+ 		ref: 'Instructor'
+ 	},
+ 	score: {
+ 		type: Number,
+ 		required: 'The Applicant score is compulsory'
+ 	}
+
+ });
+
+/**
  * Applicant Schema
  */
  var ApplicantSchema = UserSchema.extend({
@@ -158,31 +186,6 @@ var SkillsetSchema = new Schema({
  		type: String,
  		enum: ['instructor', 'admin']
  	}
- });
-
- var AssessmentSchema = new Schema({
- 	assessment_name:{
- 		type: String,
- 		trim: true,
-        required: 'Name of assessment is important'
- 	},
- 	assessment_date:{
- 		type: Date,
-        required: 'Date of assessment is important'
- 	},
- 	applicantId:{
- 		type: Schema.ObjectId,
- 		ref: 'Applicant' 
- 	},
- 	instructorId:{
- 		type: Schema.ObjectId,
- 		ref: 'Instructor'
- 	},
- 	score: {
- 		type: Number,
- 		required: 'The Applicant score is compulsory'
- 	}
-
  });
 
 
