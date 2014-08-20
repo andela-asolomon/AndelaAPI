@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     Applicant = mongoose.model('Applicant'),
     User = mongoose.model('User'),
     Bootcamp = mongoose.model('Bootcamp'),
+    Skillset = mongoose.model('Skillset'),
     _ = require('lodash');
 var users = require('../../app/controllers/users');
 
@@ -14,12 +15,8 @@ var users = require('../../app/controllers/users');
 Input assessment score for trainee
 */
 exports.createAssmt = function(req, res){
-	//var camp = req.camp;
 	req.body.instructorId = req.user;
-	//var assessment = new Assessment(req.body);
     var trainee = req.trainee;
-
-	// camp.assessments.push(assessment);
 	trainee.assessments.push(req.body);
 	
 	trainee.save(function(err) {
@@ -57,9 +54,9 @@ exports.updateAssmt = function(req, res){
 *delete an assessment
 */
 exports.deleteAssmt = function(req, res){
-	//var camp = req.camp;
 	var assessment = req.assessment,
 	    trainee = req.trainee;
+
 	assessment.remove();
 	trainee.save(function(err) {
 		if (err) {
@@ -97,18 +94,98 @@ exports.selectFellow = function(req, res){
      }
 };
 
+/*
+*Rate a fellow
+*/
+exports.rateFellow = function(req, res){
+	var skillset = req.body,
+        fellow = req.trainee;
+
+	if (req.body.rating < 1 || req.body.rating > 10) {
+		return res.send(400, {
+			   message: "Error: rating is a 10 point system"
+	    });
+	} else {
+		fellow.skillSets.push(skillset);
+		fellow.save(function(err) {
+			if (err) {
+			    return res.send(400, {
+			       message: "Error: Couldn't create assessment"
+			    });
+			} else {
+			    res.jsonp(fellow);
+			}
+		});
+	}
+};
+
+/*
+*Edit a rating
+*/
+exports.editRating = function(req, res){
+	var skillset = req.skill,
+        fellow = req.trainee;
+
+    skillset = _.extend(skillset, req.body);
+    fellow.save(function(err) {
+      if (err) {
+          return res.send(400, {
+              message: "could not edit rating"
+          });
+      } else {
+          res.jsonp(fellow);
+      }
+    });
+};
+
+/*
+*Delete a rating
+*/
+exports.deleteRating = function(req, res){
+	var skillset = req.skill,
+        fellow = req.trainee;
+
+    skillset.remove();
+    fellow.save(function(err) {
+      if (err) {
+          return res.send(400, {
+              message: "could not delete rating"
+          });
+      } else {
+          res.jsonp(fellow);
+      }
+    });
+};
+
+
+/**
+ * Show the current trainee/fellow
+ */
+exports.readTrainee = function(req, res) {
+    res.jsonp(req.trainee);
+};
+
 
 /**
 * Particular trainee middleware
 */
 exports.traineeByID = function(req, res, next, id){   
-    Applicant.findById(id).where({role: "trainee"}).populate('campId','camp_name').exec(function(err, trainee) {
+    Applicant.findById(id).populate('campId','camp_name').exec(function(err, trainee) {
 		if (err) return next(err);
 		if (!trainee) return next(new Error('Failed to load trainee ' + id));
 		req.trainee = trainee;
 		next();
 	});
 };
+
+/**
+* Particular skillset middleware
+*/
+exports.skillByID = function(req, res, next, id){   
+    req.skill = req.trainee.skillSets.id(id);
+    next();
+};
+
 
 /**
 * Particular assessment middleware
@@ -129,7 +206,7 @@ exports.isCreator = function(req, res, next){
 };
 
 /**
- * Admin authorization middleware
+ * Instructor authorization middleware
  */
 exports.checkRights = function(req, res, next) {
     if (req.user._type === "Instructor" && req.user.role === "instructor") {

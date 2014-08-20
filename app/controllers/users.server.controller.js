@@ -41,49 +41,55 @@ exports.signup = function(req, res) {
 	// For security measurement we remove the roles from the req.body object
 	// delete req.body.roles;
 	var type = req.body.type;
-	var user;
 
 	if (type === 'applicant') {
-		user = req.body;
+		var user = req.body;
+		console.log(req.body);
+		// Add missing user fields
+	    user.provider = 'local';
 		user.role = type;
 		user = new Applicant(user);
+		    
+		    
+        // console.log(user.password.length);
+		// Init Variables
+		var message = null;
+	   
+		// Then save the user 
+		user.save(function(err, data) {
+			if (err) {
+				return res.send(400, {
+					message: getErrorMessage(err)
+				});
+			} else {
+				// Remove sensitive data before login
+				// console.log(user.password.length);
+				user.password = undefined;
+				user.salt = undefined;
+	            
+	            req.camp.applicants.push(data);
+	           	req.camp.save(function(err, camp) { 
+	           		if (err) {
+	           			return res.send(400, {
+	           				message: err
+	           			});
+	           		} else {
+	           			req.login(user, function(err) {
+							if (err) {
+								res.send(400, err);
+							} else {
+								res.jsonp(user);
+							}
+						});
+	           		}
+	           	});
+			}
+		});
+	} else {
+         return res.send(400, {
+	           	message: 'Error: only applicants can signup'
+	     });
 	}
-	// Init Variables
-	var message = null;
-
-	// Add missing user fields
-	user.provider = 'local';
-   
-   
-	// Then save the user 
-	user.save(function(err, data) {
-		if (err) {
-			return res.send(400, {
-				message: getErrorMessage(err)
-			});
-		} else {
-			// Remove sensitive data before login
-			user.password = undefined;
-			user.salt = undefined;
-            
-            req.camp.applicants.push(data);
-           	req.camp.save(function(err) {
-           		if (err) {
-           			return res.send(400, {
-           				message: err
-           			});
-           		} else {
-           			req.login(user, function(err) {
-						if (err) {
-							res.send(400, err);
-						} else {
-							res.jsonp(user);
-						}
-					});
-           		}
-           	});
-		}
-	});
 };
 
 /**

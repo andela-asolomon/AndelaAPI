@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 var users = require('../../app/controllers/users'),
+    admin = require('../../app/controllers/admin'),
     admin = require('../../app/controllers/admin');
 
 module.exports = function(app) {
@@ -72,6 +73,13 @@ module.exports = function(app) {
     app.route('/admin/test/:testId/:questId/:optionId')
         .post(users.requiresLogin, admin.checkPermission, admin.addOption)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteOption);
+
+    // app.route('/admin/trainee/:traineeId/rate')
+    //      .post(users.requiresLogin, admin.checkPermission, instr.rateFellow);
+
+    // app.route('/admin/trainee/:traineeId/rate/:skillId')
+    //     .put(users.requiresLogin, admin.checkPermission, instr.editRating)
+    //     .delete(users.requiresLogin, admin.checkPermission, instr.deleteRating);
 
     // Finish by binding the applicant middleware
     app.param('apptId', admin.apptByID);

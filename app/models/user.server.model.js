@@ -77,7 +77,7 @@ var UserSchema = new Schema({
  * Skillset Schema
  */
 var SkillsetSchema = new Schema({
-	skills: {
+	skill: {
 		type: String
 	},
 	rating: {
@@ -347,6 +347,7 @@ InstructorSchema.statics.findUniqueUsername = function(username, suffix, callbac
 };
 
 mongoose.model('User', UserSchema);
-	mongoose.model('Applicant', ApplicantSchema);
-		mongoose.model('Instructor', InstructorSchema);
-			mongoose.model('Bootcamp', BootcampSchema);
+mongoose.model('Applicant', ApplicantSchema);
+mongoose.model('Instructor', InstructorSchema);
+mongoose.model('Bootcamp', BootcampSchema);
+mongoose.model('Skillset', SkillsetSchema);
