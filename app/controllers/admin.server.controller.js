@@ -15,10 +15,10 @@ var users = require('../../app/controllers/users');
 
 
 /**
- * Admin/instructor authorization middleware
+ * Admin authorization middleware
  */
 exports.checkPermission = function(req, res, next) {
-    if (req.user._type === "Instructor" && req.user.role === "admin") {
+    if (req.user._type === 'Instructor' && req.user.role === 'admin') {
         next();
     } else {
         return res.send(403, {
@@ -54,13 +54,13 @@ exports.createUsers = function(req, res, next) {
 exports.changeStatus = function(req, res) {
         var applicant = req.applicant; 
       
-      if (req.body.status === "rejected" && req.body.reason.length === 0) {
+      if (req.body.status === 'rejected' && req.body.reason.length === 0) {
           return res.send(400, {
-              message: "Please give reason why applicant was rejected"
+              message: 'Please give reason why applicant was rejected'
           });
       } else {
-          if (req.body.status === "selected for bootcamp") {
-          	  applicant.role = "trainee";
+          if (req.body.status === 'selected for bootcamp') {
+          	  applicant.role = 'trainee';
           }
 
           applicant = _.extend(applicant, req.body);
@@ -68,7 +68,7 @@ exports.changeStatus = function(req, res) {
           applicant.save(function(err) {
     	        if (err) {
     	            return res.send(400, {
-    	                message: "could not change applicant status"
+    	                message: 'could not change applicant status'
     	            });
     	        } else {
     	            res.jsonp(applicant);
@@ -85,14 +85,14 @@ exports.changeRole = function(req, res) {
       applicant = _.extend(applicant, req.body);
       var role = req.body.role;
       
-      if(role === "applicant") {
-        applicant.status = "selectedInterview";
+      if(role === 'applicant') {
+        applicant.status = 'selectedInterview';
       }
 
       applicant.save(function(err) {
           if (err) {
               return res.send(400, {
-                  message: "could not change applicant role"
+                  message: 'could not change applicant role'
               });
           } else {
               res.jsonp(applicant);
@@ -110,7 +110,7 @@ exports.changeInstrRole = function(req, res) {
       instructor.save(function(err) {
           if (err) {
               return res.send(400, {
-                  message: "could not change instructor role"
+                  message: 'could not change instructor role'
               });
           } else {
               res.jsonp(instructor);
@@ -124,11 +124,11 @@ exports.changeInstrRole = function(req, res) {
 exports.deleteUser = function(req, res) {
     var person = req.profile;
     
-    if (person._type === "instructor") {
+    if (person._type === 'instructor') {
        Instructor.findById(person._id).exec(function(err, user) {
-            if (user.role === "admin") {
+            if (user.role === 'admin') {
                 return res.send(400, {
-                  message: "You cannot delete another admin"
+                  message: 'You cannot delete another admin'
                 });
             }
        });
@@ -136,7 +136,7 @@ exports.deleteUser = function(req, res) {
     person.remove(function(err) {
         if (err) {
             return res.send(400, {
-                message: "could not delete user"
+                message: 'could not delete user'
             });
         } else {
             res.jsonp(person);
@@ -225,7 +225,7 @@ exports.editCamp = function(req, res) {
     camp.save(function(err) {
         if (err) {
             return res.send(400, {
-                message: "Couldn't edit camp"
+                message: 'Couldn\'t edit camp'
             });
         } else {
             res.jsonp(camp);
@@ -273,11 +273,11 @@ exports.instrRead = function(req, res) {
 
 var doListing = function(req, res, schema, whichRole) {
   if(schema === "Applicant") {
-     Applicant.find().where({role: whichRole}).populate('campId').exec(function (err, users) {
+     Applicant.find().where({role: whichRole}).populate('campId','camp_name').exec(function (err, users) {
          if (err) {
             return res.send(400, {
-          message: "No " + whichRole + " found"
-        });
+                message: "No " + whichRole + " found"
+            });
          } else {
             res.jsonp(users);
          }
