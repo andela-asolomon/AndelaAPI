@@ -33,7 +33,7 @@ var getErrorMessage = function(err) {
 
 	return message;
 };
-exports.applicantByID = function(req, res, next, id) {
+exports.fellowByID = function(req, res, next, id) {
 	Applicant.findOne({
 		_id:id
 	}).exec(function(err, applicant){

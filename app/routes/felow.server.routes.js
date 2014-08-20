@@ -17,15 +17,15 @@ module.exports = function(app) {
 		.put(felows.update_camp) // login and authorization required
 		.delete(felows.delete_camp); // login and authorization required
 
-	app.route('/camps/:campId/fellow')
+	app.route('/camps/:campId/fellows')
 		.get(felows.list_applicant) // login and authorization required
 		.post(felows.create_applicant); //by admin
 		
-	app.route('/camps/:campId/fellow/:fellowId')
+	app.route('/camps/:campId/fellows/:fellowId')
 		.get(felows.read_applicant) // login and authorization required
 		.delete(felows.delete_applicant); // login and authorization required by admin
 
 	// Finish by binding the fellow middleware
-	app.param('applicantId', felows.applicantByID);
+	app.param('fellowId', felows.fellowByID);
 
 };
