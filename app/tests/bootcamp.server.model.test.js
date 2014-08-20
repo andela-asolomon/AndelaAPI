@@ -6,17 +6,17 @@
 var should = require('should'),
 	mongoose = require('mongoose'),
 	User = mongoose.model('User'),
-	Chat = mongoose.model('Chat');
+	Bootcamp = mongoose.model('Bootcamp');
 
 /**
  * Globals
  */
-var user, chat;
+var user, bootcamp;
 
 /**
  * Unit tests
  */
-describe('Chat Model Unit Tests:', function() {
+describe('Bootcamp Model Unit Tests:', function() {
 	beforeEach(function(done) {
 		user = new User({
 			firstName: 'Full',
@@ -28,8 +28,8 @@ describe('Chat Model Unit Tests:', function() {
 		});
 
 		user.save(function() { 
-			chat = new Chat({
-				name: 'Chat Name',
+			bootcamp = new Bootcamp({
+				name: 'Bootcamp Name',
 				user: user
 			});
 
@@ -39,16 +39,16 @@ describe('Chat Model Unit Tests:', function() {
 
 	describe('Method Save', function() {
 		it('should be able to save without problems', function(done) {
-			return chat.save(function(err) {
+			return bootcamp.save(function(err) {
 				should.not.exist(err);
 				done();
 			});
 		});
 
 		it('should be able to show an error when try to save without name', function(done) { 
-			chat.name = '';
+			bootcamp.name = '';
 
-			return chat.save(function(err) {
+			return bootcamp.save(function(err) {
 				should.exist(err);
 				done();
 			});
@@ -56,7 +56,7 @@ describe('Chat Model Unit Tests:', function() {
 	});
 
 	afterEach(function(done) { 
-		Chat.remove().exec();
+		Bootcamp.remove().exec();
 		User.remove().exec();
 
 		done();

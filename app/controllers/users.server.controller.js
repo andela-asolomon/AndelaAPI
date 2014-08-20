@@ -6,6 +6,8 @@
 var mongoose = require('mongoose'),
 	passport = require('passport'),
 	User = mongoose.model('User'),
+	Applicant = mongoose.model('Applicant'),
+	Bootcamp = mongoose.model('Bootcamp'),
 	_ = require('lodash');
 
 /**
@@ -37,18 +39,24 @@ var getErrorMessage = function(err) {
  */
 exports.signup = function(req, res) {
 	// For security measurement we remove the roles from the req.body object
-	delete req.body.roles;
+	// delete req.body.roles;
+	var type = req.body.type;
+	var user;
 
+	if (type === 'applicant') {
+		user = req.body;
+		user.roles = type;
+		user = new Applicant(user);
+	}
 	// Init Variables
-	var user = new User(req.body);
 	var message = null;
 
 	// Add missing user fields
 	user.provider = 'local';
-	user.displayName = user.firstName + ' ' + user.lastName;
-
+   
+   
 	// Then save the user 
-	user.save(function(err) {
+	user.save(function(err, data) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
@@ -57,14 +65,23 @@ exports.signup = function(req, res) {
 			// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;
-
-			req.login(user, function(err) {
-				if (err) {
-					res.send(400, err);
-				} else {
-					res.jsonp(user);
-				}
-			});
+            
+            req.camp.applicants.push(data);
+           	req.camp.save(function(err) {
+           		if (err) {
+           			return res.send(400, {
+           				message: 'Could not save to Bootcamp Schema'
+           			});
+           		} else {
+           			req.login(user, function(err) {
+						if (err) {
+							res.send(400, err);
+						} else {
+							res.jsonp(user);
+						}
+					});
+           		}
+           	});
 		}
 	});
 };
@@ -235,6 +252,20 @@ exports.userByID = function(req, res, next, id) {
 	});
 };
 
+
+/**
+ * Bootcamp middleware
+ */
+exports.campByID = function(req, res, next, id) {
+	Bootcamp.findOne({
+		_id: id
+	}).exec(function(err, camp) {
+		if (err) return next(err);
+		if (!camp) return next(new Error('Failed to load Camp ' + id));
+		req.camp = camp;
+		next();
+	});
+};
 /**
  * Require login routing middleware
  */
