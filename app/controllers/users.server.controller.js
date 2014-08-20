@@ -266,7 +266,6 @@ exports.campByID = function(req, res, next, id) {
 		next();
 	});
 };
-
 /**
  * Require login routing middleware
  */
