@@ -70,7 +70,7 @@ exports.signup = function(req, res) {
            	req.camp.save(function(err) {
            		if (err) {
            			return res.send(400, {
-           				message: 'Error occurred. Couldn\'t sign you up'
+           				message: err
            			});
            		} else {
            			req.login(user, function(err) {

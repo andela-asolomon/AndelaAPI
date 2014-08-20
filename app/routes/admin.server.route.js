@@ -12,10 +12,13 @@ module.exports = function(app) {
         .get(users.requiresLogin, admin.checkPermission, admin.listApplicants);
 
     app.route('/admin/create')
-        .post(users.requiresLogin, admin.checkPermission, admin.createUsers);
+        .post(admin.createUsers);
 
     app.route('/admin/trainees')
         .get(users.requiresLogin, admin.checkPermission, admin.listTrainees);
+
+    app.route('/admin/applicants')
+        .get(users.requiresLogin, admin.checkPermission, admin.listApplicants);
 
     app.route('/admin/fellows')
         .get(users.requiresLogin, admin.checkPermission, admin.listFellows);
