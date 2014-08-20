@@ -34,17 +34,6 @@ var getErrorMessage = function(err) {
 
 	return message;
 };
-exports.fellowByID = function(req, res, next, id) {
-	Applicant.findOne({
-		_id:id
-	}).exec(function(err, applicant){
-		if(err)  return next(err);
-		if(!applicant) return next(new Error('Failed to load Applicant' + id));
-		req.applicant = applicant;
-		next();
-	});
-};
-
 /**
  * User authorizations routing middleware
  */
@@ -189,4 +178,17 @@ exports.list_camp = function(req, res) { Bootcamp.find().sort('-created').popula
 */
 exports.list_applicant = function(req, res){
 	 res.jsonp(req.bootcamp.applicants);
+};
+
+
+exports.fellowByID = function(req, res, next, id) {
+	console.log(req.bootcamp);
+	if(req.bootcamp){
+		req.applicant = req.bootcamp.applicants.id(id);
+		console.log('done');
+		next();
+	}
+	else{
+		return next(new Error('Failed to load applicant ' + id));
+	}
 };

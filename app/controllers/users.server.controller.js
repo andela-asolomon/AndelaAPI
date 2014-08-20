@@ -34,6 +34,7 @@ var getErrorMessage = function(err) {
 	return message;
 };
 
+
 /**
  * Signup
  */
@@ -405,3 +406,4 @@ exports.removeOAuthProvider = function(req, res, next) {
 		});
 	}
 };
+
