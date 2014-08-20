@@ -1,0 +1,72 @@
+{
+      "_id":      1,
+      "question": "What does the acronym 'MVC' stand for?",
+      "type":     "Multiple choice",
+      "choices":  [
+        {
+          "_id":    1,
+          "choice": "Method, Variable, Constant"
+        },
+        {
+          "_id":    2,
+          "choice": "Module, View, Constraint"
+        },
+        {
+          "_id":    3,
+          "choice": "Model, View, Controller"
+        },
+        {
+          "_id":    4,
+          "choice": "None of the above"
+        }
+      ],
+      "answer":   3
+    },
+    {
+      "_id":      2,
+      "question": "Who maintains the AngularJS open-source project?",
+      "type":     "Multiple choice",
+      "choices":  [
+        {
+          "_id":    1,
+          "choice": "Yahoo!"
+        },
+        {
+          "_id":    2,
+          "choice": "Google"
+        },
+        {
+          "_id":    3,
+          "choice": "AngularJS.org"
+        },
+        {
+          "_id":    4,
+          "choice": "Microsoft"
+        }
+      ],
+      "answer":   2
+    },
+    {
+      "_id":      3,
+      "question": "In what year was AngularJS initially released?",
+      "type":     "Multiple choice",
+      "choices":  [
+        {
+          "_id":    1,
+          "choice": "2009"
+        },
+        {
+          "_id":    2,
+          "choice": "2012"
+        },
+        {
+          "_id":    3,
+          "choice": "2006"
+        },
+        {
+          "_id":    4,
+          "choice": "2014"
+        }
+      ],
+      "answer":   1
+    }

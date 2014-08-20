@@ -48,13 +48,13 @@ exports.signup = function(req, res) {
 		user.roles = type;
 		user = new Applicant(user);
 	}
+	console.log('user: ' + user);
 	// Init Variables
 	var message = null;
 
 	// Add missing user fields
 	user.provider = 'local';
-   
-   
+
 	// Then save the user 
 	user.save(function(err, data) {
 		if (err) {
@@ -65,7 +65,7 @@ exports.signup = function(req, res) {
 			// Remove sensitive data before login
 			user.password = undefined;
 			user.salt = undefined;
-            
+			console.log('Checking data');
             req.camp.applicants.push(data);
            	req.camp.save(function(err) {
            		if (err) {
@@ -90,6 +90,7 @@ exports.signup = function(req, res) {
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
+	console.log(req.body);
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
 			res.send(400, info);
@@ -147,6 +148,37 @@ exports.update = function(req, res) {
 		});
 	}
 };
+
+
+// viewing Applicants data page
+exports.appView = function(req, res, id) { 
+	var user = req.user;
+	var message = null;
+	id = req.user._id;
+
+	if (user) {
+			User.findById(id).populate('user', 'displayName').exec(function(err, users) {
+			if (err) {
+				return res.send(400, {
+					message: getErrorMessage(err)
+				});
+			} else {
+					req.login(user, function(err) {
+						if (err) {
+							res.send(400, err);
+						} else {
+							res.jsonp(users);
+						}
+				});
+			}
+		});
+	} else {
+		res.send(400, {
+			message: 'You need to Sign in to view your application progress'
+		});
+	}
+};
+
 
 /**
  * Change Password
@@ -257,13 +289,18 @@ exports.userByID = function(req, res, next, id) {
  * Bootcamp middleware
  */
 exports.campByID = function(req, res, next, id) {
+	console.log('Bootcamp Init');
+	console.log(req.body);
 	Bootcamp.findOne({
 		_id: id
 	}).exec(function(err, camp) {
 		if (err) return next(err);
 		if (!camp) return next(new Error('Failed to load Camp ' + id));
+		console.log('Bootcamp called');
+		console.log(camp);
 		req.camp = camp;
 		next();
+		console.log('Bootcamp finished');
 	});
 };
 

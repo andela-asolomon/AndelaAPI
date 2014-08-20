@@ -61,18 +61,25 @@ var UserSchema = new Schema({
 	},
 	provider: {
 		type: String,
-		required: 'Provider is required'
+		required: 'Provider is required',
 	},
 	providerData: {},
 	additionalProvidersData: {},
 	updated: {
 		type: Date
 	},
+	roles: {
+		type: [{
+			type: String,
+			enum: ['user', 'admin']
+		}],
+		default: ['user']
+	},
 	created: {
 		type: Date,
 		default: Date.now
 	}
-}, { collection : 'users', discriminatorKey : '_type'});
+}, { collection : 'users', discriminatorKey : '_type' });
 
 /**
  * Skillset Schema
@@ -90,11 +97,13 @@ var SkillsetSchema = new Schema({
  * Applicant Schema, Trainee and Fellow
  */
  var ApplicantSchema = UserSchema.extend({
- 	score: {
- 		type: Number
+ 	testScore: {
+ 		type: Number,
+ 		required: 'Applicant score must be submitted'
  	},
- 	cv_path: {
+ 	cvPath: {
  		type: String
+ 		// required: 'A vaild CV is required'
  	},
  	photo_path: String,
  	roles: {
