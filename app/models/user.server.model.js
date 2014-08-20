@@ -119,7 +119,8 @@ var SkillsetSchema = new Schema({
  	campId: {
  		type: Schema.ObjectId,
  		ref: 'Bootcamp'
- 	}
+ 	},
+ 	assessments: [AssessmentSchema]
  });
 
 /**

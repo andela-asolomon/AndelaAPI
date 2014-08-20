@@ -5,29 +5,19 @@
  */
 var users = require('../../app/controllers/users'),
     admin = require('../../app/controllers/admin');
+    instructor = require('../../app/controllers/instructor');
 
 module.exports = function(app) {
     // Admin Routes
-    app.route('/admin')
-        .get(users.requiresLogin, admin.checkPermission, admin.listApplicants);
-
-    app.route('/admin/create')
-        .post(admin.createUsers);
-
-    app.route('/admin/trainees')
+    app.route('/instr')
         .get(users.requiresLogin, admin.checkPermission, admin.listTrainees);
 
-    app.route('/admin/applicants')
-        .get(users.requiresLogin, admin.checkPermission, admin.listApplicants);
-
-    app.route('/admin/fellows')
+    app.route('/instr/fellows')
         .get(users.requiresLogin, admin.checkPermission, admin.listFellows);
 
-    app.route('/admin/instructors')
-        .get(users.requiresLogin, admin.checkPermission, admin.listInstructors);
-
-    app.route('/admin/admins')
-        .get(users.requiresLogin, admin.checkPermission, admin.listAdmins);
+    app.route('/instr/trainee/:traineeId')
+        .get(users.requiresLogin, admin.checkPermission, admin.listAdmins)
+        .post();
 
     app.route('/admin/appt/:apptId')
         .get(users.requiresLogin, admin.checkPermission, admin.apptRead)

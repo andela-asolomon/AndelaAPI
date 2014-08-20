@@ -15,7 +15,7 @@ var users = require('../../app/controllers/users');
 
 
 /**
- * Admin/instructor authorization middleware
+ * Admin authorization middleware
  */
 exports.checkPermission = function(req, res, next) {
     if (req.user._type === "Instructor" && req.user.role === "admin") {
@@ -273,11 +273,11 @@ exports.instrRead = function(req, res) {
 
 var doListing = function(req, res, schema, whichRole) {
   if(schema === "Applicant") {
-     Applicant.find().where({role: whichRole}).populate('campId').exec(function (err, users) {
+     Applicant.find().where({role: whichRole}).populate('campId','camp_name').exec(function (err, users) {
          if (err) {
             return res.send(400, {
-          message: "No " + whichRole + " found"
-        });
+                message: "No " + whichRole + " found"
+            });
          } else {
             res.jsonp(users);
          }
