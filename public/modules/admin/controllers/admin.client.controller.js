@@ -1,34 +1,22 @@
 'use strict';
 
-angular.module('users').controller('AdminController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
-		$scope.authentication = Authentication;
-
-		//If user is signed in then redirect back home
-		if ($scope.authentication.user) $location.path('/');
-
-		$scope.signup = function() {
-			$http.post('/auth/signup', $scope.credentials).success(function(response) {
-				//If successful we assign the response to the global user model
-				$scope.authentication.user = response;
-
-				//And redirect to the index page
-				$location.path('/');
-			}).error(function(response) {
-				$scope.error = response.message;
-			});
-		};
-
-		$scope.signin = function() {
-			$http.post('/auth/signin', $scope.credentials).success(function(response) {
-				//If successful we assign the response to the global user model
-				$scope.authentication.user = response;
-
-				//And redirect to the index page
-				$location.path('/');
-			}).error(function(response) {
-				$scope.error = response.message;
-			});
-		};
-	}
+// Lists controller
+angular.module('admin').controller('AdminController', ['$scope', '$http',
+  function($scope, $http) {
+    
+    // Create new user
+    $scope.create = function() {
+      console.log('createInstructor called');
+      $http.post('/admin/create', $scope.credentials).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+        console.log('Success - Done');
+        $scope.passwordDetails = null;
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log('Error - can not');
+      });
+    };
+  
+  }
 ]);
