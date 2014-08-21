@@ -6,11 +6,7 @@ var users = require('../../app/controllers/users');
 module.exports = function(app) {
 	// Setting up the bootcamp api
 	app.route('/camps')
-<<<<<<< HEAD
-		.get(fellows.list_camp) // login and authorization required
-=======
 		.get(fellows.list_camp); // login and authorization required
->>>>>>> d27202af5ed201b57b4a5a78a95f3bdc88556d1a
 		// .post(fellows.create_camp); //by admin
 		
 	app.route('/camps/:campId')
