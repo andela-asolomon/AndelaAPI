@@ -7,7 +7,7 @@ module.exports = function(app) {
 	// Setting up the bootcamp api
 	app.route('/camps')
 		.get(fellows.list_camp) // login and authorization required
-		.post(fellows.create_camp); //by admin
+		// .post(fellows.create_camp); //by admin
 		
 	app.route('/camps/:campId')
 		.get(fellows.read_camp) // login and authorization required
