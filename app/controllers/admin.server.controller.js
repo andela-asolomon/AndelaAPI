@@ -32,6 +32,7 @@ exports.checkPermission = function(req, res, next) {
 * Create users
 */
 exports.createUsers = function(req, res, next) {
+  console.log('createUsers called on the backend with', req.body);
    var instructor = new Instructor(req.body);
    instructor.provider ='local';
     console.log(req.body.role);
