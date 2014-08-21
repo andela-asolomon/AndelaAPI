@@ -104,29 +104,34 @@ exports.changeRole = function(req, res) {
       var applicant = req.applicant;
       var role = req.body.role;
 
-      
-      applicant = _.extend(applicant, req.body);
-      
-      
-      if (role === 'applicant') {
-        applicant.status.name = 'selected for interview';
-        applicant.status.reason = '';
-      }
-
-      if (role === 'trainee' || role === 'fellow') {
-         applicant.status.name = 'selected for bootcamp';
-         applicant.status.reason = '';
-      }
-
-      applicant.save(function(err) {
-          if (err) {
-              return res.send(400, {
-                  message: 'could not change applicant role'
-              });
-          } else {
-              res.jsonp(applicant);
+      if (role === 'instructor' || role === 'admin') {
+          return res.send(400, {
+               message: 'you cannot change user to an admin or instructor'
+          });
+      } else {
+          applicant = _.extend(applicant, req.body);
+          
+          
+          if (role === 'applicant') {
+             applicant.status.name = 'selected for interview';
+             applicant.status.reason = '';
           }
-     });
+
+          if (role === 'trainee' || role === 'fellow') {
+             applicant.status.name = 'selected for bootcamp';
+             applicant.status.reason = '';
+          }
+
+          applicant.save(function(err) {
+              if (err) {
+                  return res.send(400, {
+                      message: 'could not change applicant role'
+                  });
+              } else {
+                  res.jsonp(applicant);
+              }
+         });
+      }
 };
 
 /**
@@ -134,17 +139,24 @@ exports.changeRole = function(req, res) {
 */
 exports.changeInstrRole = function(req, res) {
       var instructor = req.instructor;
-      instructor = _.extend(instructor, req.body);
+      
+      if (req.body.role !== 'instructor' && req.body.role !== 'admin'){
+          return res.send(400, {
+                message: 'user\'s role can only be changed to admin or instructor'
+          });
+      } else {
+          instructor = _.extend(instructor, req.body);
 
-      instructor.save(function(err) {
-          if (err) {
-              return res.send(400, {
-                  message: 'could not change instructor role'
-              });
-          } else {
-              res.jsonp(instructor);
-          }
-      });
+          instructor.save(function(err) {
+              if (err) {
+                  return res.send(400, {
+                      message: 'could not change instructor role'
+                  });
+              } else {
+                  res.jsonp(instructor);
+              }
+          });
+      }
 };
 
 /**
@@ -153,24 +165,21 @@ exports.changeInstrRole = function(req, res) {
 exports.deleteUser = function(req, res) {
     var person = req.profile;
     
-    if (person._type === 'instructor') {
-       Instructor.findById(person._id).exec(function(err, user) {
-            if (user.role === 'admin') {
+    if (person._type === 'Instructor' && person.role === 'admin') {
+        return res.send(400, {
+            message: 'You cannot delete another admin'
+        });
+    } else {
+        person.remove(function(err, user) {
+            if (err) {
                 return res.send(400, {
-                  message: 'You cannot delete another admin'
+                    message: 'could not delete user'
                 });
+            } else {
+                res.jsonp(user);
             }
-       });
+        });
     }
-    person.remove(function(err) {
-        if (err) {
-            return res.send(400, {
-                message: 'could not delete user'
-            });
-        } else {
-            res.jsonp(person);
-        }
-    });
 };
 
 /**
@@ -251,13 +260,13 @@ exports.editCamp = function(req, res) {
 
     camp = _.extend(camp, req.body);
 
-    camp.save(function(err) {
+    camp.save(function(err, boot) {
         if (err) {
             return res.send(400, {
                 message: 'Couldn\'t edit camp'
             });
         } else {
-            res.jsonp(camp);
+            res.jsonp(boot);
         }
     });
 };
@@ -268,13 +277,13 @@ exports.editCamp = function(req, res) {
 exports.deleteCamp = function(req, res) {
     var camp = req.camp;
 
-    camp.remove(function(err) {
+    camp.remove(function(err, boot) {
         if (err) {
             return res.send(400, {
                 message: "Couldn't delete camp"
             });
         } else {
-            res.jsonp(camp);
+            res.jsonp(boot);
         }
     });
 };
@@ -390,9 +399,9 @@ exports.createTests = function(req, res) {
 };
 
 /**
- * Update tests
+ * Update a particular test's name
  */
-exports.updateTest = function(req, res) {
+exports.updateTestName = function(req, res) {
     var test = req.test;
     test = _.extend(test, req.body);
 

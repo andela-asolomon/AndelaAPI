@@ -63,15 +63,18 @@ module.exports = function(app) {
     app.route('/admin/test/:testId')
         .get(users.requiresLogin, admin.checkPermission, admin.testRead)
         .post(users.requiresLogin, admin.checkPermission, admin.addQuestion)
-        .put(users.requiresLogin, admin.checkPermission, admin.updateTest)
+        .put(users.requiresLogin, admin.checkPermission, admin.updateTestName)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteTest);
 
     app.route('/admin/test/:testId/:questId')
-        .put(users.requiresLogin, admin.checkPermission, admin.updateChoices)
+        .put(users.requiresLogin, admin.checkPermission, admin.updateQuestion)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteQuestion);
 
-    app.route('/admin/test/:testId/:questId/:optionId')
+    app.route('/admin/test/:testId/:questId/options')
         .post(users.requiresLogin, admin.checkPermission, admin.addOption)
+        .put(users.requiresLogin, admin.checkPermission, admin.updateChoices);
+
+    app.route('/admin/test/:testId/:questId/:optionId')
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteOption);
 
     app.route('/admin/trainee/:traineeId/rate')
