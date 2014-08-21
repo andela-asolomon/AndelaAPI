@@ -39,19 +39,19 @@ var getErrorMessage = function(err) {
  * User authorizations routing middleware
  */
 
-exports.create_camp = function(req, res) {
-	var bootcamp = new Bootcamp(req.body);
-	bootcamp.user = req.user;
-	bootcamp.save(function(err) {
-		if (err) {
-			return res.send(400, {
-				message: getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(bootcamp);
-		}
-	});
-};
+// exports.create_camp = function(req, res) {
+// 	var bootcamp = new Bootcamp(req.body);
+// 	bootcamp.user = req.user;
+// 	bootcamp.save(function(err) {
+// 		if (err) {
+// 			return res.send(400, {
+// 				message: getErrorMessage(err)
+// 			});
+// 		} else {
+// 			res.jsonp(bootcamp);
+// 		}
+// 	});
+// };
 
 // /**
 //  * Show the current Bootcamp
