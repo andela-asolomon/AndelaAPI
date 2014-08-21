@@ -60,21 +60,24 @@ color: #ff7878;
 
 
 .header_container {
-  display: none;
   margin: 0 auto !important;
-  width: 50%;
+  /*width: 50%;*/
   padding: 40px;
   background: #fff;
 }
 
 .header_container .img-div{
   width: 500px;
-  margin: 0 auto;
+  margin: 0 auto !important;
 }
-
+.header_container .text-vertical-center{
+  margin: 0 auto !important;
+  display: inline-block !important;
+}
 p.tag-line{
   font-size: 22px !important;
-  font-family: sans-serif;
+  font-family: Raleway, sans-serif;
+  text-align:center;
 }
 
 .header_container img{
@@ -87,9 +90,21 @@ p.tag-line{
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  background: url(/modules/core/img/world2.jpg) no-repeat center center scroll;
+  background: url(/modules/core/img/wor.jpg) no-repeat center center scroll;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
   -o-background-size: cover;
 }
+.header .row{
+  vertical-align: center;
+  /*margin-top: 10%;*/
+}
+.header .row.vcenter{
+  display: table-cell;
+  vertical-align: middle;
+}
+.navbar-default {
+    border-bottom: 1px solid #F06BD1 !important;
+    padding: 0px;
+    box-shadow: none !important;

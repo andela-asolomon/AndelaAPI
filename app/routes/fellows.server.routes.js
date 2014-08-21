@@ -15,7 +15,7 @@ module.exports = function(app) {
 		.delete(fellows.delete_camp); // login and authorization required
 
 	app.route('/camps/:campId/fellows')
-		.get(fellows.list_applicant) // login and authorization required
+		//.get(fellows.list_applicant) // login and authorization required
 		.post(fellows.create_applicant); //by admin
 		
 	app.route('/camps/:campId/fellows/:fellowId')

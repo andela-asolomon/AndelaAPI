@@ -174,9 +174,8 @@ var AssessmentSchema = new Schema({
  	campId: {
  		type: Schema.ObjectId,
  		ref: 'Bootcamp'
- 	},
- 	assessments: [AssessmentSchema]
- });
+ 	}
+});
 
 /**
  * Status Schema
@@ -374,14 +373,8 @@ InstructorSchema.statics.findUniqueUsername = function(username, suffix, callbac
 };
 
 mongoose.model('User', UserSchema);
-<<<<<<< HEAD
 mongoose.model('Applicant', ApplicantSchema);
 mongoose.model('Instructor', InstructorSchema);
 mongoose.model('Bootcamp', BootcampSchema);
 mongoose.model('Skillset', SkillsetSchema);
-=======
-	mongoose.model('Applicant', ApplicantSchema);
-		mongoose.model('Instructor', InstructorSchema);
-			mongoose.model('Bootcamp', BootcampSchema);
-				mongoose.model('Assessment', AssessmentSchema);
->>>>>>> 6f95afbf1450f13f723d82b71143fdb2e054b3a5
+mongoose.model('Assessment', AssessmentSchema);

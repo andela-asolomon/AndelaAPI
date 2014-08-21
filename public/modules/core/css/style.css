@@ -81,7 +81,7 @@ section h2{
   text-transform: capitalize;
 }
 
-section#about{
+section#about, section#andela_fellow{
   background: #102078 url(/modules/core/img/bg3.jpg) no-repeat top left;
   background-size: cover;
 }

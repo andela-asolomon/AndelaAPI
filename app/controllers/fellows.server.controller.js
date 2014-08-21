@@ -14,23 +14,23 @@ var mongoose = require('mongoose'),
 // /**
 //  * Get the error message from error object
 //  */
-// var getErrorMessage = function(err) {
-// 	var message = '';
+var getErrorMessage = function(err) {
+	var message = '';
 
-// 	if (err.code) {
-// 		switch (err.code) {
-// 			case 11000:
-// 			case 11001:
-// 				message = 'Username already exists';
-// 				break;
-// 			default:
-// 				message = 'Something went wrong';
-// 		}
-// 	} else {
-// 		for (var errName in err.errors) {
-// 			if (err.errors[errName].message) message = err.errors[errName].message;
-// 		}
-// 	}
+	if (err.code) {
+		switch (err.code) {
+			case 11000:
+			case 11001:
+				message = 'Username already exists';
+				break;
+			default:
+				message = 'Something went wrong';
+		}
+	} else {
+		for (var errName in err.errors) {
+			if (err.errors[errName].message) message = err.errors[errName].message;
+		}
+	}
 
 
 	return message;
@@ -38,112 +38,101 @@ var mongoose = require('mongoose'),
 /**
  * User authorizations routing middleware
  */
-exports.hasAuthorization = function() {
->>>>>>> 6f95afbf1450f13f723d82b71143fdb2e054b3a5:app/controllers/fellows.server.controller.js
-	
-// };
 
-// exports.create_camp = function(req, res) {
-// 	var bootcamp = new Bootcamp(req.body);
-// 	bootcamp.user = req.user;
-// 	bootcamp.save(function(err) {
-// 		if (err) {
-// 			return res.send(400, {
-// 				message: getErrorMessage(err)
-// 			});
-// 		} else {
-// 			res.jsonp(bootcamp);
-// 		}
-// 	});
-// };
+exports.create_camp = function(req, res) {
+	var bootcamp = new Bootcamp(req.body);
+	bootcamp.user = req.user;
+	bootcamp.save(function(err) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bootcamp);
+		}
+	});
+};
 
 // /**
 //  * Show the current Bootcamp
 //  */
-// exports.read_camp = function(req, res) {
-// 	res.jsonp(req.bootcamp);
-// };
+exports.read_camp = function(req, res) {
+	res.jsonp(req.bootcamp);
+};
 
-// /**
-//  * Update a Bootcamp
-//  */
-// exports.update_camp = function(req, res) {
-// 	var bootcamp = req.bootcamp ;
+/**
+ * Update a Bootcamp
+ */
+exports.update_camp = function(req, res) {
+	var bootcamp = req.bootcamp ;
 
-// 	bootcamp = _.extend(bootcamp , req.body);
+	bootcamp = _.extend(bootcamp , req.body);
 
-// 	bootcamp.save(function(err) {
-// 		if (err) {
-// 			return res.send(400, {
-// 				message: getErrorMessage(err)
-// 			});
-// 		} else {
-// 			res.jsonp(bootcamp);
-// 		}
-// 	});
-// };
+	bootcamp.save(function(err) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bootcamp);
+		}
+	});
+};
 
-// /**
-//  * Delete an Bootcamp
-//  */
-// exports.delete_camp = function(req, res) {
-// 	var bootcamp = req.bootcamp ;
+/**
+ * Delete an Bootcamp
+ */
+exports.delete_camp = function(req, res) {
+	var bootcamp = req.bootcamp ;
 
-// 	bootcamp.remove(function(err) {
-// 		if (err) {
-// 			return res.send(400, {
-// 				message: getErrorMessage(err)
-// 			});
-// 		} else {
-// 			res.jsonp(bootcamp);
-// 		}
-// 	});
-// };
-// /** 
-// 	create an applicant*
-// */
-// exports.create_applicant = function(req, res){
-// 	var bootcamp = req.bootcamp;
-// 	var applicant = req.body;
-// 	bootcamp.applicant.push(applicant);
-// 	// bootcamp.applicants.create(applicant);
-// 	bootcamp.save(function(err) {
-// 		if (err) {
-// 			return res.send(400, {
-// 				message: getErrorMessage(err)
-// 			});
-// 		} else {
-// 			res.jsonp(bootcamp);
-// 		}
-// 	});
-// };
-// /*
-// 	*delete an applicant*
-// */
-// exports.delete_applicant = function(req, res){
-// 	var bootcamp = req. bootcamp;
-// 	var applicant = req.applicant;
-// 	applicant.remove();
-// 	bootcamp.save(function(err){
-// 		if (err) {
-// 			return res.send(400, {
-// 				message: getErrorMessage(err)
-// 			});
-//     	}
-//     	else{
-//     		res.jsonp(bootcamp);
-//     	}
-// 	});
-// };
+	bootcamp.remove(function(err) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bootcamp);
+		}
+	});
+};
+/** 
+	create an applicant*
+*/
+exports.create_applicant = function(req, res){
+	var bootcamp = req.bootcamp;
+	var applicant = req.body;
+	bootcamp.applicant.push(applicant);
+	// bootcamp.applicants.create(applicant);
+	bootcamp.save(function(err) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bootcamp);
+		}
+	});
+};
+/*
+	*delete an applicant*
+*/
+exports.delete_applicant = function(req, res){
+	var bootcamp = req. bootcamp;
+	var applicant = req.applicant;
+	applicant.remove();
+	bootcamp.save(function(err){
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+    	}
+    	else{
+    		res.jsonp(bootcamp);
+    	}
+	});
+};
 
-<<<<<<< HEAD:app/controllers/felow.server.controller.js
-// /*
-// 	*read an applicant*
-// */
-// exports.read_applicant = function(req, res){
-// 	res.jsonp(req.applicant);
-// };
-=======
+
 /*
 	*read an applicant*
 */
@@ -151,47 +140,43 @@ exports.read_applicant = function(req, res){
 	/**get the profile assessment**/
 	res.jsonp(req.applicant);
 };
->>>>>>> 6f95afbf1450f13f723d82b71143fdb2e054b3a5:app/controllers/fellows.server.controller.js
+ /*
+	*update an applicant*
+*/
+exports.update_applicant = function(req, res){
+	var bootcamp = req.bootcamp;
+	var applicant = req.applicant;
+	applicant = _.extend(applicant , req.body);
+	bootcamp.save(function(err) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bootcamp);
+		}
+	});
+};
+/**
+ * List of Bootcamps
+ */
+exports.list_camp = function(req, res) { Bootcamp.find().sort('-created').populate('user', 'displayName').exec(function(err, bootcamps) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bootcamps);
+		}
+	});
+};
 
-// /*
-// 	*update an applicant*
-// */
-// exports.update_applicant = function(req, res){
-// 	var bootcamp = req.bootcamp;
-// 	var applicant = req.applicant;
-// 	applicant = _.extend(applicant , req.body);
-// 	bootcamp.save(function(err) {
-// 		if (err) {
-// 			return res.send(400, {
-// 				message: getErrorMessage(err)
-// 			});
-// 		} else {
-// 			res.jsonp(bootcamp);
-// 		}
-// 	});
-// };
-// /**
-//  * List of Bootcamps
-//  */
-// exports.list_camp = function(req, res) { Bootcamp.find().sort('-created').populate('user', 'displayName').exec(function(err, bootcamps) {
-// 		if (err) {
-// 			return res.send(400, {
-// 				message: getErrorMessage(err)
-// 			});
-// 		} else {
-// 			res.jsonp(bootcamps);
-// 		}
-// 	});
-// };
-
-<<<<<<< HEAD:app/controllers/felow.server.controller.js
-// /*
-// 	*list an applicant*
-// */
-// exports.list_applicant = function(req, res){
-// 	 res.jsonp(req.bootcamp.applicants);
-// };
-=======
+/*
+	*list an applicant*
+*/
+exports.list_applicant = function(req, res){
+	 res.jsonp(req.bootcamp.applicants);
+};
 /*
 	*list an applicant*
 */
@@ -201,7 +186,6 @@ exports.list_applicant = function(req, res){
 
 
 exports.fellowByID = function(req, res, next, id) {
-	console.log(req.bootcamp);
 	if(req.bootcamp){
 		req.applicant = req.bootcamp.applicants.id(id);
 		console.log('done');
@@ -211,4 +195,3 @@ exports.fellowByID = function(req, res, next, id) {
 		return next(new Error('Failed to load applicant ' + id));
 	}
 };
->>>>>>> 6f95afbf1450f13f723d82b71143fdb2e054b3a5:app/controllers/fellows.server.controller.js
