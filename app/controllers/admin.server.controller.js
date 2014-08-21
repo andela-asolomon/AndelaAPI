@@ -18,6 +18,7 @@ var users = require('../../app/controllers/users');
  * Admin authorization middleware
  */
 exports.checkPermission = function(req, res, next) {
+  console.log(req.user.role);
     if (req.user._type === 'Instructor' && req.user.role === 'admin') {
         next();
     } else {
@@ -33,19 +34,26 @@ exports.checkPermission = function(req, res, next) {
 exports.createUsers = function(req, res, next) {
    var instructor = new Instructor(req.body);
    instructor.provider ='local';
+    console.log(req.body.role);
+   if (req.body.role !== 'instructor' && req.body.role !== 'admin') {
+       return res.send(400, {
+            message: "Error: Only admin or instructors can be created"
+       });
+   } else {
+        instructor.save(function(err) {
+        // Remove sensitive data before login
+          instructor.password = undefined;
+          instructor.salt = undefined;
+          if (err) {
+             return res.send(400, {
+                message: err
+             });
+          } else {
+            res.jsonp(instructor);
+          }
+       });
+   }
 
-   instructor.save(function(err) {
-      // Remove sensitive data before login
-      instructor.password = undefined;
-      instructor.salt = undefined;
-      if (err) {
-         return res.send(400, {
-            message: err
-         });
-      } else {
-        res.jsonp(instructor);
-      }
-   });
 };
 
 /**
@@ -54,27 +62,39 @@ exports.createUsers = function(req, res, next) {
 exports.changeStatus = function(req, res) {
         var applicant = req.applicant; 
       
-      if (req.body.status === 'rejected' && req.body.reason.length === 0) {
+      if (req.body.status === 'rejected') { 
+        if (!req.body.reason || req.body.reason.length === 0) {
           return res.send(400, {
               message: 'Please give reason why applicant was rejected'
           });
-      } else {
-          if (req.body.status === 'selected for bootcamp') {
-          	  applicant.role = 'trainee';
-          }
-
-          applicant = _.extend(applicant, req.body);
-
-          applicant.save(function(err) {
-    	        if (err) {
-    	            return res.send(400, {
-    	                message: 'could not change applicant status'
-    	            });
-    	        } else {
-    	            res.jsonp(applicant);
-    	        }
-          }); 
+        }
+        console.log(req.body.reason.length);
+      }  
+      if (req.body.status === 'selected for bootcamp') {
+      	  applicant.role = 'trainee';
       }
+
+      if (applicant.role === 'trainee' && req.body.status !== 'selected for bootcamp' ) {
+          applicant.role = 'applicant';
+      }
+      if (req.body.reason) { 
+          applicant.status.reason = req.body.reason;
+      } else {
+          applicant.status.reason = '';
+      }
+
+      applicant.status.name = req.body.status;
+     // applicant = _.extend(applicant, req.body);
+
+      applicant.save(function(err, appt) {
+	        if (err) {
+	            return res.send(400, {
+	                message: err
+	            });
+	        } else {
+	            res.jsonp(appt);
+	        }
+      });   
 };
 
 /**
@@ -82,11 +102,20 @@ exports.changeStatus = function(req, res) {
 */
 exports.changeRole = function(req, res) {
       var applicant = req.applicant;
-      applicant = _.extend(applicant, req.body);
       var role = req.body.role;
+
       
-      if(role === 'applicant') {
-        applicant.status = 'selectedInterview';
+      applicant = _.extend(applicant, req.body);
+      
+      
+      if (role === 'applicant') {
+        applicant.status.name = 'selected for interview';
+        applicant.status.reason = '';
+      }
+
+      if (role === 'trainee' || role === 'fellow') {
+         applicant.status.name = 'selected for bootcamp';
+         applicant.status.reason = '';
       }
 
       applicant.save(function(err) {

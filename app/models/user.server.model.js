@@ -157,13 +157,12 @@ var AssessmentSchema = new Schema({
  	status: {
  		name: {
  			type: String,
- 			enum: ['pending', 'rejected', 'selectedCamp', 'selectedInterview']
+ 			enum: ['pending', 'rejected', 'selected for bootcamp', 'selected for interview']
  		},
  		reason: {
             type: String
  		}
  	},
- 	assessments: [AssessmentSchema],
  	portfolio: {
  		type: String
  	},
@@ -374,14 +373,8 @@ InstructorSchema.statics.findUniqueUsername = function(username, suffix, callbac
 };
 
 mongoose.model('User', UserSchema);
-<<<<<<< HEAD
-mongoose.model('Applicant', ApplicantSchema);
-mongoose.model('Instructor', InstructorSchema);
-mongoose.model('Bootcamp', BootcampSchema);
 mongoose.model('Skillset', SkillsetSchema);
-=======
 	mongoose.model('Applicant', ApplicantSchema);
 		mongoose.model('Instructor', InstructorSchema);
 			mongoose.model('Bootcamp', BootcampSchema);
 				mongoose.model('Assessment', AssessmentSchema);
->>>>>>> 6f95afbf1450f13f723d82b71143fdb2e054b3a5
