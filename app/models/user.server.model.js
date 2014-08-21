@@ -86,31 +86,6 @@ var SkillsetSchema = new Schema({
 	}
 });
 
- var AssessmentSchema = new Schema({
- 	assessment_name:{
- 		type: String,
- 		trim: true,
-        required: 'Name of assessment is important'
- 	},
- 	assessment_date:{
- 		type: Date,
-        required: 'Date of assessment is important'
- 	},
- 	applicantId:{
- 		type: Schema.ObjectId,
- 		ref: 'Applicant' 
- 	},
- 	instructorId:{
- 		type: Schema.ObjectId,
- 		ref: 'Instructor'
- 	},
- 	score: {
- 		type: Number,
- 		required: 'The Applicant score is compulsory'
- 	}
-
- });
-
 /**
  * Assessment Schema
  */
@@ -157,13 +132,12 @@ var AssessmentSchema = new Schema({
  	status: {
  		name: {
  			type: String,
- 			enum: ['pending', 'rejected', 'selectedCamp', 'selectedInterview']
+ 			enum: ['pending', 'rejected', 'selected for bootcamp', 'selected for interview']
  		},
  		reason: {
             type: String
  		}
  	},
- 	assessments: [AssessmentSchema],
  	portfolio: {
  		type: String
  	},
@@ -174,7 +148,8 @@ var AssessmentSchema = new Schema({
  	campId: {
  		type: Schema.ObjectId,
  		ref: 'Bootcamp'
- 	}
+ 	},
+ 	assessments: [AssessmentSchema]
 });
 
 /**
