@@ -1,8 +1,11 @@
 'use strict';
 
 // Lists controller
-angular.module('admin').controller('AdminController', ['$scope', '$http',
-  function($scope, $http) {
+angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authentication',
+  function($scope, $http, Authentication) {
+
+    $scope.user = Authentication.user;
+
     
     // Create new user
     $scope.create = function() {
@@ -24,7 +27,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http',
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
-        $scope.passwordDetails = null;
+        
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
@@ -36,7 +39,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http',
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
-        $scope.passwordDetails = null;
+        
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
@@ -48,7 +51,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http',
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
-        $scope.passwordDetails = null;
+        
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
@@ -60,7 +63,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http',
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
-        $scope.passwordDetails = null;
+        
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
@@ -72,7 +75,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http',
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
-        $scope.passwordDetails = null;
+        
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
@@ -84,7 +87,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http',
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
-        $scope.passwordDetails = null;
+        
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
@@ -96,14 +99,23 @@ angular.module('admin').controller('AdminController', ['$scope', '$http',
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
-        $scope.passwordDetails = null;
+        
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
       });
-    };
+    }; 
 
-    
-  
+    $scope.changeRole = function(apptId) {
+      $http.put('/admin/appt/' + apptId + '/role').success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+        // console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log('Error - can not');
+      });
+    } 
   }
 ]);
