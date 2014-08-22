@@ -19,6 +19,9 @@ var validateLocalStrategyProperty = function(property) {
  * A Validation function for local strategy password
  */
 var validateLocalStrategyPassword = function(password) {
+	// console.log('validate passwd');
+	// console.log(password);
+	// console.log('how d fuck is this invalid');
 	return (this.provider !== 'local' || (password && password.length > 6));
 };
 
@@ -60,18 +63,25 @@ var UserSchema = new Schema({
 	},
 	provider: {
 		type: String,
-		required: 'Provider is required'
+		required: 'Provider is required',
 	},
 	providerData: {},
 	additionalProvidersData: {},
 	updated: {
 		type: Date
 	},
+	roles: {
+		type: [{
+			type: String,
+			enum: ['user', 'admin']
+		}],
+		default: ['user']
+	},
 	created: {
 		type: Date,
 		default: Date.now
 	}
-}, { collection : 'users', discriminatorKey : '_type'});
+}, { collection : 'users', discriminatorKey : '_type' });
 
 /**
  * Skillset Schema
@@ -114,14 +124,17 @@ var AssessmentSchema = new Schema({
  });
 
 /**
- * Applicant Schema
+ * 
+ * Applicant Schema, Trainee and Fellow
  */
  var ApplicantSchema = UserSchema.extend({
- 	score: {
- 		type: Number
+ 	testScore: {
+ 		type: Number,
+ 		required: 'Applicant score must be submitted'
  	},
- 	cv_path: {
- 		type: String,
+ 	cvPath: {
+ 		type: String
+ 		// required: 'A vaild CV is required'
  	},
  	photo_path: String,
  	role: {
@@ -150,26 +163,6 @@ var AssessmentSchema = new Schema({
  	},
  	assessments: [AssessmentSchema]
 });
-
-/**
- * Status Schema
- */
-// var StatusSchema = new Schema({
-// 	pending: {
-// 		type: String
-// 	},
-// 	rejected: {
-// 		description: {
-// 			type: String
-// 		}
-// 	},
-// 	selectedCamp: {
-// 		type: String
-// 	},
-// 	selectedInterview: {
-// 		type: String
-// 	}
-// });
 
 /**
  * Instructor Schema
@@ -208,9 +201,12 @@ var BootcampSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	applicants: [ApplicantSchema]
+	applicants: [ApplicantSchema],
+	user: {
+		type: Schema.ObjectId,
+		ref: 'admin' 
+	}
 });
-
  
 /**
  * Hook a pre save method to hash the password
@@ -227,7 +223,14 @@ UserSchema.pre('save', function(next) {
 ApplicantSchema.pre('save', function(next) {
 	if (this.password && this.password.length > 6) {
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
-		this.password = this.hashPassword(this.password);
+		if(this.constructor.name === 'EmbeddedDocument'){
+			var tempApplicant = mongoose.model('Applicant');
+			var embeddedDocApplicant = new tempApplicant(this);
+			this.password = embeddedDocApplicant.hashPassword(this.password);
+		}
+		else {
+			this.password = this.hashPassword(this.password);
+		}
 	}
 
 	next();
@@ -241,8 +244,6 @@ InstructorSchema.pre('save', function(next) {
 
 	next();
 });
-
-
 
 /**
  * Create instance method for hashing a password
