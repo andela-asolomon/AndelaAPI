@@ -181,17 +181,6 @@ exports.appView = function(req, res, id) {
 	}
 };
 
-// Getting questions from Test Schema
-exports.testByID = function(req, res, next, id) {
-    Test.findById(id).exec(function(err, test) {
-        if (err) return next(err);
-        if (!test) return next(new Error('Failed to load test ' + id));
-        req.test = test;
-        next();
-    });
-};
-
-
 /**
  * Change Password
  */
