@@ -6,7 +6,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
     $scope.user = Authentication.user;
 
-    
+
     // Create new user
     $scope.create = function() {
       console.log('createInstructor called');
@@ -106,7 +106,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     }; 
 
-    $scope.changeRole = function(apptId) {
+    $scope.changeRole = function() {
+      $scope.data
       $http.put('/admin/appt/' + apptId + '/role').success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
