@@ -19,6 +19,9 @@ var validateLocalStrategyProperty = function(property) {
  * A Validation function for local strategy password
  */
 var validateLocalStrategyPassword = function(password) {
+	// console.log('validate passwd');
+	// console.log(password);
+	// console.log('how d fuck is this invalid');
 	return (this.provider !== 'local' || (password && password.length > 6));
 };
 
@@ -216,7 +219,9 @@ var BootcampSchema = new Schema({
 		type: Schema.ObjectId,
 		ref: 'Applicant' 
 	},
-	applicants: [ApplicantSchema]
+	applicants: {
+		type: [ApplicantSchema]
+	} 
 });
 
  
@@ -233,9 +238,17 @@ UserSchema.pre('save', function(next) {
 });
 
 ApplicantSchema.pre('save', function(next) {
+	// console.log('pre save signal to hash password');
 	if (this.password && this.password.length > 6) {
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
-		this.password = this.hashPassword(this.password);
+		if(this.constructor.name === 'EmbeddedDocument'){
+			var tempApplicant = mongoose.model('Applicant');
+			var embeddedDocApplicant = new tempApplicant(this);
+			this.password = embeddedDocApplicant.hashPassword(this.password);
+		}
+		else {
+			this.password = this.hashPassword(this.password);
+		}
 	}
 
 	next();
@@ -264,6 +277,7 @@ UserSchema.methods.hashPassword = function(password) {
 };
 
 ApplicantSchema.methods.hashPassword = function(password) {
+	console.log('about to hash password');
 	if (this.salt && password) {
 		return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
 	} else {
@@ -355,6 +369,6 @@ InstructorSchema.statics.findUniqueUsername = function(username, suffix, callbac
 };
 
 mongoose.model('User', UserSchema);
-	mongoose.model('Applicant', ApplicantSchema);
-		mongoose.model('Instructor', InstructorSchema);
-			mongoose.model('Bootcamp', BootcampSchema);
+mongoose.model('Applicant', ApplicantSchema);
+mongoose.model('Instructor', InstructorSchema);
+mongoose.model('Bootcamp', BootcampSchema);

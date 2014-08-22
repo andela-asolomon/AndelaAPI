@@ -3,12 +3,14 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	passport = require('passport'),
-	User = mongoose.model('User'),
-	Applicant = mongoose.model('Applicant'),
-	Bootcamp = mongoose.model('Bootcamp'),
-	_ = require('lodash');
+var mongoose 		= require('mongoose'),
+	passport 		= require('passport'),
+	User 			= mongoose.model('User'),
+	Applicant 		= mongoose.model('Applicant'),
+	Bootcamp 		= mongoose.model('Bootcamp'),
+	Test 	 		= mongoose.model('Test'),
+	_ 				= require('lodash'),
+   admin 			= require('../../app/contollers/admin');
 
 /**
  * Get the error message from error object
@@ -48,42 +50,42 @@ exports.signup = function(req, res) {
 		user.roles = type;
 		user = new Applicant(user);
 	}
-	console.log('user: ' + user);
 	// Init Variables
 	var message = null;
 
 	// Add missing user fields
 	user.provider = 'local';
 
-	// Then save the user 
-	user.save(function(err, data) {
-		if (err) {
-			return res.send(400, {
-				message: getErrorMessage(err)
-			});
-		} else {
-			// Remove sensitive data before login
-			user.password = undefined;
-			user.salt = undefined;
-			console.log('Checking data');
-            req.camp.applicants.push(data);
-           	req.camp.save(function(err) {
-           		if (err) {
-           			return res.send(400, {
-           				message: 'Could not save to Bootcamp Schema'
-           			});
-           		} else {
-           			req.login(user, function(err) {
-						if (err) {
+	//nads code: create user directly in bootcamp object then save
+	req.camp.applicants.push(user);
+
+	req.camp.save(function(err) {
+   		if (err) {
+   			return res.send(400, {
+   				message: err
+   			});
+   		} 
+   		else {
+   			user.save(function(err) {
+   				if (err) {
+   					console.log('Error');
+   				} 
+   				else {
+   					req.login(user, function(err) {
+	   					if (err) {
 							res.send(400, err);
-						} else {
+						} 
+						else {
+							user.password = undefined;
+							user.salt = undefined;
+
 							res.jsonp(user);
 						}
-					});
-           		}
-           	});
-		}
-	});
+		   			});
+   				}
+   			});
+   		}
+   	});
 };
 
 /**
@@ -178,6 +180,18 @@ exports.appView = function(req, res, id) {
 		});
 	}
 };
+
+// Getting questions from Test Schema
+exports.testByID = function(req, res, next, id) {
+    Test.findById(id).exec(function(err, test) {
+        if (err) return next(err);
+        if (!test) return next(new Error('Failed to load test ' + id));
+        req.test = test;
+        next();
+    });
+};
+
+
 
 
 /**
@@ -289,18 +303,13 @@ exports.userByID = function(req, res, next, id) {
  * Bootcamp middleware
  */
 exports.campByID = function(req, res, next, id) {
-	console.log('Bootcamp Init');
-	console.log(req.body);
 	Bootcamp.findOne({
 		_id: id
 	}).exec(function(err, camp) {
 		if (err) return next(err);
 		if (!camp) return next(new Error('Failed to load Camp ' + id));
-		console.log('Bootcamp called');
-		console.log(camp);
 		req.camp = camp;
 		next();
-		console.log('Bootcamp finished');
 	});
 };
 
@@ -442,4 +451,13 @@ exports.removeOAuthProvider = function(req, res, next) {
 			}
 		});
 	}
+};
+
+exports.testByID = function(req, res, next, id) {
+    Test.findById(id).exec(function(err, test) {
+        if (err) return next(err);
+        if (!test) return next(new Error('Failed to load test ' + id));
+        req.test = test;
+        next();
+    });
 };
