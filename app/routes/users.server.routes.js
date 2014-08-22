@@ -13,7 +13,7 @@ module.exports = function(app) {
 	app.route('/users').put(users.update);
 	app.route('/users/password').post(users.changePassword);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
-	app.route('/users/view').get(users.appView);
+	app.route('/users/view').get(users.requiresLogin, users.appView);
 	
 	// Setting up the users api
 	app.route('/auth/:campId/signup').post(users.signup);
