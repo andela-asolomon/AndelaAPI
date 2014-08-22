@@ -13,7 +13,7 @@ module.exports = function(app) {
 	app.route('/users/password').post(users.changePassword);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
 	app.route('/users/view').get(users.appView);
-	app.route('/users/test_questions').get(users.testByID);
+	app.route('/users/:testId/test_questions').get(users.testByID);
 
 	// Setting up the users api
 	app.route('/auth/:campId/signup').post(users.signup);
@@ -49,4 +49,7 @@ module.exports = function(app) {
 
 	// Finish by binding the bootcamp middleware
 	app.param('campId', users.campByID);
+
+	//Finish by binding the test middleware
+	app.param('testId', users.testByID);
 };

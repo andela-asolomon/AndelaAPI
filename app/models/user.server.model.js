@@ -97,7 +97,6 @@ var SkillsetSchema = new Schema({
 });
 
 /**
-<<<<<<< HEAD
  * Assessment Schema
  */
 var AssessmentSchema = new Schema({
@@ -223,7 +222,6 @@ UserSchema.pre('save', function(next) {
 });
 
 ApplicantSchema.pre('save', function(next) {
-	// console.log('pre save signal to hash password');
 	if (this.password && this.password.length > 6) {
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
 		if(this.constructor.name === 'EmbeddedDocument'){
@@ -260,7 +258,6 @@ UserSchema.methods.hashPassword = function(password) {
 };
 
 ApplicantSchema.methods.hashPassword = function(password) {
-	console.log('about to hash password');
 	if (this.salt && password) {
 		return crypto.pbkdf2Sync(password, this.salt, 10000, 64).toString('base64');
 	} else {

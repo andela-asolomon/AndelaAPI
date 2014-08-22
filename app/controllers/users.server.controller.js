@@ -9,8 +9,10 @@ var mongoose 		= require('mongoose'),
 	Applicant 		= mongoose.model('Applicant'),
 	Bootcamp 		= mongoose.model('Bootcamp'),
 	Test 	 		= mongoose.model('Test'),
-	_ 				= require('lodash'),
-   admin 			= require('../../app/contollers/admin');
+	_ 				= require('lodash');
+
+var admin = require('../../app/controllers/admin');
+
 
 /**
  * Get the error message from error object
@@ -41,56 +43,49 @@ var getErrorMessage = function(err) {
  * Signup
  */
 exports.signup = function(req, res) {
-	// For security measurement we remove the roles from the req.body object
-	// delete req.body.roles;
+
 	var type = req.body.type;
+	var user;
 
 	if (type === 'applicant') {
-		var user = req.body;
-		// console.log(req.body);
-		// Add missing user fields
-	    user.provider = 'local';
-		user.role = type;
+		user = req.body;
+		user.roles = type;
 		user = new Applicant(user);
-
 	}
-	
-	// Init Variables
-	var message = null;
 
-	// Add missing user fields
+	var messae = null;
+
 	user.provider = 'local';
 
-	//nads code: create user directly in bootcamp object then save
 	req.camp.applicants.push(user);
 
 	req.camp.save(function(err) {
-   		if (err) {
-   			return res.send(400, {
-   				message: err
-   			});
-   		} 
-   		else {
-   			user.save(function(err) {
-   				if (err) {
-   					console.log('Error');
-   				} 
-   				else {
-   					req.login(user, function(err) {
-	   					if (err) {
-							res.send(400, err);
-						} 
-						else {
-							user.password = undefined;
-							user.salt = undefined;
+		if (err) {
+			return res.send(400, {
+				message: err
+			});
+		} 
+		else {
+			user.save(function(err) {
+				if (err) {
+					console.log('Error');
+				} 
+				else {
+					req.login(user, function(err) {
+   					if (err) {
+						res.send(400, err);
+					} 
+					else {
+						user.password = undefined;
+						user.salt = undefined;
 
-							res.jsonp(user);
-						}
-		   			});
-   				}
-   			});
-   		}
-   	});
+						res.jsonp(user);
+					}
+	   			});
+				}
+			});
+		}
+	});
 };
 
 /**
@@ -195,8 +190,6 @@ exports.testByID = function(req, res, next, id) {
         next();
     });
 };
-
-
 
 
 /**
