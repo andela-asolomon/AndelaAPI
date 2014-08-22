@@ -3,12 +3,14 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	passport = require('passport'),
-	User = mongoose.model('User'),
-	Applicant = mongoose.model('Applicant'),
-	Bootcamp = mongoose.model('Bootcamp'),
-	_ = require('lodash');
+var mongoose 		= require('mongoose'),
+	passport 		= require('passport'),
+	User 			= mongoose.model('User'),
+	Applicant 		= mongoose.model('Applicant'),
+	Bootcamp 		= mongoose.model('Bootcamp'),
+	Test 	 		= mongoose.model('Test'),
+	_ 				= require('lodash'),
+   admin 			= require('../../app/contollers/admin');
 
 /**
  * Get the error message from error object
@@ -45,58 +47,57 @@ exports.signup = function(req, res) {
 
 	if (type === 'applicant') {
 		var user = req.body;
-		console.log(req.body);
+		// console.log(req.body);
 		// Add missing user fields
 	    user.provider = 'local';
 		user.role = type;
 		user = new Applicant(user);
-		    
-		    
-        // console.log(user.password.length);
-		// Init Variables
-		var message = null;
-	   
-		// Then save the user 
-		user.save(function(err, data) {
-			if (err) {
-				return res.send(400, {
-					message: getErrorMessage(err)
-				});
-			} else {
-				// Remove sensitive data before login
-				// console.log(user.password.length);
-				user.password = undefined;
-				user.salt = undefined;
-	            
-	            req.camp.applicants.push(data);
-	           	req.camp.save(function(err, camp) { 
-	           		if (err) {
-	           			return res.send(400, {
-	           				message: err
-	           			});
-	           		} else {
-	           			req.login(user, function(err) {
-							if (err) {
-								res.send(400, err);
-							} else {
-								res.jsonp(user);
-							}
-						});
-	           		}
-	           	});
-			}
-		});
-	} else {
-         return res.send(400, {
-	           	message: 'Error: only applicants can signup'
-	     });
+
 	}
+	
+	// Init Variables
+	var message = null;
+
+	// Add missing user fields
+	user.provider = 'local';
+
+	//nads code: create user directly in bootcamp object then save
+	req.camp.applicants.push(user);
+
+	req.camp.save(function(err) {
+   		if (err) {
+   			return res.send(400, {
+   				message: err
+   			});
+   		} 
+   		else {
+   			user.save(function(err) {
+   				if (err) {
+   					console.log('Error');
+   				} 
+   				else {
+   					req.login(user, function(err) {
+	   					if (err) {
+							res.send(400, err);
+						} 
+						else {
+							user.password = undefined;
+							user.salt = undefined;
+
+							res.jsonp(user);
+						}
+		   			});
+   				}
+   			});
+   		}
+   	});
 };
 
 /**
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
+	console.log(req.body);
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
 			res.send(400, info);
@@ -154,6 +155,49 @@ exports.update = function(req, res) {
 		});
 	}
 };
+
+
+// viewing Applicants data page
+exports.appView = function(req, res, id) { 
+	var user = req.user;
+	var message = null;
+	id = req.user._id;
+
+	if (user) {
+			User.findById(id).populate('user', 'displayName').exec(function(err, users) {
+			if (err) {
+				return res.send(400, {
+					message: getErrorMessage(err)
+				});
+			} else {
+					req.login(user, function(err) {
+						if (err) {
+							res.send(400, err);
+						} else {
+							res.jsonp(users);
+						}
+				});
+			}
+		});
+	} else {
+		res.send(400, {
+			message: 'You need to Sign in to view your application progress'
+		});
+	}
+};
+
+// Getting questions from Test Schema
+exports.testByID = function(req, res, next, id) {
+    Test.findById(id).exec(function(err, test) {
+        if (err) return next(err);
+        if (!test) return next(new Error('Failed to load test ' + id));
+        req.test = test;
+        next();
+    });
+};
+
+
+
 
 /**
  * Change Password
@@ -412,4 +456,3 @@ exports.removeOAuthProvider = function(req, res, next) {
 		});
 	}
 };
-

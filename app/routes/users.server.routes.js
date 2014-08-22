@@ -8,11 +8,12 @@ var passport = require('passport');
 module.exports = function(app) {
 	// User Routes
 	var users = require('../../app/controllers/users');
-	//var fellows = require('../../app/controllers/fellows');
 	app.route('/users/me').get(users.me);
 	app.route('/users').put(users.update);
 	app.route('/users/password').post(users.changePassword);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
+	app.route('/users/view').get(users.appView);
+	app.route('/users/test_questions').get(users.testByID);
 
 	// Setting up the users api
 	app.route('/auth/:campId/signup').post(users.signup);
@@ -48,5 +49,4 @@ module.exports = function(app) {
 
 	// Finish by binding the bootcamp middleware
 	app.param('campId', users.campByID);
-	
 };
