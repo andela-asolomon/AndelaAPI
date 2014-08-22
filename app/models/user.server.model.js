@@ -228,7 +228,13 @@ UserSchema.pre('save', function(next) {
 ApplicantSchema.pre('save', function(next) {
 	if (this.password && this.password.length > 6) {
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
-		this.password = this.hashPassword(this.password);
+		if (this.constructor.name === 'EmbeddedDocument') {
+			var TempApplicant = mongoose.model('Applicant');
+			var embeddedDocApplicant = new TempApplicant(this);
+			this.password = embeddedDocApplicant.hashPassword(this.password);
+		} else {
+            this.password = this.hashPassword(this.password);
+		}
 	}
 
 	next();

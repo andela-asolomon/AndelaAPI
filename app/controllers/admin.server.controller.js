@@ -624,7 +624,7 @@ exports.listAdmins = function(req, res) {
  * Applicant middleware
  */
 exports.apptByID = function(req, res, next, id)  {
-    Applicant.findById(id).populate('campId').exec(function(err, user) {
+    Applicant.findById(id).exec(function(err, user) {
         if (err) return next(err);
         if (!user) return next(new Error('Failed to load Applicant ' + id));
         req.applicant = user;

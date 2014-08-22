@@ -16,6 +16,7 @@ Input assessment score for trainee
 */
 exports.createAssmt = function(req, res){
 	req.body.instructorId = req.user;
+	req.body.applicantId = req.trainee._id;
     var trainee = req.trainee;
 	trainee.assessments.push(req.body);
 	
@@ -101,7 +102,11 @@ exports.rateFellow = function(req, res){
 	var skillset = req.body,
         fellow = req.trainee;
 
-	if (req.body.rating < 1 || req.body.rating > 10) {
+    if (fellow.role !== 'fellow') {
+    	return res.send(400, {
+			   message: "Error: You can only rate a fellow's skills"
+	    });
+    } else if (req.body.rating < 1 || req.body.rating > 10) {
 		return res.send(400, {
 			   message: "Error: rating is a 10 point system"
 	    });

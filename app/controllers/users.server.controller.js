@@ -46,46 +46,72 @@ exports.signup = function(req, res) {
 	if (type === 'applicant') {
 		var user = req.body;
 		console.log(req.body);
-		// Add missing user fields
-	    user.provider = 'local';
+		
 		user.role = type;
 		user = new Applicant(user);
-		    
-		    
-        // console.log(user.password.length);
+		// console.log(user.password.length);
 		// Init Variables
 		var message = null;
-	   
-		// Then save the user 
-		user.save(function(err, data) {
+
+		// Add missing user fields
+	    user.provider = 'local';
+
+	    req.camp.applicants.push(user);
+
+	    req.camp.save(function(err) {
 			if (err) {
 				return res.send(400, {
-					message: getErrorMessage(err)
+					message: err
 				});
 			} else {
-				// Remove sensitive data before login
-				// console.log(user.password.length);
-				user.password = undefined;
-				user.salt = undefined;
-	            
-	            req.camp.applicants.push(data);
-	           	req.camp.save(function(err, camp) { 
-	           		if (err) {
-	           			return res.send(400, {
-	           				message: err
-	           			});
-	           		} else {
-	           			req.login(user, function(err) {
+				user.save(function(err) {
+                    if (err) {
+                    	res.send(400, err);
+                    } else {
+                        req.login(user, function(err) {
 							if (err) {
 								res.send(400, err);
 							} else {
+								user.password = undefined;
+				                user.salt = undefined;
 								res.jsonp(user);
 							}
 						});
-	           		}
-	           	});
-			}
+                    }
+				});
+		    }
 		});
+	   
+		// Then save the user 
+		// user.save(function(err, data) {
+		// 	if (err) {
+		// 		return res.send(400, {
+		// 			message: getErrorMessage(err)
+		// 		});
+		// 	} else {
+		// 		// Remove sensitive data before login
+		// 		// console.log(user.password.length);
+		// 		user.password = undefined;
+		// 		user.salt = undefined;
+	            
+	 //            req.camp.applicants.push(data);
+	 //           	req.camp.save(function(err, camp) { 
+	 //           		if (err) {
+	 //           			return res.send(400, {
+	 //           				message: err
+	 //           			});
+	 //           		} else {
+	 //           			req.login(user, function(err) {
+		// 					if (err) {
+		// 						res.send(400, err);
+		// 					} else {
+		// 						res.jsonp(user);
+		// 					}
+		// 				});
+	 //           		}
+	 //           	});
+		// 	}
+		// });
 	} else {
          return res.send(400, {
 	           	message: 'Error: only applicants can signup'
