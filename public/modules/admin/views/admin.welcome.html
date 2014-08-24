@@ -15,6 +15,39 @@
     <div><a href="" ng-click='listAdmins()'>View Admins</a></div>
     <div><a href="" ng-click='viewApplicant("53f635bf7a52aff418fb2e5a")'>View Applicant</a></div>
     <div><a href="" ng-click='assignBootCamp("53f635bf7a52aff418fb2e5a", "53f634711c14d36019f692d5")'>Assign Bootcamp</a></div>
+    
+    <div>Change Applicant Status
+    <form data-ng-submit="changeStatus()" class="form-horizontal" autocomplete="off">
+    <fieldset>
+        <label for="apptId">
+            <b>Appt id:</b>
+            <input type="text" data-ng-model="apptId" id="apptId" placeholder="apptId" required>
+        </label>        
+        <label for="category"><span>Status</span>
+            <select data-ng-model="data.status" id="category">
+              <option value="pending">pending</option>
+              <option value="rejected">rejected</option>
+              <option value="selected for bootcamp">selected for bootcamp</option>
+              <option value="selected for interview">selected for interview</option>
+            </select>
+        </label>
+
+        <label for="apptId">
+            <b>Reason:</b>
+            <input type="text" data-ng-model="data.reason" id="apptId" placeholder="reason" required>
+        </label>
+
+        <button type="submit" class="btn btn-xs btn-primary">Change Status</button>
+        
+        <div data-ng-show="error" class="text-center text-danger">
+            <strong data-ng-bind="error"></strong>
+        </div>
+    </fieldset>
+    </form>
+    </div>
+
+
+
     <div>Change Applicant Role
     <form data-ng-submit="changeRole()" class="signin form-horizontal" autocomplete="off">
     <fieldset>

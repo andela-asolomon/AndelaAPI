@@ -106,17 +106,29 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     }; 
 
-    $scope.changeRole = function() {
-      console.log($scope.apptId);
-      // console.log(typeof $scope.credentials.role);
-      $http.put('/admin/appt/' + $scope.apptId + '/role', $scope.appt.role).success(function(response) {
+    $scope.changeStatus = function() {
+      $http.put('/admin/appt/' + $scope.apptId, $scope.data).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
+        console.log('Success - Done', response);
         
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
       });
     }; 
+
+    // $scope.changeRole = function() {
+    //   console.log($scope.apptId);
+    //   // console.log(typeof $scope.credentials.role);
+    //   $http.put('/admin/appt/' + $scope.apptId + '/role', $scope.appt.role).success(function(response) {
+    //     // If successful show success message and clear form
+    //     $scope.success = true;
+        
+    //   }).error(function(response) {
+    //     $scope.error = response.message;
+    //     console.log('Error - can not');
+    //   });
+    // }; 
   }
 ]);
