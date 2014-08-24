@@ -5,7 +5,7 @@
  */
 var users = require('../../app/controllers/users'),
     admin = require('../../app/controllers/admin'),
-    admin = require('../../app/controllers/admin');
+    instr = require('../../app/controllers/instructor');
 
 module.exports = function(app) {
     // Admin Routes
@@ -13,7 +13,7 @@ module.exports = function(app) {
         .get(users.requiresLogin, admin.checkPermission, admin.listApplicants);
 
     app.route('/admin/create')
-        .post(admin.createUsers);
+        .post(users.requiresLogin, admin.checkPermission, admin.createUsers);
 
     app.route('/admin/trainees')
         .get(users.requiresLogin, admin.checkPermission, admin.listTrainees);
@@ -34,7 +34,7 @@ module.exports = function(app) {
         .get(users.requiresLogin, admin.checkPermission, admin.apptRead)
         .put(users.requiresLogin, admin.checkPermission, admin.changeStatus);
 
-    app.route('/admin/appt/:apptId/:campId')
+    app.route('/admin/appt/:apptId/camp/:campId')
         .put(users.requiresLogin, admin.checkPermission, admin.assignBootCamp);
 
     app.route('/admin/appt/:apptId/role')
@@ -63,23 +63,26 @@ module.exports = function(app) {
     app.route('/admin/test/:testId')
         .get(users.requiresLogin, admin.checkPermission, admin.testRead)
         .post(users.requiresLogin, admin.checkPermission, admin.addQuestion)
-        .put(users.requiresLogin, admin.checkPermission, admin.updateTest)
+        .put(users.requiresLogin, admin.checkPermission, admin.updateTestName)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteTest);
 
     app.route('/admin/test/:testId/:questId')
-        .put(users.requiresLogin, admin.checkPermission, admin.updateChoices)
+        .put(users.requiresLogin, admin.checkPermission, admin.updateQuestion)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteQuestion);
 
-    app.route('/admin/test/:testId/:questId/:optionId')
+    app.route('/admin/test/:testId/:questId/options')
         .post(users.requiresLogin, admin.checkPermission, admin.addOption)
+        .put(users.requiresLogin, admin.checkPermission, admin.updateChoices);
+
+    app.route('/admin/test/:testId/:questId/:optionId')
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteOption);
 
-    // app.route('/admin/trainee/:traineeId/rate')
-    //      .post(users.requiresLogin, admin.checkPermission, instr.rateFellow);
+    app.route('/admin/trainee/:traineeId/rate')
+        .post(users.requiresLogin, admin.checkPermission, instr.rateFellow);
 
-    // app.route('/admin/trainee/:traineeId/rate/:skillId')
-    //     .put(users.requiresLogin, admin.checkPermission, instr.editRating)
-    //     .delete(users.requiresLogin, admin.checkPermission, instr.deleteRating);
+    app.route('/admin/trainee/:traineeId/rate/:skillId')
+        .put(users.requiresLogin, admin.checkPermission, instr.editRating)
+        .delete(users.requiresLogin, admin.checkPermission, instr.deleteRating);
 
     // Finish by binding the applicant middleware
     app.param('apptId', admin.apptByID);
@@ -98,4 +101,10 @@ module.exports = function(app) {
 
     // Finish by binding the question middleware
     app.param('questId', admin.questByID);
+
+    // Finish by binding the trainee middleware
+    app.param('traineeId', instr.traineeByID);
+
+    // Finish by binding the skillset middleware
+    app.param('skillId', instr.skillByID);
  };
