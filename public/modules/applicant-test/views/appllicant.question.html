@@ -1,0 +1,13 @@
+<section data-ng-init="find()">
+    <div class="page-header">
+        <h1>Take Test</h1>
+    </div>
+    <div class="list-group">
+        <div data-ng-repeat="question in questons">
+            <p data-ng-bind="applicant.question"></p>
+            <div data-ng-repeat="option in options">
+                <input type="radio">
+            </div>
+        </div>
+    </div>
+</section>
