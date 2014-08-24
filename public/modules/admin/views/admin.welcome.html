@@ -8,23 +8,28 @@
         <a href="/auth/signout">Signout</a>
     </div>
 
-    <div><a href="" ng-click='viewTrainees()'>View Trainees</a></div>
-    <div><a href="" ng-click='listApplicants()'>View Applicants</a></div>
-    <div><a href="" ng-click='listFellows()'>View Fellows</a></div>
-    <div><a href="" ng-click='listInstructors()'>View Instructors</a></div>
-    <div><a href="" ng-click='listAdmins()'>View Admins</a></div>
-    <div><a href="" ng-click='viewApplicant("53f635bf7a52aff418fb2e5a")'>View Applicant</a></div>
-    <div><a href="" ng-click='assignBootCamp("53f635bf7a52aff418fb2e5a", "53f634711c14d36019f692d5")'>Assign Bootcamp</a></div>
+    <p><a href="/#!/admin/appts">View Applicants</a></p>
+    <p><a href="/#!/admin/trainees">View Trainees</a></p>
+    <p><a href="#" ng-click='listFellows()'>View Fellows</a></p>
+    <p><a href="#" ng-click='listInstructors()'>View Instructors</a></p>
+    <p><a href="#" ng-click='listAdmins()'>View Admins</a></p>
+
+    <div><a href="#" ng-click='viewApplicant("53f635bf7a52aff418fb2e5a")'>View Applicant</a></div>
+    <div><a href="#" ng-click='assignBootCamp("53f635bf7a52aff418fb2e5a", "53f634711c14d36019f692d5")'>Assign Bootcamp</a></div>
+    
+    
     <div>Change Applicant Role
-    <form data-ng-submit="changeRole()" class="signin form-horizontal" autocomplete="off">
+    <form data-ng-submit="changeRole()" class="form-horizontal" autocomplete="off">
     <fieldset>
-        <label for="apptId" style="display: block">
+        <label for="apptId">
             <b>Appt id:</b>
             <input type="text" data-ng-model="apptId" id="apptId" placeholder="apptId" required>
         </label>        
         <label for="category"><span>Role: </span>
             <select data-ng-model="appt.role" id="category">
               <option value="applicant">applicant</option>
+              <option value="trainee">trainee</option>
+              <option value="fellow">fellow</option>
             </select>
         </label>
 
@@ -36,6 +41,11 @@
     </fieldset>
     </form>
     </div>
+
+
+    <div><a href="" ng-click='viewInstructor("53f971953916ce6c1e8a038c")'>View instr</a></div>
+
+
     <p>Scope user</p>: {{user}}
     
   </div>
