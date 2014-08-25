@@ -49,10 +49,11 @@ exports.signup = function(req, res) {
 
 	if (type === 'applicant') {
 		user = req.body;
-
 		user.role = type;
 		user = new Applicant(user);
-		user.provider = 'local';
+	}
+	var messae = null;
+	user.provider = 'local';
 
 	req.camp.applicants.push(user);
 
