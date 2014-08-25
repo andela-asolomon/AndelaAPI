@@ -176,7 +176,6 @@ var AssessmentSchema = new Schema({
  * Instructor Schema
  */
  var InstructorSchema = UserSchema.extend({
- 	skillSets: [SkillsetSchema],
  	experience: {
  		type: String
  	},
@@ -186,7 +185,8 @@ var AssessmentSchema = new Schema({
  	role: {
  		type: String,
  		enum: ['instructor', 'admin']
- 	}
+ 	},
+ 	skillSets: [SkillsetSchema]
  });
 
 

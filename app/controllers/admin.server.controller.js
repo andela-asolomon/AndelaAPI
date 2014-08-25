@@ -479,7 +479,7 @@ exports.addOption = function(req, res) {
         question = req.question,
         option = req.body.option;
 
-        question.questOptions.push({option: option});
+        question.questOptions.push(new Options({option: option}));
         test.save(function(err, test) {
           if (err) {
               return res.send(400, {

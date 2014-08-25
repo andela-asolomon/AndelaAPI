@@ -18,6 +18,13 @@ module.exports = function(app) {
     app.route('/instr/bootcamps')
         .get(users.requiresLogin, instr.checkRights, admin.bootCamps);
 
+    app.route('/instr/skill')
+        .post(users.requiresLogin, instr.checkRights, instr.addSkills);
+
+    app.route('/instr/skill/:userId/:skillId')
+        .put(users.requiresLogin, instr.checkRights, instr.editRating)
+        .delete(users.requiresLogin,  instr.deleteRating);
+
     app.route('/instr/camp/:campId')
         .get(users.requiresLogin, instr.checkRights, admin.read);
 
