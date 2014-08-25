@@ -48,48 +48,44 @@ exports.signup = function(req, res) {
 	var user;
 
 	if (type === 'applicant') {
-		var user = req.body;
-		console.log(req.body);
-		
-		user.role = type;
+		user = req.body;
+		user.roles = type;
 		user = new Applicant(user);
-		// console.log(user.password.length);
-		// Init Variables
-		var message = null;
-
-		// Add missing user fields
-	    user.provider = 'local';
-
-	    req.camp.applicants.push(user);
-
-	    req.camp.save(function(err) {
-			if (err) {
-				return res.send(400, {
-					message: err
-				});
-			} else {
-				user.save(function(err) {
-                    if (err) {
-                    	res.send(400, err);
-                    } else {
-                        req.login(user, function(err) {
-							if (err) {
-								res.send(400, err);
-							} else {
-								user.password = undefined;
-				                user.salt = undefined;
-								res.jsonp(user);
-							}
-						});
-                    }
-				});
-		    }
-		});
-	} else {
-         return res.send(400, {
-	           	message: 'Error: only applicants can signup'
-	     });
 	}
+
+	var messae = null;
+
+	user.provider = 'local';
+
+	req.camp.applicants.push(user);
+
+	req.camp.save(function(err) {
+		if (err) {
+			return res.send(400, {
+				message: err
+			});
+		} 
+		else {
+			user.save(function(err) {
+				if (err) {
+					console.log('Error');
+				} 
+				else {
+					req.login(user, function(err) {
+   					if (err) {
+						res.send(400, err);
+					} 
+					else {
+						user.password = undefined;
+						user.salt = undefined;
+
+						res.jsonp(user);
+					}
+	   			});
+				}
+			});
+		}
+	});
 };
 
 /**
@@ -115,7 +111,16 @@ exports.signin = function(req, res, next) {
 		}
 	})(req, res, next);
 };
-
+exports.list = function(req, res) { User.find({_type: 'Applicant'}).populate('user', 'displayName').exec(function(err, fellows) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(fellows);
+		}
+	});
+};
 /**
  * Update user details
  */
@@ -279,17 +284,17 @@ exports.oauthCallback = function(strategy) {
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
-	User.findOne({
-		_id: id
-	}).exec(function(err, user) {
-		if (err) return next(err);
-		if (!user) return next(new Error('Failed to load User ' + id));
-		req.profile = user;
-		next();
-	});
+    User.findById(id).exec(function(err, user) {
+        if (err) return next(err);
+        if (!user) return next(new Error('Failed to load User ' + id));
+        req.user = user;
+        next();
+    });
 };
 
-
+exports.read = function(req, res) {
+	res.jsonp(req.user);
+};
 /**
  * Bootcamp middleware
  */
