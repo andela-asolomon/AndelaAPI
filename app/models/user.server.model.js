@@ -61,7 +61,7 @@ var UserSchema = new Schema({
 	},
 	provider: {
 		type: String,
-		required: 'Provider is required'
+		required: 'Provider is required',
 	},
 	providerData: {},
 	additionalProvidersData: {},
@@ -72,7 +72,7 @@ var UserSchema = new Schema({
 		type: Date,
 		default: Date.now
 	}
-}, { collection : 'users', discriminatorKey : '_type'});
+}, { collection : 'users', discriminatorKey : '_type' });
 
 /**
  * Skillset Schema
@@ -115,14 +115,17 @@ var AssessmentSchema = new Schema({
  });
 
 /**
- * Applicant Schema
+ * 
+ * Applicant Schema, Trainee and Fellow
  */
  var ApplicantSchema = UserSchema.extend({
- 	score: {
- 		type: Number
+ 	testScore: {
+ 		type: Number,
+ 		required: 'Applicant score must be submitted'
  	},
- 	cv_path: {
- 		type: String,
+ 	cvPath: {
+ 		type: String
+ 		// required: 'A vaild CV is required'
  	},
  	photo_path: String,
  	role: {
@@ -151,26 +154,6 @@ var AssessmentSchema = new Schema({
  	},
  	assessments: [AssessmentSchema]
 });
-
-/**
- * Status Schema
- */
-// var StatusSchema = new Schema({
-// 	pending: {
-// 		type: String
-// 	},
-// 	rejected: {
-// 		description: {
-// 			type: String
-// 		}
-// 	},
-// 	selectedCamp: {
-// 		type: String
-// 	},
-// 	selectedInterview: {
-// 		type: String
-// 	}
-// });
 
 /**
  * Instructor Schema
@@ -209,9 +192,12 @@ var BootcampSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	applicants: [ApplicantSchema]
+	applicants: [ApplicantSchema],
+	user: {
+		type: Schema.ObjectId,
+		ref: 'admin' 
+	}
 });
-
  
 /**
  * Hook a pre save method to hash the password
@@ -248,8 +234,6 @@ InstructorSchema.pre('save', function(next) {
 
 	next();
 });
-
-
 
 /**
  * Create instance method for hashing a password

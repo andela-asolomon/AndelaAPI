@@ -3,12 +3,16 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	passport = require('passport'),
-	User = mongoose.model('User'),
-	Applicant = mongoose.model('Applicant'),
-	Bootcamp = mongoose.model('Bootcamp'),
-	_ = require('lodash');
+var mongoose 		= require('mongoose'),
+	passport 		= require('passport'),
+	User 			= mongoose.model('User'),
+	Applicant 		= mongoose.model('Applicant'),
+	Bootcamp 		= mongoose.model('Bootcamp'),
+	Test 	 		= mongoose.model('Test'),
+	_ 				= require('lodash');
+
+var admin = require('../../app/controllers/admin');
+
 
 /**
  * Get the error message from error object
@@ -39,9 +43,9 @@ var getErrorMessage = function(err) {
  * Signup
  */
 exports.signup = function(req, res) {
-	// For security measurement we remove the roles from the req.body object
-	// delete req.body.roles;
+
 	var type = req.body.type;
+	var user;
 
 	if (type === 'applicant') {
 		var user = req.body;
@@ -81,37 +85,6 @@ exports.signup = function(req, res) {
 				});
 		    }
 		});
-	   
-		// Then save the user 
-		// user.save(function(err, data) {
-		// 	if (err) {
-		// 		return res.send(400, {
-		// 			message: getErrorMessage(err)
-		// 		});
-		// 	} else {
-		// 		// Remove sensitive data before login
-		// 		// console.log(user.password.length);
-		// 		user.password = undefined;
-		// 		user.salt = undefined;
-	            
-	 //            req.camp.applicants.push(data);
-	 //           	req.camp.save(function(err, camp) { 
-	 //           		if (err) {
-	 //           			return res.send(400, {
-	 //           				message: err
-	 //           			});
-	 //           		} else {
-	 //           			req.login(user, function(err) {
-		// 					if (err) {
-		// 						res.send(400, err);
-		// 					} else {
-		// 						res.jsonp(user);
-		// 					}
-		// 				});
-	 //           		}
-	 //           	});
-		// 	}
-		// });
 	} else {
          return res.send(400, {
 	           	message: 'Error: only applicants can signup'
@@ -123,6 +96,7 @@ exports.signup = function(req, res) {
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
+	console.log(req.body);
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
 			res.send(400, info);
@@ -177,6 +151,36 @@ exports.update = function(req, res) {
 	} else {
 		res.send(400, {
 			message: 'User is not signed in'
+		});
+	}
+};
+
+
+// viewing Applicants data page
+exports.appView = function(req, res, id) { 
+	var user = req.user;
+	var message = null;
+	id = req.user._id;
+
+	if (user) {
+			User.findById(id).populate('user', 'displayName').exec(function(err, users) {
+			if (err) {
+				return res.send(400, {
+					message: getErrorMessage(err)
+				});
+			} else {
+					req.login(user, function(err) {
+						if (err) {
+							res.send(400, err);
+						} else {
+							res.jsonp(users);
+						}
+				});
+			}
+		});
+	} else {
+		res.send(400, {
+			message: 'You need to Sign in to view your application progress'
 		});
 	}
 };
@@ -438,4 +442,3 @@ exports.removeOAuthProvider = function(req, res, next) {
 		});
 	}
 };
-

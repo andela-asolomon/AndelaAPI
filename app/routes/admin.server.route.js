@@ -60,7 +60,7 @@ module.exports = function(app) {
 
     app.route('/admin/test')
         .get(users.requiresLogin, admin.checkPermission, admin.listTests)
-        .post(users.requiresLogin, admin.checkPermission, admin.createTests);
+        .post(users.requiresLogin,  admin.createTests);
 
     app.route('/admin/test/:testId')
         .get(users.requiresLogin, admin.checkPermission, admin.testRead)
