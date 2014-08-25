@@ -1,0 +1,37 @@
+<section data-ng-controller="AdminController" data-ng-init="viewApplicant()">
+  <div class="container">
+    <br><br><br>
+      <h3>Change Status of {{appt.firstName}} {{appt.lastName}} </h3>
+
+      <form data-ng-submit='changeRole()' class="signin form-horizontal" autocomplete="off">
+        <fieldset>
+          <div class="form-group">
+            <label for="category"><span>Status</span>
+                <select data-ng-model="data.status" id="category">
+                  <option value="pending">pending</option>
+                  <option value="rejected">rejected</option>
+                  <option value="selected for bootcamp">selected for bootcamp</option>
+                  <option value="selected for interview">selected for interview</option>
+                </select>
+            </label>
+          </div>
+
+          <div class="form-group">
+          <label for="apptId">
+              <b>Reason:</b>
+              <input type="text" data-ng-model="data.reason" id="apptId" placeholder="reason" required>
+          </label>
+          </div>
+
+          <div class="form-group">
+          <button type="submit" class="btn btn-xs btn-primary">Change Status</button>
+          </div>
+          
+          <div data-ng-show="error" class="text-center text-danger">
+              <strong data-ng-bind="error"></strong>
+          </div>
+      </fieldset>
+      </form>
+  </div>
+
+</section>

@@ -1,0 +1,26 @@
+<section data-ng-controller="AdminController" data-ng-init="viewTrainees()">
+  <div class="container">
+    <br><br><br><br><br>
+    <table class="appt">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Assessments</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <tr data-ng-repeat="trainee in trainees">
+        <td data-ng-bind="trainee.firstName"></td>
+        <td data-ng-bind="trainee.lastName"></td>
+        <td data-ng-bind="trainee.email"></td>
+        <td data-ng-bind="trainee.status.name"></td>
+        <td data-ng-bind="trainee.email"></td>
+        <td data-ng-bind="trainee.email"></td>
+      </tr>
+  </div>
+</section>

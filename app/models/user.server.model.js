@@ -20,9 +20,6 @@ var validateLocalStrategyProperty = function(property) {
  * A Validation function for local strategy password
  */
 var validateLocalStrategyPassword = function(password) {
-	// console.log('validate passwd');
-	// console.log(password);
-	// console.log('how d fuck is this invalid');
 	return (this.provider !== 'local' || (password && password.length > 6));
 };
 
@@ -70,13 +67,6 @@ var UserSchema = new Schema({
 	additionalProvidersData: {},
 	updated: {
 		type: Date
-	},
-	roles: {
-		type: [{
-			type: String,
-			enum: ['user', 'admin']
-		}],
-		default: ['user']
 	},
 	created: {
 		type: Date,
@@ -169,7 +159,6 @@ var AssessmentSchema = new Schema({
  * Instructor Schema
  */
  var InstructorSchema = UserSchema.extend({
- 	skillSets: [SkillsetSchema],
  	experience: {
  		type: String
  	},
@@ -179,7 +168,8 @@ var AssessmentSchema = new Schema({
  	role: {
  		type: String,
  		enum: ['instructor', 'admin']
- 	}
+ 	},
+ 	skillSets: [SkillsetSchema]
  });
 
 
@@ -224,13 +214,12 @@ UserSchema.pre('save', function(next) {
 ApplicantSchema.pre('save', function(next) {
 	if (this.password && this.password.length > 6) {
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
-		if(this.constructor.name === 'EmbeddedDocument'){
-			var tempApplicant = mongoose.model('Applicant');
-			var embeddedDocApplicant = new tempApplicant(this);
+		if (this.constructor.name === 'EmbeddedDocument') {
+			var TempApplicant = mongoose.model('Applicant');
+			var embeddedDocApplicant = new TempApplicant(this);
 			this.password = embeddedDocApplicant.hashPassword(this.password);
-		}
-		else {
-			this.password = this.hashPassword(this.password);
+		} else {
+            this.password = this.hashPassword(this.password);
 		}
 	}
 

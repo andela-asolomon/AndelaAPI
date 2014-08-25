@@ -7,6 +7,8 @@ var users = require('../../app/controllers/users'),
     admin = require('../../app/controllers/admin'),
     instr = require('../../app/controllers/instructor');
 
+//var app = module.exports = express();
+//require('./routes')({app: app});
 module.exports = function(app) {
     // Admin Routes
     app.route('/admin')
@@ -58,7 +60,7 @@ module.exports = function(app) {
 
     app.route('/admin/test')
         .get(users.requiresLogin, admin.checkPermission, admin.listTests)
-        .post(users.requiresLogin, admin.checkPermission, admin.createTests);
+        .post(users.requiresLogin,  admin.createTests);
 
     app.route('/admin/test/:testId')
         .get(users.requiresLogin, admin.checkPermission, admin.testRead)
@@ -101,10 +103,4 @@ module.exports = function(app) {
 
     // Finish by binding the question middleware
     app.param('questId', admin.questByID);
-
-    // Finish by binding the trainee middleware
-    app.param('traineeId', instr.traineeByID);
-
-    // Finish by binding the skillset middleware
-    app.param('skillId', instr.skillByID);
  };

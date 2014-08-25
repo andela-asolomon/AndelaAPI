@@ -48,44 +48,46 @@ exports.signup = function(req, res) {
 	var user;
 
 	if (type === 'applicant') {
-		user = req.body;
-		user.roles = type;
+		var user = req.body;
+		user.role = type;
 		user = new Applicant(user);
 	}
 
 	var message = null;
 
-	user.provider = 'local';
+		// Add missing user fields
+	    user.provider = 'local';
 
-	req.camp.applicants.push(user);
+	    req.camp.applicants.push(user);
 
-	req.camp.save(function(err) {
-		if (err) {
-			return res.send(400, {
-				message: err
-			});
-		} 
-		else {
-			user.save(function(err) {
-				if (err) {
-					console.log('Error');
-				} 
-				else {
-					req.login(user, function(err) {
-   					if (err) {
-						res.send(400, err);
-					} 
-					else {
-						user.password = undefined;
-						user.salt = undefined;
-
-						res.jsonp(user);
-					}
-	   			});
-				}
-			});
-		}
-	});
+	    req.camp.save(function(err) {
+			if (err) {
+				return res.send(400, {
+					message: err
+				});
+			} else {
+				user.save(function(err) {
+                    if (err) {
+                    	res.send(400, err);
+                    } else {
+                        req.login(user, function(err) {
+							if (err) {
+								res.send(400, err);
+							} else {
+								user.password = undefined;
+				                user.salt = undefined;
+								res.jsonp(user);
+							}
+						});
+                    }
+				});
+		    }
+		});
+	} else {
+         return res.send(400, {
+	           	message: 'Error: only applicants can signup'
+	     });
+	}
 };
 
 /**
