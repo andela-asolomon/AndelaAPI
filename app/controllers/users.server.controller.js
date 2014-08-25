@@ -110,7 +110,7 @@ exports.signin = function(req, res, next) {
 		}
 	})(req, res, next);
 };
-exports.list = function(req, res) { User.find({_type: 'Applicant'}).populate('user', 'displayName').exec(function(err, fellows) {
+exports.list = function(req, res) { Applicant.find().where({role: 'fellow'}).populate('user', 'displayName').exec(function(err, fellows) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
