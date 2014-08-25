@@ -1,4 +1,4 @@
-<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
+<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2" data-ng-controller="AuthenticationController">
 		<form data-ng-submit="signin()" class="signin form-horizontal" autocomplete="off">
 			<fieldset>
 				<div class="form-group">
@@ -25,10 +25,11 @@
             <div class="form-group" data-ng-repeat="choice in choiceOne">
                 <label for="choice" data-ng-show="showChoiceLabel(choice)">Choices</label>
 
-                <input type="text" data-ng-hide="isSelected('optionOne'+$index)" data-ng-model="optionOne[$index]" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
+                <input type="text" data-ng-hide="isSelected('optionOne'+$index)" data-ng-model="optionOne[$index]['option']" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
                 <button type="button" data-ng-click="setShow('optionOne'+$index)">
                     Edit
                 </button>
+                <input type="radio" name="option" value="true" data-ng-model="optionOne[$index]['answer']" data-ng-change="changeAnsVal($index, 1)" data-ng-checked="($index+1)===choiceOne.length">Answer
 
                 <span data-ng-show="isSelected('optionOne'+$index)">{{optionOne[$index]}}
                  <button type="button" data-ng-click="setShow(null)">back</button>

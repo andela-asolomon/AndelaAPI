@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('applicant-test').controller('ApplicantTestController', ['$scope', '$stateParams', '$location', 'Authentication', 'Questions'
+angular.module('applicant-test').controller('ApplicantTestController', ['$scope', '$stateParams', '$location', 'Authentication', 'Questions',
     function($scope, $stateParams, $location, Authentication, Questions) {
         $scope.authentication =Authentication;
 

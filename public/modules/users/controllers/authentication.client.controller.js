@@ -66,6 +66,23 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				return choice.id === $scope.choiceTwo[$scope.choiceTwo.length-1].id;
 		};
 
+		$scope.changeAnsVal = function(index, num) { console.log("y");
+			if (num === 1) { 
+                for (var i in $scope.optionOne) {
+                	if (parseInt(i,10) !== index) {
+                		$scope.optionOne[i].answer= 'false';
+                		console.log("yea");
+                	} 
+                }
+			} else {
+				 for (var i in $scope.optionTwo) {
+                	if (parseInt(i,10) !== index) {
+                		$scope.optionTwo[i].answer = false;
+                	}
+                }
+			}
+		};
+
 		$scope.signup = function() {
 			$http.post('/auth/signup', $scope.credentials).success(function(response) {
 				//If successful we assign the response to the global user model

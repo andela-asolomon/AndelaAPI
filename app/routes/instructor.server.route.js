@@ -17,13 +17,19 @@ module.exports = function(app) {
 
     app.route('/instr/bootcamps')
         .get(users.requiresLogin, instr.checkRights, admin.bootCamps);
-
+    
+    //instructor can add skills for himself
     app.route('/instr/skill')
         .post(users.requiresLogin, instr.checkRights, instr.addSkills);
 
+    //instructor can add skills for himself
+    app.route('/instr/:userId/expr')
+        .put(users.requiresLogin, instr.checkRights, instr.updateExp);
+
+    //instructor can edit and delete his own rating
     app.route('/instr/skill/:userId/:skillId')
         .put(users.requiresLogin, instr.checkRights, instr.editRating)
-        .delete(users.requiresLogin,  instr.deleteRating);
+        .delete(users.requiresLogin, instr.checkRights, instr.deleteRating);
 
     app.route('/instr/camp/:campId')
         .get(users.requiresLogin, instr.checkRights, admin.read);
