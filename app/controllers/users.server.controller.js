@@ -49,6 +49,8 @@ exports.signup = function(req, res) {
 
 	if (type === 'applicant') {
 		user = req.body;
+		console.log(req.body);
+		
 		user.role = type;
 		user = new Applicant(user);
 
