@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	crypto = require('crypto');
 
+
 /**
  * A Validation function for local strategy properties
  */
@@ -47,7 +48,6 @@ var UserSchema = new Schema({
 	},
 	username: {
 		type: String,
-		unique: true,
 		required: 'Please fill in a username',
 		trim: true
 	},
@@ -61,17 +61,10 @@ var UserSchema = new Schema({
 	},
 	provider: {
 		type: String,
-		required: 'Provider is required'
+		required: 'Provider is required',
 	},
 	providerData: {},
 	additionalProvidersData: {},
-	roles: {
-		type: [{
-			type: String,
-			enum: ['user', 'admin']
-		}],
-		default: ['user']
-	},
 	updated: {
 		type: Date
 	},
@@ -79,13 +72,13 @@ var UserSchema = new Schema({
 		type: Date,
 		default: Date.now
 	}
-}, { collection : 'users', discriminatorKey : '_type'});
+}, { collection : 'users', discriminatorKey : '_type' });
 
 /**
  * Skillset Schema
  */
 var SkillsetSchema = new Schema({
-	skills: {
+	skill: {
 		type: String
 	},
 	rating: {
@@ -94,75 +87,9 @@ var SkillsetSchema = new Schema({
 });
 
 /**
- * Applicant Schema
+ * Assessment Schema
  */
- var ApplicantSchema = UserSchema.extend({
- 	score: {
- 		type: Number
- 	},
- 	cv_path: {
- 		type: String,
- 	},
- 	photo_path: String,
- 	roles: {
- 		type: String,
- 		enum: ['applicant', 'trainee', 'fellow']
- 	},
- 	status: {
- 		type: Schema.ObjectId,
- 		ref: 'Status'
- 	},
- 	portfolio: {
- 		type: String
- 	},
- 	skillSets: [SkillsetSchema],
- 	profile: {
- 		type: String
- 	},
- 	campId: {
- 		type: Schema.ObjectId,
- 		ref: 'Bootcamp'
- 	}
- });
-
-/**
- * Status Schema
- */
-var StatusSchema = new Schema({
-	pending: {
-		type: String
-	},
-	rejected: {
-		description: {
-			type: String
-		}
-	},
-	selectedCamp: {
-		type: String
-	},
-	selectedInterview: {
-		type: String
-	}
-});
-
-/**
- * Instructor Schema
- */
- var InstructorSchema = UserSchema.extend({
- 	skillSets: [SkillsetSchema],
- 	experience: {
- 		type: String
- 	},
- 	photo: {
- 		type: String
- 	},
- 	roles: {
- 		type: String,
- 		enum: ['instructor', 'admin']
- 	}
- });
-
- var AssessmentSchema = new Schema({
+var AssessmentSchema = new Schema({
  	assessment_name:{
  		type: String,
  		trim: true,
@@ -187,6 +114,64 @@ var StatusSchema = new Schema({
 
  });
 
+/**
+ * 
+ * Applicant Schema, Trainee and Fellow
+ */
+ var ApplicantSchema = UserSchema.extend({
+ 	testScore: {
+ 		type: Number,
+ 		required: 'Applicant score must be submitted'
+ 	},
+ 	cvPath: {
+ 		type: String
+ 		// required: 'A vaild CV is required'
+ 	},
+ 	photo_path: String,
+ 	role: {
+ 		type: String,
+ 		enum: ['applicant', 'trainee', 'fellow']
+ 	},
+ 	status: {
+ 		name: {
+ 			type: String,
+ 			enum: ['pending', 'rejected', 'selected for bootcamp', 'selected for interview']
+ 		},
+ 		reason: {
+            type: String
+ 		}
+ 	},
+ 	portfolio: {
+ 		type: String
+ 	},
+ 	skillSets: [SkillsetSchema],
+ 	profile: {
+ 		type: String
+ 	},
+ 	campId: {
+ 		type: Schema.ObjectId,
+ 		ref: 'Bootcamp'
+ 	},
+ 	assessments: [AssessmentSchema]
+});
+
+/**
+ * Instructor Schema
+ */
+ var InstructorSchema = UserSchema.extend({
+ 	experience: {
+ 		type: String
+ 	},
+ 	photo: {
+ 		type: String
+ 	},
+ 	role: {
+ 		type: String,
+ 		enum: ['instructor', 'admin']
+ 	},
+ 	skillSets: [SkillsetSchema]
+ });
+
 
  /**
  * Bootcamp Schema
@@ -196,9 +181,6 @@ var BootcampSchema = new Schema({
 		type: String,
 		required: 'Please fill in the Bootcamp name',
 		trim: true
-	},
-	assessments:{
-		type:[AssessmentSchema]
 	},
 	start_date: {
 		type: Date
@@ -210,13 +192,12 @@ var BootcampSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
+	applicants: [ApplicantSchema],
 	user: {
 		type: Schema.ObjectId,
-		ref: 'Applicant' 
-	},
-	applicants: [ApplicantSchema]
+		ref: 'admin' 
+	}
 });
-
  
 /**
  * Hook a pre save method to hash the password
@@ -233,7 +214,13 @@ UserSchema.pre('save', function(next) {
 ApplicantSchema.pre('save', function(next) {
 	if (this.password && this.password.length > 6) {
 		this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
-		this.password = this.hashPassword(this.password);
+		if (this.constructor.name === 'EmbeddedDocument') {
+			var TempApplicant = mongoose.model('Applicant');
+			var embeddedDocApplicant = new TempApplicant(this);
+			this.password = embeddedDocApplicant.hashPassword(this.password);
+		} else {
+            this.password = this.hashPassword(this.password);
+		}
 	}
 
 	next();
@@ -247,8 +234,6 @@ InstructorSchema.pre('save', function(next) {
 
 	next();
 });
-
-
 
 /**
  * Create instance method for hashing a password
@@ -353,6 +338,8 @@ InstructorSchema.statics.findUniqueUsername = function(username, suffix, callbac
 };
 
 mongoose.model('User', UserSchema);
-	mongoose.model('Applicant', ApplicantSchema);
-		mongoose.model('Instructor', InstructorSchema);
-			mongoose.model('Bootcamp', BootcampSchema);
+mongoose.model('Applicant', ApplicantSchema);
+mongoose.model('Instructor', InstructorSchema);
+mongoose.model('Bootcamp', BootcampSchema);
+mongoose.model('Skillset', SkillsetSchema);
+mongoose.model('Assessment', AssessmentSchema);

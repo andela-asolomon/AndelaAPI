@@ -7,18 +7,19 @@ var passport = require('passport');
 
 module.exports = function(app) {
 	// User Routes
-	var users = require('../../app/controllers/users'),
-	felow = require('../../app/controllers/felow');
+	var users = require('../../app/controllers/users');
+	var admin = require('../../app/controllers/admin');
 	app.route('/users/me').get(users.me);
-	app.route('/users').put(users.update);
+	app.route('/users').get(users.list).put(users.update);
+	app.route('/users/:userId').get(users.read);
 	app.route('/users/password').post(users.changePassword);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
-
+	app.route('/users/view').get(users.requiresLogin, users.appView);
+	
 	// Setting up the users api
 	app.route('/auth/:campId/signup').post(users.signup);
 	app.route('/auth/signin').post(users.signin);
 	app.route('/auth/signout').get(users.signout);
-
 
 	// Setting the facebook oauth routes
 	app.route('/auth/facebook').get(passport.authenticate('facebook', {
@@ -48,5 +49,7 @@ module.exports = function(app) {
 
 	// Finish by binding the bootcamp middleware
 	app.param('campId', users.campByID);
-	
+
+	//Finish by binding the test middleware
+	app.param('testId', admin.testByID);
 };

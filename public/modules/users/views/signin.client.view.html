@@ -1,6 +1,4 @@
-<section class="row" data-ng-controller="AuthenticationController">
-	<h3 class="col-md-12 text-center">Sign in with your account</h3>
-	<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
+<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
 		<form data-ng-submit="signin()" class="signin form-horizontal" autocomplete="off">
 			<fieldset>
 				<div class="form-group">
@@ -20,20 +18,50 @@
 				</div>
 			</fieldset>
 		</form>
-	</div>
-	<h3 class="col-md-12 text-center">Or your social accounts</h3>
-	<div class="col-md-12 text-center">
-		<a href="/auth/facebook" class="social undecorated-link">
-			<img src="/modules/users/img/buttons/facebook.png">
-		</a>
-		<a href="/auth/twitter" class="social undecorated-link">
-			<img src="/modules/users/img/buttons/twitter.png">
-		</a>
-		<a href="/auth/google" class="social undecorated-link">
-			<img src="/modules/users/img/buttons/google.png">
-		</a>
-		<a href="/auth/linkedin" class="social undecorated-link">
-			<img src="/modules/users/img/buttons/linkedin.png">
-		</a>
+		 <form name="test">
+            <div class="form-group">
+                <input type="text" data-ng-model="questions[0]" name="quest" placeholder="Question 1" required>
+            </div>
+            <div class="form-group" data-ng-repeat="choice in choiceOne">
+                <label for="choice" data-ng-show="showChoiceLabel(choice)">Choices</label>
+
+                <input type="text" data-ng-hide="isSelected('optionOne'+$index)" data-ng-model="optionOne[$index]" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
+                <button type="button" data-ng-click="setShow('optionOne'+$index)">
+                    Edit
+                </button>
+
+                <span data-ng-show="isSelected('optionOne'+$index)">{{optionOne[$index]}}
+                 <button type="button" data-ng-click="setShow(null)">back</button>
+                </span>
+
+                <button type="button" data-ng-click="deleteChoice($index, 1)" data-ng-show="choiceOne.length > 2">Delete</button>
+                <button type="button" data-ng-click="addNewChoice(1)" data-ng-show="showAddChoice(choice,1)">
+                    Add another choice
+                </button>
+            </div>
+            <div class="form-group">
+                <input type="text" data-ng-model="questions[1]" name="quest" placeholder="Question 2" required>
+            </div>
+            <div class="form-group" data-ng-repeat="choice in choiceTwo">
+                <label for="choice" data-ng-show="showChoiceLabel(choice)">Choices</label>
+                <input type="text"  data-ng-hide="isSelected('optionTwo'+$index)" data-ng-model="optionTwo[$index]" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
+                <button type="button" data-ng-click="setShow('optionTwo'+$index)">
+                    Edit
+                </button>
+                <span data-ng-show="isSelected('optionTwo'+$index)">{{optionTwo[$index]}}
+                 <button type="button" data-ng-click="setShow(null)">back</button>
+                </span>
+                <button type="button" data-ng-click="deleteChoice($index, 2)" data-ng-show="choiceTwo.length > 2">
+                    Delete
+                </button>
+                <button type="button" data-ng-click="addNewChoice(2)" data-ng-show="showAddChoice(choice,2)">
+                    Add another choice
+                </button>
+            </div>
+              <button type="submit" data-ng-disabled="test.$invalid" class="btn btn-large btn-primary">Submit</button>
+            </form>
+            {{questions[0]}}{{optionOne}}
+            {{questions[1]}}{{optionTwo}}
+        </div>
 	</div>
 </section>

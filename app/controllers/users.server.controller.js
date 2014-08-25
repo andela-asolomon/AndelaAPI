@@ -3,12 +3,16 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-	passport = require('passport'),
-	User = mongoose.model('User'),
-	Applicant = mongoose.model('Applicant'),
-	Bootcamp = mongoose.model('Bootcamp'),
-	_ = require('lodash');
+var mongoose 		= require('mongoose'),
+	passport 		= require('passport'),
+	User 			= mongoose.model('User'),
+	Applicant 		= mongoose.model('Applicant'),
+	Bootcamp 		= mongoose.model('Bootcamp'),
+	Test 	 		= mongoose.model('Test'),
+	_ 				= require('lodash');
+
+var admin = require('../../app/controllers/admin');
+
 
 /**
  * Get the error message from error object
@@ -34,54 +38,49 @@ var getErrorMessage = function(err) {
 	return message;
 };
 
+
 /**
  * Signup
  */
 exports.signup = function(req, res) {
-	// For security measurement we remove the roles from the req.body object
-	// delete req.body.roles;
+
 	var type = req.body.type;
 	var user;
 
 	if (type === 'applicant') {
 		user = req.body;
-		user.roles = type;
-		user = new Applicant(user);
-	}
-	// Init Variables
-	var message = null;
 
-	// Add missing user fields
-	user.provider = 'local';
-   
-   
-	// Then save the user 
-	user.save(function(err, data) {
+		user.role = type;
+		user = new Applicant(user);
+		user.provider = 'local';
+
+	req.camp.applicants.push(user);
+
+	req.camp.save(function(err) {
 		if (err) {
 			return res.send(400, {
-				message: getErrorMessage(err)
+				message: err
 			});
-		} else {
-			// Remove sensitive data before login
-			user.password = undefined;
-			user.salt = undefined;
-            
-            req.camp.applicants.push(data);
-           	req.camp.save(function(err) {
-           		if (err) {
-           			return res.send(400, {
-           				message: 'Could not save to Bootcamp Schema'
-           			});
-           		} else {
-           			req.login(user, function(err) {
-						if (err) {
-							res.send(400, err);
-						} else {
-							res.jsonp(user);
-						}
-					});
-           		}
-           	});
+		} 
+		else {
+			user.save(function(err) {
+				if (err) {
+					console.log('Error');
+				} 
+				else {
+					req.login(user, function(err) {
+   					if (err) {
+						res.send(400, err);
+					} 
+					else {
+						user.password = undefined;
+						user.salt = undefined;
+
+						res.jsonp(user);
+					}
+	   			});
+				}
+			});
 		}
 	});
 };
@@ -90,6 +89,7 @@ exports.signup = function(req, res) {
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
+	console.log(req.body);
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
 			res.send(400, info);
@@ -108,7 +108,16 @@ exports.signin = function(req, res, next) {
 		}
 	})(req, res, next);
 };
-
+exports.list = function(req, res) { Applicant.find().where({role: 'fellow'}).populate('user', 'displayName').exec(function(err, fellows) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(fellows);
+		}
+	});
+};
 /**
  * Update user details
  */
@@ -144,6 +153,36 @@ exports.update = function(req, res) {
 	} else {
 		res.send(400, {
 			message: 'User is not signed in'
+		});
+	}
+};
+
+
+// viewing Applicants data page
+exports.appView = function(req, res, id) { 
+	var user = req.user;
+	var message = null;
+	id = req.user._id;
+
+	if (user) {
+			User.findById(id).populate('user', 'displayName').exec(function(err, users) {
+			if (err) {
+				return res.send(400, {
+					message: getErrorMessage(err)
+				});
+			} else {
+					req.login(user, function(err) {
+						if (err) {
+							res.send(400, err);
+						} else {
+							res.jsonp(users);
+						}
+				});
+			}
+		});
+	} else {
+		res.send(400, {
+			message: 'You need to Sign in to view your application progress'
 		});
 	}
 };
@@ -242,17 +281,17 @@ exports.oauthCallback = function(strategy) {
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
-	User.findOne({
-		_id: id
-	}).exec(function(err, user) {
-		if (err) return next(err);
-		if (!user) return next(new Error('Failed to load User ' + id));
-		req.profile = user;
-		next();
-	});
+    User.findById(id).exec(function(err, user) {
+        if (err) return next(err);
+        if (!user) return next(new Error('Failed to load User ' + id));
+        req.user = user;
+        next();
+    });
 };
 
-
+exports.read = function(req, res) {
+	res.jsonp(req.user);
+};
 /**
  * Bootcamp middleware
  */

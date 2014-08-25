@@ -1,117 +1,474 @@
-[![MEAN.JS Logo](http://meanjs.org/img/logo-small.png)](http://meanjs.org/)
+Proect Name: ANDELA 
+Description: Andela Website
+List of APIs: 	localhost:3000/admin,
+				localhost:3000/instructor,
+				localhost:3000/users,
+				localhost:3000/auth,
+				localhost:3000/test
 
-[![Build Status](https://travis-ci.org/meanjs/mean.svg?branch=master)](https://travis-ci.org/meanjs/mean)
-[![Dependencies Status](https://david-dm.org/meanjs/mean.svg)](https://david-dm.org/meanjs/mean)
-
-MEAN.JS is a full-stack JavaScript open-source solution, which provides a solid starting point for [MongoDB](http://www.mongodb.org/), [Node.js](http://www.nodejs.org/), [Express](http://expressjs.com/), and [AngularJS](http://angularjs.org/) based applications. The idea is to solve the common issues with connecting those frameworks, build a robust framework to support daily development needs, and help developers use better practices while working with popular JavaScript components. 
-
-## Before You Begin 
-Before you begin we recommend you read about the basic building blocks that assemble a MEAN.JS application: 
-* MongoDB - Go through [MongoDB Official Website](http://mongodb.org/) and proceed to their [Official Manual](http://docs.mongodb.org/manual/), which should help you understand NoSQL and MongoDB better.
-* Express - The best way to understand express is through its [Official Website](http://expressjs.com/), particularly [The Express Guide](http://expressjs.com/guide.html); you can also go through this [StackOverflow Thread](http://stackoverflow.com/questions/8144214/learning-express-for-node-js) for more resources.
-* AngularJS - Angular's [Official Website](http://angularjs.org/) is a great starting point. You can also use [Thinkster Popular Guide](http://www.thinkster.io/), and the [Egghead Videos](https://egghead.io/).
-* Node.js - Start by going through [Node.js Official Website](http://nodejs.org/) and this [StackOverflow Thread](http://stackoverflow.com/questions/2353818/how-do-i-get-started-with-node-js), which should get you going with the Node.js platform in no time.
+Methods on APIs: 
 
 
-## Prerequisites
-Make sure you have installed all these prerequisites on your development machine.
-* Node.js - [Download & Install Node.js](http://www.nodejs.org/download/) and the npm package manager, if you encounter any problems, you can also use this [Github Gist](https://gist.github.com/isaacs/579814) to install Node.js.
-* MongoDB - [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).
-* Bower - You're going to use the [Bower Package Manager](http://bower.io/) to manage your front-end packages, in order to install it make sure you've installed Node.js and npm, then install bower globally using npm:
+/admin
+	admin [GET]
+	admin/create [POST]
+	admin/trainees [GET]
+	admin/applicants [GET]
+	admin/fellows [GET]
+	admin/instructors [GET]
+	admin/admins [GET]
+	admin/appt/:apptId [GET, POST]
+	admin/appt/:apptId/camp/:campId [PUT]
+	admin/appt/:apptId/role [PUT]
+	admin/instr/:instrId [GET, PUT]
+	admin/user/:userId [DELETE]
+	admin/camp [GET, POST]
+		Argument:
+		Respons:
+		{
+        "_id" : ObjectId("53f3402fdcc65f80276ef002"),
+        "camp_name" : "Alpha",
+        "applicants" : [
+                {
+                        "_id" : ObjectId("53f4770809a97398
+                        "role" : "applicant",
+                        "username" : "sdsdd",
+                        "provider" : "local",
+                        "_type" : "Applicant",
+                        "__v" : 0,
+                        "skillSets" : [ ],
+                        "created" : ISODate("2014-08-20T10
+                        "email" : "dfds@yahoo.com",
+                        "lastName" : "errr",
+                        "firstName" : "Olatun"
+                }
+        ],
+        "created" : ISODate("2014-08-19T12:16:47.292Z"),
+        "assessments" : [ ],
+        "__v" : 1
+}
+{
+        "_id" : ObjectId("53f90ef7a937c5e4305e7cc6"),
+        "camp_name" : "Beta",
+        "applicants" : [ ],
+        "created" : ISODate("2014-08-23T22:00:23.078Z"),
+        "__v" : 0
+}
+		[POST]
+			Argument:
+			Response:
+				{
+        "_id" : ObjectId("53f90ef7a937c5e4305e7cc6"),
+        "camp_name" : "Beta",
+        "applicants" : [ ],
+        "created" : ISODate("2014-08-23T22:00:23.078Z"),
+        "__v" : 0
+}
+	admin/camp/:campId [GET, PUT, DELETE]
+	admin/test [GET, POST]
+	admin/test/:testId [GET, POST, PUT, DELETE]
+	admin/test/:testId/:questId [PUT, DELETE]
+	admin/test/:testId/:questId/options [POST, PUT]
+	admin/test/:testId/:questId/:optionId [DELETE]
+	admin/trainee/:traineeId/rate [POST]
+	admin/trainee/:traineeId/rate/:skillId [PUT, DELETE]
 
-```
-$ npm install -g bower
-```
+/instructor
+	instr [GET] 
+	instr/fellows [GET]
+	instr/trainee/:traineeId [GET, POST, PUT]
+	instr/trainee/:traineeId/:assmtId [PUT, DELETE]
+	instr/trainee/:traineeId/rate [POST]
+	instr/trainee/:traineeId/rate/:skillId [PUT, DELETE]
 
-* Grunt - You're going to use the [Grunt Task Runner](http://gruntjs.com/) to automate your development process, in order to install it make sure you've installed Node.js and npm, then install grunt globally using npm:
+/test
+	test/:testId [GET]
 
-```
-$ sudo npm install -g grunt-cli
-```
+/users
+	users/me [GET]
+	users [PUT]
+	users/password [POST]
+	users/accounts [DELETE]
+	users/view [GET]
 
-## Downloading MEAN.JS
-There are several ways you can get the MEAN.JS boilerplate: 
+/auth
+	auth/:campId/signup [POST]
+	auth/signin [POST]
+	auth/signout [GET]
 
-### Yo Generator 
-The recommended way would be to use the [Official Yo Generator](http://meanjs.org/generator.html) which will generate the latest stable copy of the MEAN.JS boilerplate and supplies multiple sub-generators to ease your daily development cycles.
 
-### Cloning The GitHub Repository
-You can also use Git to directly clone the MEAN.JS repository:
-```
-$ git clone https://github.com/meanjs/mean.git meanjs
-```
-This will clone the latest version of the MEAN.JS repository to a **meanjs** folder.
+Response:
+admin [GET]
+	gets the list of Applicants
+	Arguments
+		login required.
+	response:
+		[
+	    {
+	        "_id": "53f4770809a973981ed4ec5e",
+	        "salt": "�\f�]��\u0017\"%�����(�",
+	        "_type": "Applicant",
+	        "provider": "local",
+	        "username": "sdsdd",
+	        "role": "applicant",
+	        "__v": 0,
+	        "assessments": [],
+	        "skillSets": [],
+	        "created": "2014-08-20T10:23:04.779Z",
+	        "roles": [
+	            "user"
+	        ],
+	        "password": "t3+MBANoTxtfbgH1TO2V8AWqVNfoCKW/SOGRrUIBxLO35y8/lnC9ccyyx7QYHRf2N5g5rtYitsUx0C9xrEhHJA==",
+	        "email": "dfds@yahoo.com",
+	        "lastName": "errr",
+	        "firstName": "Olatun"
+	    }
+	]
 
-### Downloading The Repository Zip File
-Another way to use the MEAN.JS boilerplate is to download a zip copy from the [master branch on github](https://github.com/meanjs/mean/archive/master.zip). You can also do this using `wget` command:
-```
-$ wget https://github.com/meanjs/mean/archive/master.zip -O meanjs.zip; unzip meanjs.zip; rm meanjs.zip
-```
-Don't forget to rename **mean-master** after your project name.
+	Arguments:
+		id: not required.f
+		login required.
+admin/create [POST]
+	creates a admin and instructors.
+	response:
+admin/trainees [GET]
+	gets the list of trainees.
+	response:
+		[
+    {
+        "_id": "53f9019bb1bdf9a02c5b8194",
+        "salt": "w�\\�C!�ڰ �\n�T�G",
+        "_type": "Trainee",
+        "username": "gmt",
+        "role": "trainee",
+        "provider": "local",
+        "__v": 0,
+        "created": "2014-08-23T21:03:23.092Z",
+        "roles": [
+            "user"
+        ],
+        "password": "z2c3Hjk9P7UFJ9at6yyHaVuexDGcjL24adrkjrdIOWtHaiAPr3YciHhIDFygWerakcv5E/JAZ38SJ6darzQvEQ==",
+        "email": "generalgmt@yahoo.co.uk",
+        "lastName": "Miguel",
+        "firstName": "Olatunde"
+    }
+]
+admin/applicants [GET]
+	Arguments:
+		login required.
+	Response:
+		[
+    {
+        "_id": "53f4770809a973981ed4ec5e",
+        "salt": "�\f�]��\u0017\"%�����(�",
+        "_type": "Applicant",
+        "provider": "local",
+        "username": "sdsdd",
+        "role": "applicant",
+        "__v": 0,
+        "assessments": [],
+        "skillSets": [],
+        "created": "2014-08-20T10:23:04.779Z",
+        "roles": [
+            "user"
+        ],
+        "password": "t3+MBANoTxtfbgH1TO2V8AWqVNfoCKW/SOGRrUIBxLO35y8/lnC9ccyyx7QYHRf2N5g5rtYitsUx0C9xrEhHJA==",
+        "email": "dfds@yahoo.com",
+        "lastName": "errr",
+        "firstName": "Olatun"
+    }
+]
+admin/fellows [GET]
+	Arguments:
+		login required.
+	Response:
+		[
+    {
+        "_id": "53f9019bb1bdf9a02c5b8194",
+        "salt": "w�\\�C!�ڰ �\n�T�G",
+        "_type": "Fellow",
+        "username": "gmt",
+        "role": "fellow",
+        "provider": "local",
+        "__v": 0,
+        "skillSets": [],
+        "created": "2014-08-23T21:03:23.092Z",
+        "roles": [
+            "user"
+        ],
+        "password": "z2c3Hjk9P7UFJ9at6yyHaVuexDGcjL24adrkjrdIOWtHaiAPr3YciHhIDFygWerakcv5E/JAZ38SJ6darzQvEQ==",
+        "email": "generalgmt@yahoo.co.uk",
+        "lastName": "Miguel",
+        "firstName": "Olatunde"
+    }
+]
+admin/instructors [GET]
+	Arguments:
+		login required.
+	Response:
+		[
+    {
+        "_id": "53f9019bb1bdf9a02c5b8194",
+        "salt": "w�\\�C!�ڰ �\n�T�G",
+        "_type": "Instructor",
+        "username": "gmt",
+        "role": "Instructor",
+        "provider": "local",
+        "__v": 0,
+        "skillSets": [],
+        "created": "2014-08-23T21:03:23.092Z",
+        "roles": [
+            "user"
+        ],
+        "password": "z2c3Hjk9P7UFJ9at6yyHaVuexDGcjL24adrkjrdIOWtHaiAPr3YciHhIDFygWerakcv5E/JAZ38SJ6darzQvEQ==",
+        "email": "generalgmt@yahoo.co.uk",
+        "lastName": "Miguel",
+        "firstName": "Olatunde"
+    }
+]
+admin/admins [GET]
+	Arguments:
+		login required.
+	Response:
+		[
+    {
+        "_id": "53f9019bb1bdf9a02c5b8194",
+        "salt": "w�\\�C!�ڰ �\n�T�G",
+        "_type": "Instructor",
+        "username": "gmt",
+        "role": "admin",
+        "provider": "local",
+        "__v": 0,
+        "skillSets": [],
+        "created": "2014-08-23T21:03:23.092Z",
+        "roles": [
+            "user"
+        ],
+        "password": "z2c3Hjk9P7UFJ9at6yyHaVuexDGcjL24adrkjrdIOWtHaiAPr3YciHhIDFygWerakcv5E/JAZ38SJ6darzQvEQ==",
+        "email": "generalgmt@yahoo.co.uk",
+        "lastName": "Miguel",
+        "firstName": "Olatunde"
+    }
+]
+admin/appt/:apptId [GET, POST]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/appt/:apptId/camp/:campId [PUT]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/appt/:apptId/role [PUT]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/instr/:instrId [GET, PUT]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/user/:userId [DELETE]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/camp [GET, POST]
+[GET]
+	gets the list of created Camps
+	Arguments:
+		login required.
+		Response:
+			[
+    {
+        "_id": "53f3402fdcc65f80276ef002",
+        "camp_name": "Alpha",
+        "__v": 1,
+        "applicants": [],
+        "created": "2014-08-19T12:16:47.292Z"
+    }
+]
+[POST]
+	Creates a new Bootcamp
+		Arguments:
+		login required.
+		Response:
+			[
+    {
+        "_id": "53f3402fdcc65f80276ef002",
+        "camp_name": "Alpha",
+       "__v": 1,
+        "applicants": [],
+        "created": "2014-08-19T12:16:47.292Z"
+    }
+]
+admin/camp/:campId [GET, PUT, DELETE]
+[GET]
+	gets an individual camp by id
+	Arguments:
+		id: id required
+		login required.
+	Response:
+		{
+    "_id": "53f90ef7a937c5e4305e7cc6",
+    "camp_name": "Beta",
+    "__v": 0,
+    "applicants": []
+    "created": "2014-08-19T12:16:47.292Z"
+}
+[PUT]
+	Updates an individual camp by id
+	Arguments:
+		id: id required
+		login required.
+	Response:
+		{
+    "_id": "53f90ef7a937c5e4305e7cc6",
+    "camp_name": "Beta",
+    "__v": 0,
+    "applicants": []
+    "created": "2014-08-19T12:16:47.292Z"
+}
+[DELETE]
+	Deletes	 an individual camp by id
+	Arguments:
+		id: id required
+		login required.
+	Response:
+		{
+    "_id": "53f90ef7a937c5e4305e7cc6",
+    "camp_name": "Beta",
+    "__v": 0,
+    "applicants": []
+    "created": "2014-08-19T12:16:47.292Z"
+}
+admin/test [GET, POST]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/test/:testId [GET, POST, PUT, DELETE]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/test/:testId/:questId [PUT, DELETE]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/test/:testId/:questId/options [POST, PUT]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/test/:testId/:questId/:optionId [DELETE]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/trainee/:traineeId/rate [POST]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+admin/trainee/:traineeId/rate/:skillId [PUT, DELETE]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+auth/:campId/signup [POST]
+	Response:
+	Arguments:
+		id: not required.f
+		login required.
+auth/signin [POST]
+	Arguments:
+		id: not required.
+	Response:
+		{
+		    "_id": "53f9019bb1bdf9a02c5b8194",
+		    "_type": "Instructor",
+		    "username": "gmt",
+		    "role": "admin",
+		    "provider": "local",
+		    "skillSets": [],
+		    "__v": 0,
+		    "created": "2014-08-23T21:03:23.092Z",
+		    "roles": [
+		        "user"
+		    ],
+		    "email": "generalgmt@yahoo.co.uk",
+		    "lastName": "Miguel",
+		    "firstName": "Olatunde"
+		}
 
-## Quick Install
-Once you've downloaded the boilerplate and installed all the prerequisites, you're just a few steps away from starting to develop you MEAN application.
+auth/signout [GET]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+instr [GET] 
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+instr/fellows [GET]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+instr/trainee/:traineeId [GET, POST, PUT]
+response:
+	Arguments:
+		id: not required.f
+		login required.
+instr/trainee/:traineeId/:assmtId [PUT, DELETE]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+instr/trainee/:traineeId/rate [POST]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+instr/trainee/:traineeId/rate/:skillId [PUT, DELETE]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+test/:testId [GET]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+users/me [GET]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+users [GET, PUT]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+users/password [POST]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+users/accounts [DELETE]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
+users/view [GET]
+	response:
+	Arguments:
+		id: not required.f
+		login required.
 
-The first thing you should do is install the Node.js dependencies. The boilerplate comes pre-bundled with a package.json file that contains the list of modules you need to start your application, to learn more about the modules installed visit the NPM & Package.json section.
 
-To install Node.js dependencies you're going to use npm again, in the application folder run this in the command-line:
-
-```
-$ npm install
-```
-
-This command does a few things:
-* First it will install the dependencies needed for the application to run.
-* If you're running in a development environment, it will then also install development dependencies needed for testing and running your application.
-* Finally, when the install process is over, npm will initiate a bower installcommand to install all the front-end modules needed for the application
-
-## Running Your Application
-After the install process is over, you'll be able to run your application using Grunt, just run grunt default task:
-
-```
-$ grunt
-```
-
-Your application should run on the 3000 port so in your browser just go to [http://localhost:3000](http://localhost:3000)
-                            
-That's it! your application should be running by now, to proceed with your development check the other sections in this documentation. 
-If you encounter any problem try the Troubleshooting section.
-
-## Getting Started With MEAN.JS
-You have your application running but there are a lot of stuff to understand, we recommend you'll go over the [Offical Documentation](http://meanjs.org/docs.html). 
-In the docs we'll try to explain both general concepts of MEAN components and give you some guidelines to help you improve your development procees. We tried covering as many aspects as possible, and will keep update it by your request, you can also help us develop the documentation better by checking out the *gh-pages* branch of this repository.
-
-## Community
-* Use to [Offical Website](http://meanjs.org) to learn about changes and the roadmap.
-* Join #meanjs on freenode.
-* Discuss it in the new [Google Group](https://groups.google.com/d/forum/meanjs)
-* Ping us on [Twitter](http://twitter.com/meanjsorg) and [Facebook](http://facebook.com/meanjs)
-
-## Live Example
-Browse the live MEAN.JS example on [http://meanjs.herokuapp.com](http://meanjs.herokuapp.com).
-
-## Credits
-Inspired by the great work of [Madhusudhan Srinivasa](https://github.com/madhums/)
-The MEAN name was coined by [Valeri Karpov](http://blog.mongodb.org/post/49262866911/the-mean-stack-mongodb-expressjs-angularjs-and)
-
-## License
-(The MIT License)
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
