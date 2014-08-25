@@ -53,7 +53,7 @@ exports.signup = function(req, res) {
 		user = new Applicant(user);
 	}
 
-	var messae = null;
+	var message = null;
 
 	user.provider = 'local';
 
