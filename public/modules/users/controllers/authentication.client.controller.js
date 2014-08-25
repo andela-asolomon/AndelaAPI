@@ -12,15 +12,15 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		$scope.optionOne=[];
 		$scope.optionTwo=[];
 		$scope.questions=[];
-		$scope.selected = "";
+		$scope.selected = '';
 
 		$scope.setShow = function(val) {
 			$scope.selected = val;
-		}
+		};
 
 		$scope.isSelected = function(val) {
 			return val === $scope.selected;
-		}
+		};
 
 		$scope.addNewChoice = function(num) {
 			var newItemNo;
@@ -36,7 +36,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		$scope.deleteChoice = function(index, num) {
 			if (num === 1) {
 				if ($scope.choiceOne.length === 2) {
-					alert("sorry u can't touch this");
+					alert('sorry u can\'t touch this');
 				} else {
 			        $scope.choiceOne.splice(index, 1);
 			        $scope.optionOne.splice(index, 1);
@@ -44,7 +44,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				}
 			} else {
 				 if ($scope.choiceTwo.length === 2) {
-					alert("sorry u can't touch this");
+					alert('sorry u can\'t touch this');
 				 } else {
 			        $scope.choiceTwo.splice(index, 1);
 			        $scope.optionTwo.splice(index, 1);

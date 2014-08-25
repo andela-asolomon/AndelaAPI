@@ -1,11 +1,18 @@
-'use strict'
+'use strict';
 
-angular.module('applicant').controller('CampsController', ['$scope', '$stateParams', '$location', 'Applicants',
-        function($scope, $stateParams, $location, Camps){
+angular.module('applicant').controller('ApplicantController', ['$scope',  '$http', '$stateParams', '$location', 'Applicants', 'Users',
+        function($scope, $http, $stateParams, $location, Applicants, Users){
+            $scope.find = function() {
+                $scope.applicants = Users.query();
+                console.log($scope.applicants);
+            };
 
-        	$scope.find = function(){
-        		$scope.camps = Camps.query();
-        		console.log($scope.camps)
-        	}
-            
-        }]);
+             $scope.findOne = function() {
+                var url = '/users/' + $stateParams.applicantId;
+                $http.get(url).success(function(response) {
+                        $scope.applicant = response;
+                        console.log($scope.applicant);
+                });
+            };
+              
+}]);
