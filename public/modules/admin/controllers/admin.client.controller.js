@@ -35,12 +35,13 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
-    $scope.listApplicants = function() {
+    $scope.listApplicants = function(userId) {
+      var delUser = $scope.user[userId];
       $http.get('/admin/applicants').success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
         $scope.applicants = response;
-        console.log('Success - Done', response);
+        console.log('Success - Done', $scope.applicants);
         
       }).error(function(response) {
         $scope.error = response.message;
@@ -61,10 +62,13 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
-    $scope.deleteUser = function(userId) {
+    $scope.deleteUser = function(userId, index) {
+      $scope.applicants.splice(index, 1);
+    
       $http.delete('/admin/user/' + userId).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
+
         // $scope.appt = response;
         console.log('Success - Done', response);
         
@@ -118,7 +122,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $scope.success = true;
         // $location.path('admin/appt/' + response._id);
         console.log('Success - Done', response);
-        
+        $location.path('/admin/appts');
+
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
