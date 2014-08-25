@@ -51,7 +51,6 @@ exports.signup = function(req, res) {
 		user = req.body;
 		user.role = type;
 		user = new Applicant(user);
-	}
 
 	var message = null;
 
