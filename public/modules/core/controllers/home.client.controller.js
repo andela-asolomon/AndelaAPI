@@ -5,7 +5,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 	function($scope, Authentication) {
 		// This provides Authentication context.
 		$scope.authentication = Authentication;
-	}
+	};
 ])
 
 .directive('scrollOnclick', function(){
@@ -17,7 +17,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                         scrollTop: target.offset().top
                     }, 1000);
                     return false;
-			})
-		}
+			});
+		};
 	}
-})
+});
