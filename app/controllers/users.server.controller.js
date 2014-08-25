@@ -48,11 +48,10 @@ exports.signup = function(req, res) {
 	var user;
 
 	if (type === 'applicant') {
-		user = req.body;
-		user.roles = type;
+		var user = req.body;
+		user.role = type;
 		user = new Applicant(user);
 	}
-
 	var messae = null;
 
 	user.provider = 'local';
