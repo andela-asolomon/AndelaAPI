@@ -51,8 +51,8 @@ exports.signup = function(req, res) {
 		user = req.body;
 		user.role = type;
 		user = new Applicant(user);
-	}
-	var messae = null;
+
+	var message = null;
 	user.provider = 'local';
 
 	req.camp.applicants.push(user);
@@ -66,7 +66,7 @@ exports.signup = function(req, res) {
 		else {
 			user.save(function(err) {
 				if (err) {
-					console.log('Error');
+					console.log(err);
 				} 
 				else {
 					req.login(user, function(err) {
@@ -84,8 +84,12 @@ exports.signup = function(req, res) {
 			});
 		}
 	});
+} else {
+	return res.send(400, {
+		message: 'Error: only applicants can signup'
+	});
+}
 };
-
 /**
  * Signin after passport authentication
  */
@@ -283,13 +287,13 @@ exports.userByID = function(req, res, next, id) {
     User.findById(id).exec(function(err, user) {
         if (err) return next(err);
         if (!user) return next(new Error('Failed to load User ' + id));
-        req.user = user;
+        req.profile = user;
         next();
     });
 };
 
 exports.read = function(req, res) {
-	res.jsonp(req.user);
+	res.jsonp(req.profile);
 };
 /**
  * Bootcamp middleware
