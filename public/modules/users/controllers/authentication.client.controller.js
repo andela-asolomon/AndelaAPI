@@ -82,14 +82,20 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 			$http.post('/auth/signin', $scope.credentials).success(function(response) {
 				//If successful we assign the response to the global user model
 				$scope.authentication.user = response;
+				console.log($scope.authentication.user._id);
+				console.log(response);
+				
 
 				//And redirect to the right page
 				if ($scope.authentication.user.role === 'admin'){
 					$location.path('/admin/welcome');
 				}
-				else{
-					$location.path('/');
+				else if ($scope.authentication.user.role === 'fellow' || 'trainee' || 'applicant'){
+					$location.path('/logged_in_user/' + $scope.authentication.user._id);
 				}
+				 else{
+					$location.path('/');
+				 }
 			}).error(function(response) {
 				$scope.error = response.message;
 			});
