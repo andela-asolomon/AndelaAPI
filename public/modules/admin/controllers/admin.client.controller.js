@@ -36,8 +36,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
-    $scope.listApplicants = function(userId) {
-      var delUser = $scope.user[userId];
+    $scope.listApplicants = function() {
+      $scope.statusInit = 'pending';
       $http.get('/admin/applicants').success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
@@ -118,6 +118,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
     $scope.changeStatus = function() {
       $http.put('/admin/appt/' + $stateParams.apptId, $scope.data).success(function(response) {
+
         // If successful show success message and clear form
         $scope.success = true;
         // $location.path('admin/appt/' + response._id);
