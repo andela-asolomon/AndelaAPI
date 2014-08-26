@@ -13,6 +13,7 @@
             <th>Email</th>
             <th>Skill Sets</th>
             <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -21,11 +22,12 @@
           <td data-ng-bind="fellow.firstName"></td>
           <td data-ng-bind="fellow.lastName"></td>
           <td data-ng-bind="fellow.email"></td>
-          <td data-ng-bind="fellow.skillSets"></td>
-          <td data-ng-bind="fellow.portfolio"></td>
-
+          <td><a ng-href="/#!/fellows/rate/">View Skillset</a></td>
+          <td><a ng-href="/#!/fellows/{{fellow._id}}/rate">Rate Fellow</a></td>
+          <td><a href="" class="btn btn-danger btn-xs">Delete User</a></td>
         </tr>
       </table>
     </div>
   </div>
 </section>
+

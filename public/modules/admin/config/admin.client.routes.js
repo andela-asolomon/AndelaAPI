@@ -36,6 +36,10 @@ angular.module('admin').config(['$stateProvider',
     state('listFellows', {
       url: '/admin/fellows',
       templateUrl: 'modules/admin/views/list.fellows.admin.html'
+    }).
+    state('rateFellow', {
+      url: '/fellows/:apptId/rate',
+      templateUrl: 'modules/admin/views/rate.fellows.admin.html'
     });
     
   }

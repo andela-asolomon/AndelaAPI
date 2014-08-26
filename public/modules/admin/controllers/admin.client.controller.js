@@ -53,6 +53,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.viewApplicant = function() {
       $http.get('/admin/appt/' + $stateParams.apptId).success(function(response) {
         // If successful show success message and clear form
+        $scope.data = {};
         $scope.success = true;
         $scope.appt = response;
         console.log('Success - Done', response);
@@ -62,6 +63,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         console.log('Error - can not');
       });
     };
+
 
     $scope.deleteUser = function(userId, index) {
       $scope.applicants.splice(index, 1);
@@ -134,8 +136,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.changeRoleToFellow = function(trainee_id, index) {
       console.log(trainee_id);
       console.log($scope.role[index]);
+      $scope.trainees.splice(index, 1);
       
-      $http.put('/admin/appt/' + trainee_id + '/role', {role: $scope.role}).success(function(response) {
+      $http.put('/admin/appt/' + trainee_id + '/role', {role: $scope.role[index]}).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
         
@@ -150,6 +153,20 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log('Error - can not');
+      });
+    };
+
+    $scope.rateFellow = function() {
+      console.log();
+      $http.post('/admin/trainee/' + $stateParams.apptId + '/rate', $scope.data).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+        console.log('Success - Done', response);
+        $location.path('/admin/fellows');
         
       }).error(function(response) {
         $scope.error = response.message;
