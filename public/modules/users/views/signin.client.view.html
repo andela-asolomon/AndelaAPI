@@ -29,7 +29,7 @@
                 <button type="button" data-ng-click="setShow('optionOne'+$index)">
                     Edit
                 </button>
-                <input type="radio" name="option" value="true" data-ng-model="optionOne[$index]['answer']" data-ng-change="changeAnsVal($index, 1)" data-ng-checked="($index+1)===choiceOne.length">Answer
+                <input type="radio" name="option" value="true" data-ng-model="optionOne[$index]['answer']" data-ng-change="changeAnsVal($index, 1)">Answer
 
                 <span data-ng-show="isSelected('optionOne'+$index)">{{optionOne[$index]}}
                  <button type="button" data-ng-click="setShow(null)">back</button>
@@ -45,10 +45,12 @@
             </div>
             <div class="form-group" data-ng-repeat="choice in choiceTwo">
                 <label for="choice" data-ng-show="showChoiceLabel(choice)">Choices</label>
-                <input type="text"  data-ng-hide="isSelected('optionTwo'+$index)" data-ng-model="optionTwo[$index]" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
+                <input type="text"  data-ng-hide="isSelected('optionTwo'+$index)" data-ng-model="optionTwo[$index]['option']" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
                 <button type="button" data-ng-click="setShow('optionTwo'+$index)">
                     Edit
                 </button>
+                 <input type="radio" name="option1" value="true" data-ng-model="optionTwo[$index]['answer']" data-ng-change="changeAnsVal($index, 2)">Answer
+
                 <span data-ng-show="isSelected('optionTwo'+$index)">{{optionTwo[$index]}}
                  <button type="button" data-ng-click="setShow(null)">back</button>
                 </span>
@@ -59,7 +61,7 @@
                     Add another choice
                 </button>
             </div>
-              <button type="submit" data-ng-disabled="test.$invalid" class="btn btn-large btn-primary">Submit</button>
+              <button type="submit" data-ng-disabled="test.$invalid || !answered.bool || !answeredTwo.bool" class="btn btn-large btn-primary">Submit</button>
             </form>
             {{questions[0]}}{{optionOne}}
             {{questions[1]}}{{optionTwo}}

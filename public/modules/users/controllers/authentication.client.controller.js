@@ -9,10 +9,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 		$scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}];
 		$scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}];
-		$scope.optionOne=[];
-		$scope.optionTwo=[];
-		$scope.questions=[];
-		$scope.selected = '';
+		$scope.optionOne=[], $scope.optionTwo=[], $scope.questions=[];
+		$scope.selected = '', $scope.answered = { bool: false, index: -1 };
+		$scope.answeredTwo = { bool: false, index: -1 };
 
 		$scope.setShow = function(val) {
 			$scope.selected = val;
@@ -35,27 +34,30 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 		$scope.deleteChoice = function(index, num) {
 			if (num === 1) {
-				if ($scope.choiceOne.length === 2) {
-					alert('sorry u can\'t touch this');
-				} else {
-			        $scope.choiceOne.splice(index, 1);
-			        $scope.optionOne.splice(index, 1);
-			        changeIds($scope.choiceOne);
-				}
+		        //$scope.choiceOne.splice(index, 1);
+                doDelete($scope.choiceOne, $scope.optionOne, index);
+		        if ($scope.answered.index === index) {
+		        	$scope.answered.bool = false;
+		        }
+		        // $scope.optionOne.splice(index, 1);
+		        // changeIds($scope.choiceOne);
 			} else {
-				 if ($scope.choiceTwo.length === 2) {
-					alert('sorry u can\'t touch this');
-				 } else {
-			        $scope.choiceTwo.splice(index, 1);
-			        $scope.optionTwo.splice(index, 1);
-			        changeIds($scope.choiceTwo);
-				 }
+				doDelete($scope.choiceTwo, $scope.optionTwo, index);
+				if ($scope.answeredTwo.index === index) {
+		        	$scope.answeredTwo.bool = false;
+		        }
+		        // $scope.choiceTwo.splice(index, 1);
+		        // $scope.optionTwo.splice(index, 1);
+		        // changeIds($scope.choiceTwo);
 			}
 		};
 
-		var changeIds = function(array) {
-            for (var i in array) {
-            	array[i].id = 'choice' + i;
+		var doDelete = function(choiceArr, optionArr, index) {
+            choiceArr.splice(index, 1);
+            optionArr.splice(index, 1);
+
+            for (var i in choiceArr) {
+            	choiceArr[i].id = 'choice' + i;
             }
 		};
 
@@ -68,20 +70,27 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 		$scope.changeAnsVal = function(index, num) { console.log("y");
 			if (num === 1) { 
-                for (var i in $scope.optionOne) {
-                	if (parseInt(i,10) !== index) {
-                		$scope.optionOne[i].answer= 'false';
-                		console.log("yea");
-                	} 
-                }
+				doChange($scope.optionOne, index); console.log($scope.optionOne.length);
+				$scope.answered.bool = true;
+				$scope.answered.index = index;
 			} else {
-				 for (var i in $scope.optionTwo) {
-                	if (parseInt(i,10) !== index) {
-                		$scope.optionTwo[i].answer = false;
-                	}
-                }
+				doChange($scope.optionTwo, index);
+				$scope.answeredTwo.bool = true;
+				$scope.answeredTwo.index = index;
 			}
 		};
+
+		var doChange = function (array, index) {
+			for (var i in array) {
+            	if (parseInt(i,10) !== index) {
+            		array[i].answer = 'false';
+            		console.log("yea");
+            	} else {
+            		array[i].answer= 'true';
+            	}
+                
+            }
+        };
 
 		$scope.signup = function() {
 			$http.post('/auth/signup', $scope.credentials).success(function(response) {
