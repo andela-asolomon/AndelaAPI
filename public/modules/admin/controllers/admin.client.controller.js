@@ -25,6 +25,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       console.log('viewTrainees called');
       $http.get('/admin/trainees').success(function(response) {
         // If successful show success message and clear form
+        $scope.role = [];
         $scope.success = true;
         $scope.trainees = response;
         console.log('Success - Done', response);
@@ -81,6 +82,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.listFellows = function() {
       $http.get('/admin/fellows').success(function(response) {
         // If successful show success message and clear form
+        $scope.fellows = response;
         $scope.success = true;
         console.log('Success - Done', response);
         
@@ -115,8 +117,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.changeStatus = function() {
-      console.log('hahaha');
-      console.log('$scope.appt', $scope.appt);
       $http.put('/admin/appt/' + $stateParams.apptId, $scope.data).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
@@ -130,10 +130,11 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     }; 
 
-    $scope.changeRole = function() {
-      console.log($scope.apptId);
-      // console.log(typeof $scope.credentials.role);
-      $http.put('/admin/appt/' + $scope.apptId + '/role', $scope.appt).success(function(response) {
+    $scope.changeRoleToFellow = function(trainee_id, index) {
+      console.log(trainee_id);
+      console.log($scope.role[index]);
+      
+      $http.put('/admin/appt/' + trainee_id + '/role', {role: $scope.role}).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
         
