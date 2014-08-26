@@ -1,10 +1,10 @@
-table.appt{
+table.list{
   font-size: 1.125em;
-  width: 80%; margin: 0 auto;
-  min-width: 800px;
+  margin: 0 auto;
+  width: 100%
 }
 
-table.appt {
+table.list {
   line-height: 1.0;
   text-shadow: 1px 1px 0px #fff;
   margin:5px 0; background: #fafafa;
@@ -13,37 +13,42 @@ table.appt {
   -webkit-box-shadow: 0 1px 2px #d1d1d1;
   box-shadow: 0 1px 2px #d1d1d1;
 }
-table.appt th {
+table.list th {
   padding:10px; color: #fff; text-transform: uppercase;
   border:1px solid #5b2f01; text-shadow: 0 0 1px #fff5e4;
   border-bottom:1px solid #e0e0e0; background: #946134;
   background: -webkit-gradient(linear, left top, left bottom, from(#946134), to(#5b2f01));
   background: -moz-linear-gradient(top, #946134, #5b2f01);
 }
-table.appt th:first-child {
+table.list th:first-child {
   text-align: left;
   padding-left:20px;
 }
-table.appt tr {
+table.list tr {
   padding-left:20px;
 }
-table.appt td{
+table.list td{
   vertical-align: middle;
 }
-table.appt td:first-child {
+table.list td:first-child {
   text-align: left;
   padding-left:20px;
   border-left: 0;
 }
-table.appt td {
+table.list td {
   padding:10px;
   border-top: 1px solid #ffffff;
   border-bottom:1px solid #e0e0e0;
   border-left: 1px solid #e0e0e0;
 }
-table.appt tr:last-child td {
+table.list tr:last-child td {
   border-bottom:0;
 }
-table.appt tr:nth-child(even){
+table.list tr:nth-child(even){
   background: #f3f3f3;
 }
+
+/*form.role_admin div.form-group, form.role_admin label {
+  display: none !important;
+  padding:0 !important; margin: 0 !important;
+}*/
