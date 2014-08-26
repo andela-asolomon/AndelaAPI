@@ -48,7 +48,13 @@ table.list tr:nth-child(even){
   background: #f3f3f3;
 }
 
-/*form.role_admin div.form-group, form.role_admin label {
-  display: none !important;
-  padding:0 !important; margin: 0 !important;
-}*/
+form.form_trainee div{
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+form.form_trainee div select, form.form_trainee div select option{
+  width: 100% !important;
+  padding: 1px;
+  margin-bottom: 3px !important;
+}

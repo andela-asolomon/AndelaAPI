@@ -47,7 +47,7 @@ module.exports = function(app) {
         .put(users.requiresLogin, admin.checkPermission, admin.changeInstrRole);
 
     app.route('/admin/user/:userId')
-        .delete(users.requiresLogin, admin.checkPermission, admin.deleteUser);
+        .delete(admin.deleteUser);
 
     app.route('/admin/camp')
         .get(users.requiresLogin, admin.checkPermission,  admin.bootCamps)

@@ -11,20 +11,19 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
-            <th>Skill Sets</th>
+            <!-- <th></th> -->
             <th></th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
           <tr data-ng-repeat="fellow in fellows">
           <td data-ng-bind="fellow.firstName"></td>
           <td data-ng-bind="fellow.lastName"></td>
           <td data-ng-bind="fellow.email"></td>
-          <td><a ng-href="/#!/fellows/rate/">View Skillset</a></td>
+          <!-- <td><a ng-href="/#!/fellows/rate/">View Full Details</a></td> -->
           <td><a ng-href="/#!/fellows/{{fellow._id}}/rate">Rate Fellow</a></td>
-          <td><a href="" class="btn btn-danger btn-xs">Delete User</a></td>
+          <td><a href="" ng-click="deleteFellow(fellow._id, $index)" class="btn btn-danger btn-xs">Delete User</a></td>
         </tr>
       </table>
     </div>

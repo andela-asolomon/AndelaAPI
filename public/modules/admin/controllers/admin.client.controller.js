@@ -77,7 +77,25 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         
       }).error(function(response) {
         $scope.error = response.message;
-        console.log('Error - can not');
+        console.log($scope.error);
+        // console.log('Error - can not');
+      });
+    };
+
+    $scope.deleteFellow = function(userId, index) {
+      $scope.fellows.splice(index, 1);
+    
+      $http.delete('/admin/user/' + userId).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+
+        // $scope.appt = response;
+        console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log($scope.error);
+        
       });
     };
 
