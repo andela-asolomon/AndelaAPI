@@ -1,0 +1,44 @@
+<section data-ng-controller="AdminController" data-ng-init="viewTrainees()">
+  <div class="container">
+    <div class="page-header text-center">
+      <h1>Trainees</h1>
+    </div>
+
+    <div class="list-group">
+      <table class="list">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Assessments</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+          <tr data-ng-repeat="trainee in trainees">
+          <td data-ng-bind="trainee.firstName"></td>
+          <td data-ng-bind="trainee.lastName"></td>
+          <td data-ng-bind="trainee.email"></td>
+          <td><a href="">View Assessments</a></td>
+          <td>
+            <form data-ng-submit='changeRoleToFellow(trainee._id, $index)' class="form_trainee signin form-horizontal" autocomplete="off">
+              <fieldset>
+                <div class="form-group">
+                  <select data-ng-model="role[$index]" id="category">
+                    <option value="applicant">Applicant</option>
+                    <option value="fellow" selected="selected">Fellow</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                <button type="submit" class="btn btn-xs btn-primary">Change Role</button>
+                </div>
+              </fieldset>
+            </form>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>

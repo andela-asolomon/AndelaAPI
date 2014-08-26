@@ -90,7 +90,6 @@ exports.signup = function(req, res) {
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
-	console.log(req.body);
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
 			res.send(400, info);
@@ -134,7 +133,6 @@ exports.update = function(req, res) {
 		// Merge existing user
 		user = _.extend(user, req.body);
 		user.updated = Date.now();
-		user.displayName = user.firstName + ' ' + user.lastName;
 
 		user.save(function(err) {
 			if (err) {

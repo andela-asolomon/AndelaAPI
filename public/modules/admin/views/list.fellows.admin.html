@@ -1,0 +1,31 @@
+<section data-ng-controller="AdminController" data-ng-init="listFellows()">
+  <div class="container">
+    <div class="page-header text-center">
+      <h1>Fellows</h1>
+    </div>
+
+    <div class="list-group">
+      <table class="list">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Skill Sets</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+          <tr data-ng-repeat="fellow in fellows">
+          <td data-ng-bind="fellow.firstName"></td>
+          <td data-ng-bind="fellow.lastName"></td>
+          <td data-ng-bind="fellow.email"></td>
+          <td data-ng-bind="fellow.skillSets"></td>
+          <td data-ng-bind="fellow.portfolio"></td>
+
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
