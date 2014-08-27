@@ -9,15 +9,15 @@ angular.module('instructors').config(['$stateProvider',
 			url: '/instructors',
 			templateUrl: 'modules/instructors/views/instructor_signin.client.view.html'
 		}).
-		state('instructorsome', {
+		state('instructorshome', {
 			url: '/instructors/home',
 			templateUrl: 'modules/instructors/views/instructors_home.client.view.html'
 		}).
-		state('listTrainees', {
+		state('list_Trainees', {
 			url: '/instructors/trainees',
 			templateUrl: 'modules/instructors/views/list-trainees.client.view.html'
 		}).
-		state('listFellows', {
+		state('list_Fellows', {
 			url: '/instructors/fellows',
 			templateUrl: 'modules/instructors/views/list-fellows.client.view.html'
 		}).
