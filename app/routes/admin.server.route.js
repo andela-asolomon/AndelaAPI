@@ -7,13 +7,15 @@ var users = require('../../app/controllers/users'),
     admin = require('../../app/controllers/admin'),
     admin = require('../../app/controllers/admin');
 
+//var app = module.exports = express();
+//require('./routes')({app: app});
 module.exports = function(app) {
     // Admin Routes
     app.route('/admin')
         .get(users.requiresLogin, admin.checkPermission, admin.listApplicants);
 
     app.route('/admin/create')
-        .post(admin.createUsers);
+        .post(users.requiresLogin, admin.checkPermission, admin.createUsers);
 
     app.route('/admin/trainees')
         .get(users.requiresLogin, admin.checkPermission, admin.listTrainees);
@@ -38,7 +40,7 @@ module.exports = function(app) {
         .put(users.requiresLogin, admin.checkPermission, admin.assignBootCamp);
 
     app.route('/admin/appt/:apptId/role')
-        .put(users.requiresLogin, admin.checkPermission, admin.changeRole);
+        .put(admin.changeRole);
 
     app.route('/admin/instr/:instrId')
         .get(users.requiresLogin, admin.checkPermission, admin.instrRead)
@@ -58,7 +60,7 @@ module.exports = function(app) {
 
     app.route('/admin/test')
         .get(users.requiresLogin, admin.checkPermission, admin.listTests)
-        .post(users.requiresLogin, admin.checkPermission, admin.createTests);
+        .post(users.requiresLogin,  admin.createTests);
 
     app.route('/admin/test/:testId')
         .get(users.requiresLogin, admin.checkPermission, admin.testRead)

@@ -49,10 +49,9 @@ exports.signup = function(req, res) {
 
 	if (type === 'applicant') {
 		user = req.body;
-		user.roles = type;
+		user.role = type;
 		user = new Applicant(user);
 	}
-
 	var messae = null;
 
 	user.provider = 'local';
@@ -111,7 +110,16 @@ exports.signin = function(req, res, next) {
 		}
 	})(req, res, next);
 };
-
+exports.list = function(req, res) { User.find({_type: 'Applicant'}).populate('user', 'displayName').exec(function(err, fellows) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(fellows);
+		}
+	});
+};
 /**
  * Update user details
  */
@@ -180,17 +188,6 @@ exports.appView = function(req, res, id) {
 		});
 	}
 };
-
-// Getting questions from Test Schema
-exports.testByID = function(req, res, next, id) {
-    Test.findById(id).exec(function(err, test) {
-        if (err) return next(err);
-        if (!test) return next(new Error('Failed to load test ' + id));
-        req.test = test;
-        next();
-    });
-};
-
 
 /**
  * Change Password
@@ -286,17 +283,17 @@ exports.oauthCallback = function(strategy) {
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
-	User.findOne({
-		_id: id
-	}).exec(function(err, user) {
-		if (err) return next(err);
-		if (!user) return next(new Error('Failed to load User ' + id));
-		req.profile = user;
-		next();
-	});
+    User.findById(id).exec(function(err, user) {
+        if (err) return next(err);
+        if (!user) return next(new Error('Failed to load User ' + id));
+        req.user = user;
+        next();
+    });
 };
 
-
+exports.read = function(req, res) {
+	res.jsonp(req.user);
+};
 /**
  * Bootcamp middleware
  */

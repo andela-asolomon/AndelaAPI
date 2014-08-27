@@ -441,7 +441,7 @@ exports.addOption = function(req, res) {
         question = req.question,
         option = req.body.option;
 
-        question.questOptions.push({option: option});
+        question.questOptions.push(new Options({option: option}));
         test.save(function(err, test) {
           if (err) {
               return res.send(400, {
@@ -586,7 +586,7 @@ exports.listAdmins = function(req, res) {
  * Applicant middleware
  */
 exports.apptByID = function(req, res, next, id)  {
-    Applicant.findById(id).populate('campId').exec(function(err, user) {
+    Applicant.findById(id).exec(function(err, user) {
         if (err) return next(err);
         if (!user) return next(new Error('Failed to load Applicant ' + id));
         req.applicant = user;

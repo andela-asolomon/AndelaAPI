@@ -1,0 +1,13 @@
+<section data-ng-controller="InstructorsController" data-ng-init="viewBootcamp()">
+    <div class="container">
+        <div class="page-header text-center">
+          <h1>Applicants</h1>
+        </div>
+
+        <div class="list-group">
+            <p data-ng-bind="bootcamp.camp_name"></p>
+            <p data-ng-bind="bootcamp.start_date | date"></p>
+            <p data-ng-bind="bootcamp.end_date | date"></p>
+        </div>
+    </div>
+</section>

@@ -16,6 +16,7 @@ Input assessment score for trainee
 */
 exports.createAssmt = function(req, res){
 	req.body.instructorId = req.user;
+	req.body.applicantId = req.trainee._id;
     var trainee = req.trainee;
 	trainee.assessments.push(req.body);
 	
@@ -97,26 +98,57 @@ exports.selectFellow = function(req, res){
 /*
 *Rate a fellow
 */
-exports.rateFellow = function(req, res){
+exports.rateFellow = function(req, res) {
 	var skillset = req.body,
         fellow = req.trainee;
 
-	if (req.body.rating < 1 || req.body.rating > 10) {
+    if (fellow.role !== 'fellow') {
+    	return res.send(400, {
+			   message: 'Error: You can only rate a fellow\'s skills'
+	    });
+    } else if (req.body.rating < 1 || req.body.rating > 10) {
 		return res.send(400, {
-			   message: "Error: rating is a 10 point system"
+			   message: 'Error: rating is a 10 point system'
 	    });
 	} else {
 		fellow.skillSets.push(skillset);
 		fellow.save(function(err) {
 			if (err) {
 			    return res.send(400, {
-			       message: "Error: Couldn't create assessment"
+			       message: 'Error: Couldn\'t rate fellow'
 			    });
 			} else {
 			    res.jsonp(fellow);
 			}
 		});
 	}
+};
+
+
+/*
+*Instructor adds his own skillset
+*/
+exports.addSkills = function(req, res) {
+	var skill = req.body;
+	User.findById(req.user._id).exec(function(err, user) {
+        if (user._type === 'Instructor') {
+        	user.skillSets.push(skill);
+
+            user.save(function(err) {
+				if (err) {
+				    return res.send(400, {
+				       message: 'Error: Couldn\'t add skill'
+				    });
+				} else {
+				    res.jsonp(user);
+				}
+			});
+        } else {
+        	return res.send(400, {
+			       message: 'Error: You are not authorized to carryout this operation'
+			});
+        }
+	});
 };
 
 /*
@@ -127,15 +159,27 @@ exports.editRating = function(req, res){
         fellow = req.trainee;
 
     skillset = _.extend(skillset, req.body);
-    fellow.save(function(err) {
-      if (err) {
-          return res.send(400, {
-              message: "could not edit rating"
-          });
-      } else {
-          res.jsonp(fellow);
-      }
-    });
+    if (req.profile) {
+    	req.profile.save(function(err) {
+	       if (err) {
+	          return res.send(400, {
+	              message: "could not edit rating"
+	          });
+	        } else {
+	              res.jsonp(req.profile);
+	        }
+	    });
+    } else {
+	    fellow.save(function(err) {
+	       if (err) {
+	          return res.send(400, {
+	              message: "could not edit rating"
+	          });
+	        } else {
+	              res.jsonp(fellow);
+	        }
+	    });
+	}
 };
 
 /*
@@ -146,15 +190,27 @@ exports.deleteRating = function(req, res){
         fellow = req.trainee;
 
     skillset.remove();
-    fellow.save(function(err) {
-      if (err) {
-          return res.send(400, {
-              message: "could not delete rating"
-          });
-      } else {
-          res.jsonp(fellow);
-      }
-    });
+     if (req.profile) {
+    	req.profile.save(function(err) {
+	       if (err) {
+	          return res.send(400, {
+	              message: "could not delete rating"
+	          });
+	        } else {
+	              res.jsonp(req.profile);
+	        }
+	    });
+    } else {
+	    fellow.save(function(err) {
+	       if (err) {
+	          return res.send(400, {
+	              message: "could not delete rating"
+	          });
+	        } else {
+	              res.jsonp(fellow);
+	        }
+	    });
+	}
 };
 
 
@@ -182,7 +238,15 @@ exports.traineeByID = function(req, res, next, id){
 * Particular skillset middleware
 */
 exports.skillByID = function(req, res, next, id){   
-    req.skill = req.trainee.skillSets.id(id);
+	if (req.profile && req.profile._type === 'Instructor') {
+		req.skill = req.profile.skillSets.id(id);
+	} else {
+        req.trainee.skillSets.id(id).exec(function(err, skill) {
+           if (err) return next(err);
+		   if (!skill) return next(new Error('Failed to load skill ' + id));
+		   req.skill = skill;
+        });
+	}
     next();
 };
 
