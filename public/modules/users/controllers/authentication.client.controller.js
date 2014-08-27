@@ -7,6 +7,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		//If user is signed in then redirect back home
 		if ($scope.authentication.user) $location.path('/');
 
+<<<<<<< HEAD
+=======
 		$scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}];
 		$scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}];
 		$scope.optionOne=[], $scope.optionTwo=[], $scope.questions=[];
@@ -92,6 +94,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
             }
         };
 
+>>>>>>> ca24d83063cf77e0a24f8ea2ae9292587afc8057
 		$scope.signup = function() {
 			$http.post('/auth/signup', $scope.credentials).success(function(response) {
 				//If successful we assign the response to the global user model

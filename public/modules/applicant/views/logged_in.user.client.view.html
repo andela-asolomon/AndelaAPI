@@ -2,12 +2,26 @@
 	<h3 class="col-md-12 text-center">Welcome</h3>
 		<div class="page-header">
 			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<h1 data-ng-bind="user_profile.username" style="text-align:left"></h1>
-						<h1 data-ng-bind="user_profile.firstName" style="text-align:left"></h1>
-						<h1 data-ng-bind="user_profile.email" style="text-align:left"></h1>
-						 <div class="">
+				<div class="row table-responsive">
+					<div  class="col-md-12 text-center">
+				    	<table class="table table-hover" style="border-sizing:border-box">
+				  				<tr class="success">
+				  					<td>Username</td>
+				  					<td>Email</td>
+				  					<td>Role</td>
+				  					<td ng-if="applicant.role == applicant">Status</td>
+				  					<td ng-if="applicant.role == applicant">Score</td>
+				  				</tr>
+						        <tr>
+									<td  data-ng-bind="user_profile.username"></td>
+									<td  data-ng-bind="user_profile.email"></td>
+									<td  data-ng-bind="user_profile.role"></td>
+									<td  data-ng-bind="user_profile.status" ng-if="applicant.role == applicant"></td>
+									<td  data-ng-bind="user_profile.testScore" ng-if="applicant.role == applicant"></td>
+						        </tr>
+				        </table>
+				    </div>
+				    <div>
 					        <a href="/auth/signout">Signout</a>
 					    </div>
 					</div>

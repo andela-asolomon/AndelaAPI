@@ -38,6 +38,18 @@ angular.module('admin').config(['$stateProvider',
     state('listFellows', {
       url: '/admin/fellows',
       templateUrl: 'modules/admin/views/list.fellows.admin.html'
+    }).
+    state('rateFellow', {
+      url: '/fellows/:apptId/rate',
+      templateUrl: 'modules/admin/views/rate.fellows.admin.html'
+    }).
+    state('createTest', {
+      url: '/admin/test/create',
+      templateUrl: 'modules/admin/views/admin.create.test.html'
+    }).
+    state('viewTest', {
+      url: '/admin/test',
+      templateUrl: 'modules/admin/views/view.tests.admin.html'
     });
     
   }

@@ -1,0 +1,25 @@
+<section data-ng-controller="AdminController" data-ng-init="viewTest()">
+  <div class="container">
+    <div class="col-sm-12 col-lg-12" data-ng-show="user">
+        <a class="btn btn-xs btn-primary pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
+    </div>
+    
+    <div class="page-header text-center">
+      <h1>Tests</h1>
+    </div>
+
+    <div>
+      <ul data-ng-repeat="test in tests">
+        <li><strong>Test name: <b data-ng-bind="test.testName"></b></strong></li>
+        <li data-ng-repeat="question in test.questions">Question {{$index + 1}}: <b data-ng-bind="question.question"></b>
+          <ol>Options:
+            <li data-ng-repeat="option in question.questOptions"><b data-ng-bind="option.option"></b> <b ng-show="option.answer">(Correct Answer)</b></li>
+          </ol>
+        </li>
+      </ul>
+
+
+    </div>
+  </div>
+</section>
+

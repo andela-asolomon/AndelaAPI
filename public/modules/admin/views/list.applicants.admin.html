@@ -1,10 +1,15 @@
 <section data-ng-controller="AdminController" data-ng-init="listApplicants()">
   <div class="container">
+
+    <div class="col-sm-12 col-lg-12" data-ng-show="user">
+        <a class="btn btn-xs btn-primary pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
+    </div>
+
     <div class="page-header text-center">
       <h1>Applicants</h1>
     </div>
 
-    <div class="list-group">
+    <div>
       <table class="list">
         <thead>
           <tr>
@@ -24,7 +29,7 @@
             <td data-ng-bind="applicant.lastName"></td>
             <td data-ng-bind="applicant.email"></td>
             <td data-ng-bind="applicant.testScore"></td>
-            <th data-ng-bind="applicant.created | date : longDate"></th>
+            <td data-ng-bind="applicant.created | date : longDate"></td>
             <td data-ng-bind="applicant.status.name"></td>
             <td><a class="btn btn-primary btn-xs" ng-href="/#!/admin/editappt/{{applicant._id}}">Change Status</a></td>
             <td><a class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id, $index)'>Delete Applicant</a></td>

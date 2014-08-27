@@ -1,0 +1,52 @@
+<section data-ng-controller="AdminController" data-ng-init="viewApplicant()">
+  <div class="container">
+    <div class="my_wrapper">
+    
+      <h3>Fellow Details</h3>
+      <ul>
+        <li>Name: <b data-ng-bind="appt.firstName"></b>
+        <b data-ng-bind="appt.lastName"></b></li>
+        <li>Email: <b data-ng-bind="appt.email"></b></li>
+        <li>Usename: <b data-ng-bind="appt.username"></b></li>
+      </ul>
+
+      <form data-ng-submit='rateFellow()' class="signin form-horizontal" autocomplete="off">
+        <fieldset>
+
+          <div class="form-group">
+          <label for="skill">
+              <b>Skill:</b>
+              <input type="text" data-ng-model="data.skill" id="skill" required>
+          </label>
+          </div>
+
+          <div class="form-group">
+            <label for="category"><span>Rate:</span>
+                <select data-ng-model="data.rate" id="category">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+            </label>
+          </div>
+
+          <div class="form-group">
+          <button type="submit" class="btn btn-xs btn-primary" ng-href="/#!/admin/appt">Submit Rating</button>
+          </div>
+          
+          <div data-ng-show="error" class="text-center text-danger">
+              <strong data-ng-bind="error"></strong>
+          </div>
+        </fieldset>
+      </form>
+            
+  </div>
+  </div>
+</section>
