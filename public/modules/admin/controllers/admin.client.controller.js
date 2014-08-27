@@ -1,3 +1,4 @@
+
 'use strict';
 
 // Lists controller
@@ -385,4 +386,5 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
   }
+
 ]);

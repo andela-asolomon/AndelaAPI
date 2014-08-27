@@ -1,0 +1,39 @@
+<section data-ng-controller="InstructorsController" data-ng-init="listTrainees()">
+    <div class="container">
+        <div class="page-header text-center">
+          <h1>List of Trainees</h1>
+        </div>
+
+        <div class="list-group">
+            <table class="appt">
+                <thead>
+                  <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody class="capitalize">
+                    <tr data-ng-repeat="trainee in trainees" data-ng-href="/#!/instructors/trainees/{{trainee._id}}">
+                    <td data-ng-bind="trainee.firstName"></td>
+                    <td data-ng-bind="trainee.lastName"></td>
+                    <td data-ng-bind="trainee.email"></td>
+                    <td><a class="btn btn-primary btn-xs" data-ng-href="/#!/instructors/trainees/{{trainee._id}}">view</a></td>
+                  </tr>               
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+ 
+<!-- applicants -->
+
+<!-- fellows -->
+<!-- assessment
+ -->
+
+ 

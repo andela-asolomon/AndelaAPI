@@ -27,3 +27,4 @@ angular.module('users').config(['$stateProvider',
 		});
 	}
 ]);
+

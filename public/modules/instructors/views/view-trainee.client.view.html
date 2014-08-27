@@ -1,0 +1,13 @@
+<section data-ng-controller="InstructorsController" data-ng-init="viewTrainee()">
+    <div class="container">
+        <div class="page-header text-center">
+          <h1>Trainee</h1>
+        </div>
+        <div class="capitalize">
+            <p data-ng-bind="trainee.firstName"></p>
+            <p data-ng-bind="trainee.lastName"></p>
+            <p data-ng-bind="trainee.email"></p>
+            <p><a class="btn btn-primary btn-xs" ng-click="selectFellow()">Select Fellow</a></p>
+        </div>
+    </div>
+</section>

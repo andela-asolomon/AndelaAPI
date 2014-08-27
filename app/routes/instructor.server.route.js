@@ -10,7 +10,7 @@ var users = require('../../app/controllers/users'),
 module.exports = function(app) {
     // Instructor Routes
     app.route('/instr')
-        .get(users.requiresLogin, instr.checkRights, admin.listTrainees);
+        .get( admin.listTrainees);
 
     app.route('/instr/fellows')
         .get(users.requiresLogin, instr.checkRights, admin.listFellows);
@@ -35,7 +35,7 @@ module.exports = function(app) {
         .get(users.requiresLogin, instr.checkRights, admin.read);
 
     app.route('/instr/trainee/:traineeId')
-        .get(users.requiresLogin, instr.checkRights, instr.readTrainee)
+        .get(instr.readTrainee)
         .put(users.requiresLogin, instr.checkRights, instr.selectFellow)
         .post(users.requiresLogin, instr.checkRights, instr.createAssmt);
 
@@ -44,8 +44,8 @@ module.exports = function(app) {
         .delete(users.requiresLogin, instr.checkRights, instr.isCreator, instr.deleteAssmt);
 
     app.route('/instr/trainee/:traineeId/rate')
-         .post(users.requiresLogin, instr.checkRights, instr.rateFellow);
-
+         .post( instr.rateFellow);
+    
     app.route('/instr/trainee/:traineeId/rate/:skillId')
         .put(users.requiresLogin, instr.checkRights, instr.editRating)
         .delete(users.requiresLogin, instr.checkRights, instr.deleteRating);

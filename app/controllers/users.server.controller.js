@@ -51,8 +51,8 @@ exports.signup = function(req, res) {
 		user = req.body;
 		user.role = type;
 		user = new Applicant(user);
-	}
-	var messae = null;
+
+	var message = null;
 	user.provider = 'local';
 
 	req.camp.applicants.push(user);
@@ -66,7 +66,7 @@ exports.signup = function(req, res) {
 		else {
 			user.save(function(err) {
 				if (err) {
-					console.log('Error');
+					console.log(err);
 				} 
 				else {
 					req.login(user, function(err) {
@@ -84,13 +84,16 @@ exports.signup = function(req, res) {
 			});
 		}
 	});
+} else {
+	return res.send(400, {
+		message: 'Error: only applicants can signup'
+	});
+}
 };
-
 /**
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
-	console.log(req.body);
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
 			res.send(400, info);
@@ -290,15 +293,13 @@ exports.userByID = function(req, res, next, id) {
 };
 
 exports.read = function(req, res) {
-	res.jsonp(req.user);
+	res.jsonp(req.profile);
 };
 /**
  * Bootcamp middleware
  */
 exports.campByID = function(req, res, next, id) {
-	Bootcamp.findOne({
-		_id: id
-	}).exec(function(err, camp) {
+	Bootcamp.findOne(id).exec(function(err, camp) {
 		if (err) return next(err);
 		if (!camp) return next(new Error('Failed to load Camp ' + id));
 		req.camp = camp;
