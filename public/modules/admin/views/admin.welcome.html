@@ -1,19 +1,30 @@
-<section data-ng-controller="AdminController">
-  
-
+<section data-ng-controller="AdminController" data-ng-init='reRoute()'>
   <div class="container">
   <div class="admin-test">
-    <br><br><br><br>
-    <div class="pull-right" data-ng-show="user">
-        <a href="/auth/signout">Signout</a>
+    
+    <div class="col-sm-12 col-lg-12" data-ng-show="user">
+        <a class="btn btn-xs btn-primary pull-right" href="/auth/signout">Signout</a>
     </div>
 
-    <p><a href="/#!/admin/appts">View Applicants</a></p>
-    <p><a href="/#!/admin/trainees">View Trainees</a></p>
-    <p><a href="/#!/admin/fellows">View Fellows</a></p>
+    <div class="col-sm-12 col-lg-12">
+      <ul class="nav nav-tabs" role="tablist">
+        <li><a href="/#!/admin/appts">View Applicants</a></li>
+        <li><a href="/#!/admin/trainees">View Trainees</a></li>
+        <li><a href="/#!/admin/fellows">View Fellows</a></li>
+        <li><a href="/#!/admin/test/create">Create Test</a></li>
+      </ul>
+    </div>
 
-    <p>Scope user</p>: {{user}}
-    
+    <div class="col-sm-6 col-lg-4">
+      <br><br>
+      <p>You're signed in as Admin with the following details:</p>
+      <ul class="list-group">
+        <li class="list-group-item">Name: <b data-ng-bind="user.firstName"></b> <b data-ng-bind="user.lastName"></b></li>
+        <li class="list-group-item">Username: <b data-ng-bind="user.username"></b></li>
+        <li class="list-group-item">Email: <b data-ng-bind="user.email"></b> </li>
+      </ul>
+    </div>
+        
   </div>
 
   </div>

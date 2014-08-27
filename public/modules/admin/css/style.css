@@ -58,3 +58,21 @@ form.form_trainee div select, form.form_trainee div select option{
   padding: 1px;
   margin-bottom: 3px !important;
 }
+section.content, .content {
+  margin-top: 75px !important;}
+
+.admin-test .nav-tabs > li > a {
+  margin-right: 20px !important;
+  border: 1px solid #ddd !important;
+}
+.list-group li{
+  font-weight: bold;
+}
+.list-group li b{
+  font-weight: normal;
+}
+.page-header {
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+  border-bottom: none !important;
+  }
