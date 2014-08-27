@@ -14,6 +14,10 @@ var OptionSchema = new Schema({
         type: String,
         trim: true,
         required: 'Option cannot be blank'
+    },
+    answer: {
+        type: Boolean,
+        default: false
     }
 });
 

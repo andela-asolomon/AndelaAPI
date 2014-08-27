@@ -16,8 +16,9 @@ angular.module('admin').config(['$stateProvider',
     state('adminWelcome', {
       url: '/admin/welcome',
       templateUrl: 'modules/admin/views/admin.welcome.html'
+
     }).
-    state('viewAppts', {
+    state('listAppts', {
       url: '/admin/appts',
       templateUrl: 'modules/admin/views/list.applicants.admin.html'
     }).
@@ -29,9 +30,14 @@ angular.module('admin').config(['$stateProvider',
       url: '/admin/editappt/:apptId',
       templateUrl: 'modules/admin/views/edit.appt.form.admin.html'
     }).
-    state('viewTrainee', {
+    state('listTrainees', {
       url: '/admin/trainees',
-      templateUrl: 'modules/admin/views/view.trainees.admin.html'
+
+      templateUrl: 'modules/admin/views/list.trainees.admin.html'
+    }).
+    state('listFellows', {
+      url: '/admin/fellows',
+      templateUrl: 'modules/admin/views/list.fellows.admin.html'
     });
     
   }

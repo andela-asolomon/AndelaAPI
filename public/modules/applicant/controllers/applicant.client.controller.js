@@ -14,5 +14,12 @@ angular.module('applicant').controller('ApplicantController', ['$scope',  '$http
                         console.log($scope.applicant);
                 });
             };
+            $scope.show_profile = function(){
+                 var url = '/users/' + $stateParams.logged_inId;
+                $http.get(url).success(function(response) {
+                        $scope.user_profile = response;
+                        console.log($scope.user_profile);
+                });
+            };
               
 }]);

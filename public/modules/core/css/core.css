@@ -580,3 +580,6 @@ a.selected {
 }
 
 
+.capitalize {
+  text-transform: capitalize;
+}

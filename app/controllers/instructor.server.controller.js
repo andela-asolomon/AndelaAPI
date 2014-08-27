@@ -154,7 +154,7 @@ exports.addSkills = function(req, res) {
 /*
 *Edit a rating
 */
-exports.editRating = function(req, res){
+exports.editRating = function(req, res) {
 	var skillset = req.skill,
         fellow = req.trainee;
 
@@ -213,6 +213,23 @@ exports.deleteRating = function(req, res){
 	}
 };
 
+/*
+*Instructor can update his experience
+*/
+exports.updateExp = function(req, res) {
+     var profile = req.profile;
+         profile = _.extend(profile, req.body);
+
+     profile.save(function(err) {
+	       if (err) {
+	          return res.send(400, {
+	              message: "could not save experience"
+	          });
+	        } else {
+	              res.jsonp(req.profile);
+	        }
+	 });
+}
 
 /**
  * Show the current trainee/fellow

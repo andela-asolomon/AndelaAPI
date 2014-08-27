@@ -10,26 +10,32 @@ var users = require('../../app/controllers/users'),
 module.exports = function(app) {
     // Instructor Routes
     app.route('/instr')
-        .get(users.requiresLogin, instr.checkRights, admin.listTrainees);
+        .get( admin.listTrainees);
 
     app.route('/instr/fellows')
         .get(users.requiresLogin, instr.checkRights, admin.listFellows);
 
     app.route('/instr/bootcamps')
         .get(users.requiresLogin, instr.checkRights, admin.bootCamps);
-
+    
+    //instructor can add skills for himself
     app.route('/instr/skill')
         .post(users.requiresLogin, instr.checkRights, instr.addSkills);
 
+    //instructor can add skills for himself
+    app.route('/instr/:userId/expr')
+        .put(users.requiresLogin, instr.checkRights, instr.updateExp);
+
+    //instructor can edit and delete his own rating
     app.route('/instr/skill/:userId/:skillId')
         .put(users.requiresLogin, instr.checkRights, instr.editRating)
-        .delete(users.requiresLogin,  instr.deleteRating);
+        .delete(users.requiresLogin, instr.checkRights, instr.deleteRating);
 
     app.route('/instr/camp/:campId')
         .get(users.requiresLogin, instr.checkRights, admin.read);
 
     app.route('/instr/trainee/:traineeId')
-        .get(users.requiresLogin, instr.checkRights, instr.readTrainee)
+        .get(instr.readTrainee)
         .put(users.requiresLogin, instr.checkRights, instr.selectFellow)
         .post(users.requiresLogin, instr.checkRights, instr.createAssmt);
 
@@ -38,8 +44,8 @@ module.exports = function(app) {
         .delete(users.requiresLogin, instr.checkRights, instr.isCreator, instr.deleteAssmt);
 
     app.route('/instr/trainee/:traineeId/rate')
-         .post(users.requiresLogin, instr.checkRights, instr.rateFellow);
-
+         .post( instr.rateFellow);
+    
     app.route('/instr/trainee/:traineeId/rate/:skillId')
         .put(users.requiresLogin, instr.checkRights, instr.editRating)
         .delete(users.requiresLogin, instr.checkRights, instr.deleteRating);

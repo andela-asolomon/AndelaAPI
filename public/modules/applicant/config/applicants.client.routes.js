@@ -20,6 +20,10 @@ angular.module('applicant').config(['$stateProvider',
 		state('fellow-profile', {
 			url: '/profile/:applicantId',
 			templateUrl: 'modules/applicant/views/fellow.client.view.html'
+		}).
+		state('logged_in-profile', {
+			url: '/logged_in_user/:logged_inId',
+			templateUrl: 'modules/applicant/views/logged_in.user.client.view.html'
 		});
 		
 	}

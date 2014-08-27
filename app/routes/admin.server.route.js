@@ -36,8 +36,9 @@ module.exports = function(app) {
         .get(users.requiresLogin, admin.checkPermission, admin.apptRead)
         .put(users.requiresLogin, admin.checkPermission, admin.changeStatus);
 
-    app.route('/admin/appt/:apptId/camp/:campId')
-        .put(users.requiresLogin, admin.checkPermission, admin.assignBootCamp);
+
+    // app.route('/admin/appt/:apptId/camp/:campId')
+    //     .put(users.requiresLogin, admin.checkPermission, admin.assignBootCamp);
 
     app.route('/admin/appt/:apptId/role')
         .put(users.requiresLogin, admin.checkPermission, admin.changeRole);
@@ -60,7 +61,7 @@ module.exports = function(app) {
 
     app.route('/admin/test')
         .get(users.requiresLogin, admin.checkPermission, admin.listTests)
-        .post(users.requiresLogin,  admin.createTests);
+        .post(users.requiresLogin, admin.checkPermission, admin.createTests);
 
     app.route('/admin/test/:testId')
         .get(users.requiresLogin, admin.checkPermission, admin.testRead)
