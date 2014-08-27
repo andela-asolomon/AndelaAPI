@@ -36,11 +36,11 @@ module.exports = function(app) {
         .get(users.requiresLogin, admin.checkPermission, admin.apptRead)
         .put(users.requiresLogin, admin.checkPermission, admin.changeStatus);
 
-    app.route('/admin/appt/:apptId/:campId')
-        .put(users.requiresLogin, admin.checkPermission, admin.assignBootCamp);
+    // app.route('/admin/appt/:apptId/camp/:campId')
+    //     .put(users.requiresLogin, admin.checkPermission, admin.assignBootCamp);
 
     app.route('/admin/appt/:apptId/role')
-        .put(admin.changeRole);
+        .put(users.requiresLogin, admin.checkPermission, admin.changeRole);
 
     app.route('/admin/instr/:instrId')
         .get(users.requiresLogin, admin.checkPermission, admin.instrRead)
