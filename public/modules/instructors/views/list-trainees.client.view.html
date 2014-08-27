@@ -17,11 +17,11 @@
                 </thead>
                 <tbody class="capitalize">
                     <tr data-ng-repeat="trainee in trainees" data-ng-href="/#!/instructors/trainees/{{trainee._id}}">
-                    <td data-ng-bind="trainee.firstName"></td>
-                    <td data-ng-bind="trainee.lastName"></td>
-                    <td data-ng-bind="trainee.email"></td>
-                    <td><a class="btn btn-primary btn-xs" data-ng-href="/#!/instructors/trainees/{{trainee._id}}">view</a></td>
-                  </tr>               
+                        <td data-ng-bind="trainee.firstName"></td>
+                        <td data-ng-bind="trainee.lastName"></td>
+                        <td data-ng-bind="trainee.email"></td>
+                        <td><a class="btn btn-primary btn-xs" data-ng-href="/#!/instructors/trainees/{{trainee._id}}">view</a></td>
+                    </tr>            
                 </tbody>
             </table>
         </div>

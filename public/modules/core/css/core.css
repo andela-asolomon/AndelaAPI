@@ -583,3 +583,7 @@ a.selected {
 .capitalize {
   text-transform: capitalize;
 }
+
+.title{
+  margin-top: 40px;
+}

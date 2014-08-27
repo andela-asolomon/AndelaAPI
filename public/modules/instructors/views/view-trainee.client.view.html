@@ -1,13 +1,45 @@
 <section data-ng-controller="InstructorsController" data-ng-init="viewTrainee()">
     <div class="container">
-        <div class="page-header text-center">
-          <h1>Trainee</h1>
-        </div>
-        <div class="capitalize">
-            <p data-ng-bind="trainee.firstName"></p>
-            <p data-ng-bind="trainee.lastName"></p>
-            <p data-ng-bind="trainee.email"></p>
-            <p><a class="btn btn-primary btn-xs" ng-click="selectFellow()">Select Fellow</a></p>
+        <div class="col-md-offset-2 col-md-8">
+            <div class="page-header text-center capitalize">
+              <h1>Trainee: {{trainee.firstName}} {{}}</h1>
+            </div>
+            <div class="capitalize panel-body">
+                <p>email address:</p>
+                <p data-ng-bind="trainee.email"></p>
+                <p><a class="btn btn-primary btn-xs" ng-click="selectFellow()">Select Fellow</a></p>
+                <p><a class="btn btn-primary btn-xs pull-right" data-ng-href="/#!/instructors/trainees/{{trainee._id}}/create_Assessment">Create Assessment</a></p>
+            </div>
+            <div class="">  
+                <div >
+                   <p>Assessment</p> 
+                </div> 
+                <table class="appt">
+                    <thead>
+                      <tr>
+                        <th>Assessment Name</th>
+                        <th>Assessment Date</th>
+                        <th>Score</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody class="capitalize">
+                        <tr data-ng-repeat= "assessment in assessments">
+                            <td data-ng-bind="assessment.assessment_name"></td>
+                            <td data-ng-bind="assessment.assessment_date | date"></td>
+                            <td data-ng-bind="assessment.score"></td>
+                            <!-- <td><a class="btn btn-success" href="/#!/instructors/trainees/{{trainee._id}}/{{assessment._id}}/edit">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a></td>
+                            <td><a class="btn btn-success" data-ng-click="deleteAssessment()">
+                                <i class="glyphicon glyphicon-trash"></i>
+                            </a></td> -->
+                        </tr>            
+                    </tbody>
+                </table>
+                </div>
+            </div>
         </div>
     </div>
 </section>

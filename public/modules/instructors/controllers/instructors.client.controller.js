@@ -1,10 +1,9 @@
 'use strict';
 
 // Instructors controller
-angular.module('instructors').controller('InstructorsController', ['$scope', '$stateParams', '$location', 'Authentication', '$http',
-	function($scope, $stateParams, $location, Authentication, $http ) {
+angular.module('instructors').controller('InstructorsController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', '$http',
+	function($scope, $rootScope, $stateParams, $location, Authentication, $http) {
 		$scope.user = Authentication.user;
-		console.log('controller');
 
 		$scope.instructor_signin = function() {
 			$http.post('/auth/signin', $scope.credentials).success(function(response) {
@@ -71,19 +70,102 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$s
 		//   	});
 		// };
 
-		$scope.viewTrainee = function() {
-			console.log($stateParams.applicantId);
-			$scope.traineeId = $stateParams.applicantId;
-			$http.get('/instr/trainee/' + $scope.traineeId).success(function(response) {
+		$rootScope.viewTrainee = function() {
+			
+			$rootScope.traineeId = $stateParams.applicantId;
+			$http.get('/instr/trainee/' + $rootScope.traineeId).success(function(response) {
 		    // If successful show success message and clear form
 		    	$scope.success = true;
-		    	$scope.trainee = response;
+		    	$rootScope.trainee = response;
+	
+		    	$rootScope.assessments = $rootScope.trainee.assessments;   	    	
+		    	angular.forEach($rootScope.trainee.assessments, function(assessment, key){
+		    		$rootScope.assessment = assessment;
+		    		console.log($rootScope.assessment);
+		   
+		    	});
+
 		    	// $location.path('instructors' + applicant._id);
 		  	}).error(function(response) {
 		    $scope.error = response.message;
 
 		  	});
+
+		  	
+
+
 		};
+
+
+		$scope.createAssessment = function() {
+			// create new assessment for trainee 
+			$scope.assessment = ({
+				assessment_name: this.assessment_name,
+				assessment_date: this.assessment_date,
+				score: this.score
+			});
+
+			console.log($scope.assessment);
+			console.log($stateParams);
+			console.log($scope.assessment.assessment_name);
+			
+				// $scope.enterNew = false;
+			$http.post('/instr/trainee/'+ $stateParams.applicantId, $scope.assessment).success(function(response) {
+				
+				$location.path('/instructors/trainees/' + $stateParams.applicantId);
+				
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+
+			this.assessment_name = '';
+			this.assessment_date = '';
+			this.score = '';
+		};
+
+		$scope.editAssessment = function() {
+			$scope.assessment_id = $stateParams.assessmentId;
+		};
+
+		$scope.updateAssessment = function() {
+
+		  	$http.put('/instr/trainee/$stateParams.applicantId/$stateParams.assessmentId').success(function(response) {
+		    // If successful show success message and clear form
+		   
+		    	$scope.success = true;
+		    	// $location.path('/instructors/trainees/' + $stateParams.applicantId);
+		  
+		  	}).error(function(response) {
+	    		$scope.error = response.message;
+
+	  		});
+		};
+
+
+		$scope.deleteAssessment = function() {
+			// $scope.success = $scope.error = null;
+			    console.log($scope.trainee.assessments);
+			angular.forEach($scope.trainee.assessments, function(assessment, key){
+		    	$scope.assessment = assessment;
+		    });
+		    console.log($scope.assessment);
+			// for (var i in $scope.assessment) {
+			// 	if ($scope.assessments[i] === $scope.assessment) {
+			// 		$scope.assessments.splice(i, 1);
+		 //  			$http.delete('/instr/trainee/:traineeId/:assmtId').success(function(response) {
+		 //    // If successful show success message and clear form
+		 //    	// $scope._type = 'fellow';
+			//     	console.log($scope.assessment);
+			//     	$scope.success = true;
+			//     	// $location.path('instructors'...);
+			//   		}).error(function(response) {
+			//     	$scope.error = response.message;
+
+			//   		});
+			//   	}
+			// }
+		};
+ 
 
 		$scope.selectFellow = function() {
 			console.log($scope.trainee.role);
@@ -170,63 +252,20 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$s
 
 		// };
 
-		$scope.newAssessment = function() {
-			$scope.enterNew = true;
-			$scope.assessment = {};
+		// $scope.newAssessment = function() {
+		// 	$scope.enterNew = true;
+		// 	console.log($scope.assessment);
+		// 	$scope.assessment = {
+		// 		assessment_name: this.assessment_name,
+		// 		assessment_date: this.assessment_date,
+		// 		score: this.score
+		// 	};
 
-		};
+		// };
+		
 		
 
-		$scope.createAssessment = function() {
-			// Redirect after save $stateParams.applicantId
-			console.log($scope.assessment);
-			// $http.post('/instr/trainee/:traineeId', $scope.assessment).success(function(response) {
-			// 	// $location.path('instructors/assessment' + response._id);
-			// 	$scope.enterNew = false;
-			// }, function(errorResponse) {
-			// 	$scope.error = errorResponse.data.message;
-			// });
-
-		};
-
-		$scope.editAssessment = function(assessment) {
-			$scope.editing = true;
-			$scope.enterNew = false;
-		};
-
-
-		$scope.updateAssessment = function() {
-			// $scope.data='';
-		// var data = $scope.user._type;
-
-		  	$http.put('/instr/trainee/:traineeId/:assmtId').success(function(response) {
-		    // If successful show success message and clear form
-		    	// $scope._type = 'fellow';
-		    	$scope.success = true;
-		    	// $location.path('instructors'...);
-		    	$scope.editing = false;
-		    	$scope.enterNew = false;
-		  	}).error(function(response) {
-	    		$scope.error = response.message;
-
-	  		});
-		};
-
-		$scope.deleteAssessment = function() {
-			// $scope.success = $scope.error = null;
-			
-		  	$http.delete('/instr/trainee/:traineeId/:assmtId').success(function(response) {
-		    // If successful show success message and clear form
-		    	// $scope._type = 'fellow';
-		    	$scope.success = true;
-		    	// $location.path('instructors'...);
-		    	$scope.user = Authentication.user = response;
-		  	}).error(function(response) {
-		    $scope.error = response.message;
-
-		  	});
-		};
- 
+		
 		
 
 	}
