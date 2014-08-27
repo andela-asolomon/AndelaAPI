@@ -339,10 +339,13 @@ exports.createTests = function(req, res) {
           console.log("before: " + options);
           console.log("options length: " + options.length);
           var optionArr = [];
-          for (var j=0; j<options.length; j++) {
-               var eachOpt = new Options({option: options[j]});
-               console.log(eachOpt);
-               optionArr.push(eachOpt);
+          for (var j=0; j<options.length; j++) { 
+             if (!options[j].answer) {
+                options[j].answer = false;
+             }
+             var eachOpt = new Options({option: options[j].option, answer: options[j].answer});
+             console.log(eachOpt);
+             optionArr.push(eachOpt);
           }
 
           var each = new Question({question: quest[i], questOptions: optionArr});
@@ -408,9 +411,14 @@ exports.addQuestion = function(req, res) {
 
      for (var i=0; i<quest.length; i++) {
           var optionArr = [];
-
+          console.log(quest); console.log(options);
           for (var j=0; j<options.length; j++) {
-               var eachOpt = new Options({option: options[j]});
+               if (!options[j].answer) {
+                  options[j].answer = false;
+                  console.log('here');
+               }
+
+               var eachOpt = new Options({option: options[j].option, answer: options[j].answer});
                console.log(eachOpt);
                optionArr.push(eachOpt);
           }
@@ -425,7 +433,7 @@ exports.addQuestion = function(req, res) {
      test.save(function(err, test) {
           if (err) {
               return res.send(400, {
-                  message: "Error: couldn't add question"
+                  message: err
               });
           } else {
               res.jsonp(test);
@@ -441,7 +449,7 @@ exports.addOption = function(req, res) {
         question = req.question,
         option = req.body.option;
 
-        question.questOptions.push(new Options({option: option}));
+        question.questOptions.push(new Options({option: option, answer: false}));
         test.save(function(err, test) {
           if (err) {
               return res.send(400, {
@@ -468,7 +476,8 @@ exports.updateChoices = function(req, res) {
     //     console.log(test);
     for (var i=0; i<options.questOptions.length; i++) {
          // for(var j=i; j<=i; j++) {
-             options.questOptions[i].option = bodyVals[i];
+             options.questOptions[i].option = bodyVals[i].option;
+             options.questOptions[i].answer = bodyVals[i].answer;
          //     options.questOptions.push({option: bodyVals[i]});
              
          // }

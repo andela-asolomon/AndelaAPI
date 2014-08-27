@@ -1,0 +1,16 @@
+<section class="row" data-ng-controller="ApplicantController" data-ng-init="show_profile()">
+	<h3 class="col-md-12 text-center">Welcome</h3>
+		<div class="page-header">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 data-ng-bind="user_profile.username" style="text-align:left"></h1>
+						<h1 data-ng-bind="user_profile.firstName" style="text-align:left"></h1>
+						<h1 data-ng-bind="user_profile.email" style="text-align:left"></h1>
+						 <div class="">
+					        <a href="/auth/signout">Signout</a>
+					    </div>
+					</div>
+		    </div>
+	    </div>
+</section>

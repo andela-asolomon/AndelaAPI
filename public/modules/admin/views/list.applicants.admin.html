@@ -5,12 +5,14 @@
     </div>
 
     <div class="list-group">
-      <table class="appt">
+      <table class="list">
         <thead>
           <tr>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
+            <th>Score</th>
+            <th>Date Applied</th>
             <th>Status</th>
             <th></th>
             <th></th>
@@ -21,9 +23,11 @@
             <td data-ng-bind="applicant.firstName"></td>
             <td data-ng-bind="applicant.lastName"></td>
             <td data-ng-bind="applicant.email"></td>
+            <td data-ng-bind="applicant.testScore"></td>
+            <th data-ng-bind="applicant.created | date : longDate"></th>
             <td data-ng-bind="applicant.status.name"></td>
             <td><a class="btn btn-primary btn-xs" ng-href="/#!/admin/editappt/{{applicant._id}}">Change Status</a></td>
-            <td><a class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id)'>Delete Applicant</a></td>
+            <td><a class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id, $index)'>Delete Applicant</a></td>
           </tr>               
         </tbody>
       </table>

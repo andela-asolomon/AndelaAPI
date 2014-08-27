@@ -17,7 +17,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			templateUrl: 'modules/core/views/mission.client.view.html'
 		}).
 		state('about', {
-			url: '/about_andela',
+			url: '/meet_the_team',
 			templateUrl: 'modules/core/views/about.client.view.html'
 		}).
 		state('andela_network', {

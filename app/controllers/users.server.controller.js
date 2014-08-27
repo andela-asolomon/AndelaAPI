@@ -51,9 +51,8 @@ exports.signup = function(req, res) {
 		user = req.body;
 		user.role = type;
 		user = new Applicant(user);
-	}
-	var messae = null;
 
+	var message = null;
 	user.provider = 'local';
 
 	req.camp.applicants.push(user);
@@ -67,7 +66,7 @@ exports.signup = function(req, res) {
 		else {
 			user.save(function(err) {
 				if (err) {
-					console.log('Error');
+					console.log(err);
 				} 
 				else {
 					req.login(user, function(err) {
@@ -85,13 +84,16 @@ exports.signup = function(req, res) {
 			});
 		}
 	});
+} else {
+	return res.send(400, {
+		message: 'Error: only applicants can signup'
+	});
+}
 };
-
 /**
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
-	console.log(req.body);
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
 			res.send(400, info);
@@ -110,7 +112,7 @@ exports.signin = function(req, res, next) {
 		}
 	})(req, res, next);
 };
-exports.list = function(req, res) { User.find({_type: 'Applicant'}).populate('user', 'displayName').exec(function(err, fellows) {
+exports.list = function(req, res) { Applicant.find().where({role: 'fellow'}).populate('user', 'displayName').exec(function(err, fellows) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
@@ -135,7 +137,6 @@ exports.update = function(req, res) {
 		// Merge existing user
 		user = _.extend(user, req.body);
 		user.updated = Date.now();
-		user.displayName = user.firstName + ' ' + user.lastName;
 
 		user.save(function(err) {
 			if (err) {
@@ -286,21 +287,19 @@ exports.userByID = function(req, res, next, id) {
     User.findById(id).exec(function(err, user) {
         if (err) return next(err);
         if (!user) return next(new Error('Failed to load User ' + id));
-        req.user = user;
+        req.profile = user;
         next();
     });
 };
 
 exports.read = function(req, res) {
-	res.jsonp(req.user);
+	res.jsonp(req.profile);
 };
 /**
  * Bootcamp middleware
  */
 exports.campByID = function(req, res, next, id) {
-	Bootcamp.findOne({
-		_id: id
-	}).exec(function(err, camp) {
+	Bootcamp.findOne(id).exec(function(err, camp) {
 		if (err) return next(err);
 		if (!camp) return next(new Error('Failed to load Camp ' + id));
 		req.camp = camp;

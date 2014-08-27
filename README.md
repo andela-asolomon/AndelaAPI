@@ -23,6 +23,47 @@ Methods on APIs:
 	admin/instr/:instrId [GET, PUT]
 	admin/user/:userId [DELETE]
 	admin/camp [GET, POST]
+		Argument:
+		Respons:
+		{
+        "_id" : ObjectId("53f3402fdcc65f80276ef002"),
+        "camp_name" : "Alpha",
+        "applicants" : [
+                {
+                        "_id" : ObjectId("53f4770809a97398
+                        "role" : "applicant",
+                        "username" : "sdsdd",
+                        "provider" : "local",
+                        "_type" : "Applicant",
+                        "__v" : 0,
+                        "skillSets" : [ ],
+                        "created" : ISODate("2014-08-20T10
+                        "email" : "dfds@yahoo.com",
+                        "lastName" : "errr",
+                        "firstName" : "Olatun"
+                }
+        ],
+        "created" : ISODate("2014-08-19T12:16:47.292Z"),
+        "assessments" : [ ],
+        "__v" : 1
+}
+{
+        "_id" : ObjectId("53f90ef7a937c5e4305e7cc6"),
+        "camp_name" : "Beta",
+        "applicants" : [ ],
+        "created" : ISODate("2014-08-23T22:00:23.078Z"),
+        "__v" : 0
+}
+		[POST]
+			Argument:
+			Response:
+				{
+        "_id" : ObjectId("53f90ef7a937c5e4305e7cc6"),
+        "camp_name" : "Beta",
+        "applicants" : [ ],
+        "created" : ISODate("2014-08-23T22:00:23.078Z"),
+        "__v" : 0
+}
 	admin/camp/:campId [GET, PUT, DELETE]
 	admin/test [GET, POST]
 	admin/test/:testId [GET, POST, PUT, DELETE]
