@@ -10,12 +10,14 @@
 				  					<td>Email</td>
 				  					<td>Role</td>
 				  					<td ng-if="applicant.role == applicant">Status</td>
+				  					<td ng-if="applicant.role == applicant">Score</td>
 				  				</tr>
 						        <tr>
 									<td  data-ng-bind="user_profile.username"></td>
 									<td  data-ng-bind="user_profile.email"></td>
 									<td  data-ng-bind="user_profile.role"></td>
 									<td  data-ng-bind="user_profile.status" ng-if="applicant.role == applicant"></td>
+									<td  data-ng-bind="user_profile.testScore" ng-if="applicant.role == applicant"></td>
 						        </tr>
 				        </table>
 				    </div>

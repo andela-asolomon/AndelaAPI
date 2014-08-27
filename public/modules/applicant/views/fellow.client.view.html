@@ -1,8 +1,8 @@
 <section>
 	<div data-ng-controller="ApplicantController" data-ng-init="findOne()" class="page-header">
 		<div class="page-header">
-			<table>
-				<thead>
+			<table class="table table-condensed">
+				<thead class="info">
 					<tr>
 						<td>Username</td>
 						<td>Firstname</td>
@@ -12,13 +12,18 @@
 						<td>Skill Set</td>
 					</tr>
 				</thead>
+				<tbody class="success">
 				<tr>
-
+					<td data-ng-bind="applicant.username" style="text-align:left"></td>
+					<td data-ng-bind="applicant.firstName" style="text-align:left"></td>
+					<td data-ng-bind="applicant.lastName" style="text-align:left"></td>
+					<td data-ng-bind="applicant.email" style="text-align:left"></td>
+					<td data-ng-bind="applicant.portfolio" style="text-align:left"></td>
+					<td data-ng-bind="applicant.skillsets" style="text-align:left"></td>
 				</tr>
+			</tbody>
 			</table>
-		<h1 data-ng-bind="applicant.username" style="text-align:left"></h1>
-		<h1 data-ng-bind="applicant.firstName" style="text-align:left"></h1>
-		<h1 data-ng-bind="applicant.email" style="text-align:left"></h1>
+		
 		</div>
 	</div>
 </section>

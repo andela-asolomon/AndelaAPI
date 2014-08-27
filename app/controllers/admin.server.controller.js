@@ -367,7 +367,7 @@ exports.createTests = function(req, res) {
 /**
  * Update tests
  */
-exports.updateTest = function(req, res) {
+exports.updateTestName = function(req, res) {
     var test = req.test;
     test = _.extend(test, req.body);
 
