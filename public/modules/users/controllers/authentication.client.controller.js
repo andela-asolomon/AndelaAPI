@@ -7,6 +7,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		//If user is signed in then redirect back home
 		if ($scope.authentication.user) $location.path('/');
 
+
 		$scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}];
 		$scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}];
 		$scope.optionOne=[], $scope.optionTwo=[], $scope.questions=[];
@@ -91,7 +92,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
                 
             }
         };
-
 
 		$scope.signup = function() {
 			$http.post('/auth/signup', $scope.credentials).success(function(response) {

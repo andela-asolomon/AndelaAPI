@@ -35,7 +35,7 @@ module.exports = function(app) {
         .get(users.requiresLogin, instr.checkRights, admin.read);
 
     app.route('/instr/trainee/:traineeId')
-        .get(instr.readTrainee)
+        .get(users.requiresLogin, instr.checkRights, instr.readTrainee)
         .put(users.requiresLogin, instr.checkRights, instr.selectFellow)
         .post(users.requiresLogin, instr.checkRights, instr.createAssmt);
 

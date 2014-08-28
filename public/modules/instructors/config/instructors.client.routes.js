@@ -36,15 +36,19 @@ angular.module('instructors').config(['$stateProvider',
 		state('view_Trainee', {
 			url: '/instructors/trainees/:applicantId',
 			templateUrl: 'modules/instructors/views/view-trainee.client.view.html'
-		});
+		}).
+		state('create_Assessment', {
+			url: '/instructors/trainees/:applicantId/create_Assessment',
+			templateUrl: 'modules/instructors/views/create-assessment.client.view.html'
+		}).
 		// state('viewFellow', {
 		// 	url: '/instructors/fellows/:applicantId',
 		// 	templateUrl: 'modules/instructors/views/view-fellow.client.view.html'
 		// });
-		// state('editInstructor', {
-		// 	url: '/instructors/:instructorId/edit',
-		// 	templateUrl: 'modules/instructors/views/edit-instructor.client.view.html'
-		// });
+		state('editAssessment', {
+			url: '/instructors/trainees/:applicantId/:assessmentId/edit',
+			templateUrl: 'modules/instructors/views/edit-assessment.client.view.html'
+		});
 	}
 ]);
 
