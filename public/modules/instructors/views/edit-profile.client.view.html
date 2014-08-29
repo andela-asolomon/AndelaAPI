@@ -1,0 +1,41 @@
+`+<section data-ng-controller="InstructorsController">
+    <div class="container">
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/instructors/addSkill">Add To Your Skills</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
+        </div>
+        <div class="admin-view">
+            <div clas= "col-md-offset-4 col-md-4">
+                <form name="update" class="form-horizontal" data-ng-submit="create()">
+                    <fieldset>
+                        <div data-ng-show="error" class="alert alert-danger">
+                            <a class="close" data-dismiss="alert" data-ng-click="removeAlert('error')" href="#">×</a>
+                            <span data-ng-bind="error"></span>
+                        </div>
+                        <div data-ng-show="success" class="alert alert-success">
+                            <a class="close" data-dismiss="alert" data-ng-click="removeAlert('success')" href="#">×</a>
+                            <span data-ng-bind="success"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Experience</label>
+                            <textarea name="experience" data-ng-model="details.exp" required></textarea>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label">Upload Image</label>
+                            <input type="file" data-ng-file-select="onFileSelect($files)" accept="image/png, image/jpeg" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-default" data-ng-disabled="update.$invalid">
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

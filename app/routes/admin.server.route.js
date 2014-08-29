@@ -48,14 +48,14 @@ module.exports = function(app) {
         .put(users.requiresLogin, admin.checkPermission, admin.changeInstrRole);
 
     app.route('/admin/user/:userId')
-        .delete(admin.deleteUser);
+        .delete(users.requiresLogin, admin.checkPermission, admin.deleteUser);
 
     app.route('/admin/camp')
         .get(users.requiresLogin, admin.checkPermission,  admin.bootCamps)
         .post(users.requiresLogin, admin.checkPermission, admin.createBootCamp);
 
     app.route('/admin/camp/:campId')
-        .get(users.requiresLogin, admin.checkPermission, admin.read)
+        .get(admin.read)
         .put(users.requiresLogin, admin.checkPermission, admin.editCamp)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteCamp);
 

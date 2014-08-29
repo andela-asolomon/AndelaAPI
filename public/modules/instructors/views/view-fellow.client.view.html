@@ -1,22 +1,45 @@
-<!-- <section data-ng-controller="InstructorsController" data-ng-init="viewFellow()">
+<section data-ng-controller="InstructorsController" data-ng-init="viewFellow()">
     <div class="container">
-        <div class="page-header text-center">
-          <h1>Fellow</h1>
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
         </div>
-
-        
-        <div class="appt">
-        
+        <div class="admin-view">
+            <div class="col-sm-6 col-lg-4">
+                <div class="page-header text-center">
+                  <h1>Fellow</h1>
+                </div>
+                <ul class="list-group">
+                    <li class="capitalize list-group-item">Name:&nbsp;<b data-ng-bind="fellow.firstName"></b>&nbsp;<b data-ng-bind="fellow.lastName"></b></li>
+                    <li class="list-group-item">Email: <b data-ng-bind="fellow.email"></b></li>
+                    <li class="list-group-item">Score: <b data-ng-bind="fellow.testScore"></b></li>
+                </ul>
             
-            <p data-ng-bind="fellow.firstName"></p>
-            <p data-ng-bind="fellow.lastName"></p>
-            <p data-ng-bind="fellow.email"></p>
-            <!<td data-ng-bind="applicant.status.name"></td> -->
-          
-            <!-- <td><a class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id)'>Delete Applicant</a></td> --> 
-          <!--   <p><a class="btn btn-primary btn-xs" data-ng-href="/#!/instructors/{{applicant._id}}">cr</a></p> -->
-         
-       <!--  </div>
-       
+                <table class="list">
+                    <thead>
+                        <tr>
+                          <th>Skill</th>
+                          <th>Rating</th>
+                          <th></th>
+                          <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="capitalize">
+                        <tr data-ng-repeat="skillSet in fellow.skillSets">
+                            <td data-ng-bind="skillSet.skill"></td>
+                            <td data-ng-bind="skillSet.rating"></td>
+                            <td><a class="btn btn-success" href="/#!/instructors/fellow/{{fellow._id}}/{{skillSet._id}}/editRate" data-ng-click="editRate($index, skillSet)"><i class="glyphicon glyphicon-edit"></i></a></td>
+                            <td><a class="btn btn-success" data-ng-click="deleteRate($index, skillSets)"><i class="glyphicon glyphicon-trash"></i></a></td>
+                        </tr>               
+                    </tbody>
+                </table>
+                <p><a class="btn btn-primary btn-xs" data-ng-href="/#!/instructors/fellow/{{fellow._id}}/rate" ng-click="rate(fellow)">Rate Fellow</a></p>
+            </div>
+        </div>
     </div>
-</section> -->
+</section>

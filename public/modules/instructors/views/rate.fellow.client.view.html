@@ -1,0 +1,49 @@
+<section data-ng-controller="InstructorsController">
+  <div class="container">
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/instructors/addSkill">Add To Your Skills</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
+        </div>
+      <form data-ng-submit='ratefellow()' class="signin form-horizontal" autocomplete="off">
+        <fieldset>
+          <div class="form-group">
+            <b>Skill:</b>
+            <input type="text" data-ng-model="data.skill" id="skill" required>
+          </div>
+
+          <div class="form-group">
+            <label for="category"><span>Rate:</span>
+                <select data-ng-model="data.rating" id="category">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+            </label>
+          </div>
+
+          <div class="form-group">
+          <button type="submit" class="btn btn-xs btn-primary" data-ng-submit='ratefellow()'>Submit Rating</button>
+          </div>
+          
+          <div data-ng-show="error" class="text-center text-danger">
+              <strong data-ng-bind="error"></strong>
+          </div>
+        </fieldset>
+      </form>
+            
+  </div>
+  </div>
+</section>

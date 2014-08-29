@@ -1,33 +1,47 @@
-<section data-ng-controller="InstructorsController" data-ng-init="editAssessment()">
-    <div class="col-md-offset-4 col-md-4">
-        <form class="form-horizontal" data-ng-submit="updateAssessment()" novalidate>
-            <fieldset data-ng-repeat="assessment in assessments | filter:assessment_id">
-                <div class="form-group">
-                    <label class="control-label" for="assessment_name">Assessment Name</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="assessment.assessment_name" id="assessment_name" class="form-control" placeholder="" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="assessment_date">Assessment Date</label>
-                    <div class="controls">
-                        <input data-ng-model="assessment.assessment_date" id="assessment_date" class="form-control" cols="30" rows="10" placeholder="">
-                    </div>
-                </div>
-                 <div class="form-group">
-                    <label class="control-label" for="score">Score</label>
-                    <div class="controls">
-                        <input type="text" data-ng-model="assessment.score" id="score" class="form-control" placeholder="" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <input type="submit" class="btn btn-large btn-success myButton">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-            </fieldset>
-        </form>
- 	</div>
+<section data-ng-controller="InstructorsController">
+     <div class="container">
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/instructors/addSkill">Add To Your Skills</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
+        </div>
+        <div class="admin-view">
+            <div class="col-md-offset-4 col-md-4">
+                <form class="form-horizontal" data-ng-submit="updateAssessment()" novalidate>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="assessment_name">Assessment Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="assessment.assessment_name" id="assessment_name" class="form-control" placeholder="" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="assessment_date">Assessment Date</label>
+                            <div class="controls">
+                                <input data-ng-model="assessment.assessment_date" id="assessment_date" class="form-control" cols="30" rows="10" placeholder="">
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label" for="score">Score</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="assessment.score" id="score" class="form-control" placeholder="" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-large btn-success myButton">
+                        </div>
+        				<div data-ng-show="error" class="text-danger">
+        					<strong data-ng-bind="error"></strong>
+        				</div>
+                    </fieldset>
+                </form>
+         	</div>
+        </div>
+    </div>
 </section>
