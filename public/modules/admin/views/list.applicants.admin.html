@@ -1,16 +1,26 @@
 <section data-ng-controller="AdminController" data-ng-init="listApplicants()">
   <div class="container">
 
+    <div class="link-controls">
+      <ul>
+        <li><a href="/#!/admin/appts">View Applicants</a></li>
+        <li><a href="/#!/admin/trainees">View Trainees</a></li>
+        <li><a href="/#!/admin/fellows">View Fellows</a></li>
+        <li><a href="/#!/admin/test/create">Create Test</a></li>
+        <li><a href="/auth/signout">Signout</a></li>
+      </ul>
+    </div>
+
+    <div class="admin-view">
     <div class="col-sm-12 col-lg-12" data-ng-show="user">
         <a class="btn btn-xs btn-primary pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
     </div>
-
     <div class="page-header text-center">
-      <h1>Applicants</h1>
+      <h2>Applicants</h2>
     </div>
 
     <div>
-      <table class="list">
+      <table class="list list-link">
         <thead>
           <tr>
             <th>First Name</th>
@@ -25,18 +35,20 @@
         </thead>
         <tbody>
           <tr data-ng-repeat="applicant in applicants">
-            <td data-ng-bind="applicant.firstName"></td>
-            <td data-ng-bind="applicant.lastName"></td>
-            <td data-ng-bind="applicant.email"></td>
-            <td data-ng-bind="applicant.testScore"></td>
-            <td data-ng-bind="applicant.created | date : longDate"></td>
-            <td data-ng-bind="applicant.status.name"></td>
-            <td><a class="btn btn-primary btn-xs" ng-href="/#!/admin/editappt/{{applicant._id}}">Change Status</a></td>
-            <td><a class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id, $index)'>Delete Applicant</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.firstName}}</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.lastName}}</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.email}}</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.testScore}}</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.created | date : longDate}}</a></td>
+
+            <td style="text-transform: capitalize"><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.status.name}}<b style="display: block; font-size: 0.9em" data-ng-show="applicant.status.name === 'rejected'">Reason: {{applicant.status.reason}}</b></a></td>
+            
+            <td><button class="btn btn-primary btn-xs" ng-href="/#!/admin/editappt/{{applicant._id}}">Change Status</button></td>
+            <td><button class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id, $index)'>Delete Applicant</button></td>
           </tr>               
         </tbody>
       </table>
     </div>
+  </div> <!-- admin-view -->
   </div>
-
 </section>

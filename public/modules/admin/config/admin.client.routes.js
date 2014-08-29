@@ -32,7 +32,6 @@ angular.module('admin').config(['$stateProvider',
     }).
     state('listTrainees', {
       url: '/admin/trainees',
-
       templateUrl: 'modules/admin/views/list.trainees.admin.html'
     }).
     state('listFellows', {

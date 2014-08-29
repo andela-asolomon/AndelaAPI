@@ -2,22 +2,17 @@
 <section data-ng-controller="AdminController" data-ng-init='reRoute()'>
   <div class="container">
   <div class="admin-test">
-    
-    <div class="col-sm-12 col-lg-12" data-ng-show="user">
-        <a class="btn btn-xs btn-primary pull-right" href="/auth/signout">Signout</a>
-    </div>
-
-    <div class="col-sm-12 col-lg-12">
-      <ul class="nav nav-tabs" role="tablist">
+    <div class="link-controls">
+      <ul>
         <li><a href="/#!/admin/appts">View Applicants</a></li>
         <li><a href="/#!/admin/trainees">View Trainees</a></li>
         <li><a href="/#!/admin/fellows">View Fellows</a></li>
         <li><a href="/#!/admin/test/create">Create Test</a></li>
+        <li><a href="/auth/signout">Signout</a></li>
       </ul>
     </div>
 
-    <div class="col-sm-6 col-lg-4">
-      <br><br>
+    <div class="admin-view">
       <p>You're signed in as Admin with the following details:</p>
       <ul class="list-group">
         <li class="list-group-item">Name: <b data-ng-bind="user.firstName"></b> <b data-ng-bind="user.lastName"></b></li>
@@ -30,3 +25,6 @@
 
   </div>
 </section>
+
+
+

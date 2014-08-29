@@ -325,43 +325,42 @@ exports.createTests = function(req, res) {
     var quest = req.body.questions;
     var questions = [];
 
-    console.log(quest.length);
-     for (var i=0; i<quest.length; i++) {
-          
+    for (var i=0; i<quest.length; i++) {
+          var optionArr = [];
+          var answerArr = [];
           if (i === 0) {
               var options = req.body.optionOne;
-          } else if(i === 1) {
-              var options = req.body.optionTwo;
+              var chosenAnswer = req.body.answerOne;
           } else {
-              var options = req.body.optionThree;
-          }
+              var options = req.body.optionTwo;
+              var chosenAnswer = req.body.answerTwo;
+          } 
 
-          console.log("before: " + options);
-          console.log("options length: " + options.length);
-          var optionArr = [];
           for (var j=0; j<options.length; j++) { 
-             if (!options[j].answer) {
-                options[j].answer = false;
-             }
-             var eachOpt = new Options({option: options[j].option, answer: options[j].answer});
-             console.log(eachOpt);
+             // if (!options[j].answer) {
+             //    options[j].answer = false;
+             // }
+             console.log(typeof j + typeof chosenAnswer);
+              if (j === parseInt(chosenAnswer, 10)) {
+                  answerArr[j] = true;
+              } else {
+                  answerArr[j] = false;
+              }
+             var eachOpt = new Options({option: options[j], answer: answerArr[j]});
              optionArr.push(eachOpt);
           }
 
           var each = new Question({question: quest[i], questOptions: optionArr});
-          console.log(each);
           questions.push(each); 
-     }
-     var test = new Test({testName: req.body.testName, questions: questions});
-     test.save(function(err) {
-          if (err) {
-              return res.send(400, {
-                  message: err
-              });
-          } else {
-              res.jsonp(test);
-          }
-      });
+    }
+    var test = new Test({testName: req.body.testName, questions: questions});
+    test.save(function(err) {
+      if (err) {
+          return res.send(400, { message: err });
+      } else {
+          res.jsonp(test);
+      }
+    });
 };
 
 /**

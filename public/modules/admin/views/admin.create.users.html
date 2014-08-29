@@ -1,7 +1,18 @@
 <section class="row" data-ng-controller="AdminController" data-ng-init='reRoute()'>
+    <div class="link-controls">
+      <ul>
+        <li><a href="/#!/admin/appts">View Applicants</a></li>
+        <li><a href="/#!/admin/trainees">View Trainees</a></li>
+        <li><a href="/#!/admin/fellows">View Fellows</a></li>
+        <li><a href="/#!/admin/test/create">Create Test</a></li>
+        <li><a href="/auth/signout">Signout</a></li>
+      </ul>
+    </div>
+
+    <div class="admin-view">
+
     <h3 class="col-md-12 text-center">Create new instructor/admin</h3>
-    
-    
+
     <div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
         <form data-ng-submit="create()" class="signin form-horizontal" novalidate autocomplete="off">
             <fieldset>
@@ -39,5 +50,6 @@
                 </div>
             </fieldset>
         </form>
+    </div>
     </div>
 </section>

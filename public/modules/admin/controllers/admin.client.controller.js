@@ -5,7 +5,97 @@
 angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authentication', '$stateParams', '$location',
   function($scope, $http, Authentication, $stateParams, $location) {
 
-    $scope.user = Authentication.user;
+    $scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}];
+    $scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}];
+    $scope.optionOne=[];  
+    $scope.optionTwo=[];
+    $scope.questions=[];
+    $scope.selected = '', $scope.testName = '',$scope.answered = false;
+    $scope.answeredTwo = false;
+
+    $scope.setShow = function(val) {
+      $scope.selected = val;
+    };
+
+    $scope.isSelected = function(val) {
+      return val === $scope.selected;
+    };
+
+    $scope.addNewChoice = function(num) {
+      var newItemNo;
+      if (num === 1) {
+          newItemNo = $scope.choiceOne.length+1;
+          $scope.choiceOne.push({id: 'choice'+newItemNo});
+      } else {
+         newItemNo = $scope.choiceTwo.length+1;
+           $scope.choiceTwo.push({id: 'choice'+newItemNo});
+      }
+    };
+
+    $scope.deleteChoice = function(index, num) {
+      if (num === 1) {
+            //$scope.choiceOne.splice(index, 1);
+            if (parseInt($scope.test.answerOne, 10) === $scope.choiceOne.length - 1) {
+              $scope.test.answerOne = $scope.test.answerOne-1;
+              console.log('yea');
+            }
+            doDelete($scope.choiceOne, $scope.optionOne, index);
+            console.log($scope.test.answerOne); console.log(index);
+            // if (parseInt($scope.test.answerOne, 10) === index) {
+            //   $scope.answered.bool = false;
+               console.log($scope.answered);
+            // }
+            // $scope.optionOne.splice(index, 1);
+            // changeIds($scope.choiceOne);
+      } else {
+        if (parseInt($scope.test.answerTwo, 10) === $scope.choiceTwo.length - 1) {
+              $scope.test.answerTwo = $scope.test.answerTwo-1;
+         }
+        doDelete($scope.choiceTwo, $scope.optionTwo, index);
+        console.log($scope.test.answerTwo);
+        // if ($scope.test.answerTwo === index) {
+        //       $scope.answeredTwo.bool = false;
+              console.log($scope.answeredTwo);
+        // }
+            // $scope.choiceTwo.splice(index, 1);
+            // $scope.optionTwo.splice(index, 1);
+            // changeIds($scope.choiceTwo);
+      }
+    };
+
+    var doDelete = function(choiceArr, optionArr, index) {
+            choiceArr.splice(index, 1);
+            optionArr.splice(index, 1);
+
+            for (var i in choiceArr) {
+              choiceArr[i].id = 'choice' + i;
+            }
+    };
+
+    $scope.showAddChoice = function(choice, num) {
+      if (num === 1)
+         return choice.id === $scope.choiceOne[$scope.choiceOne.length-1].id;
+      else
+        return choice.id === $scope.choiceTwo[$scope.choiceTwo.length-1].id;
+    };
+
+    $scope.changeAnsVal = function(index, num) { console.log("y");
+      if (num === 1) { 
+        //doChange($scope.optionOne,  index); console.log($scope.optionOne.length);
+        //$scope.test.answerOne = index;
+        console.log('answerOne: ' + $scope.test.answerOne);
+        $scope.answered = true;
+       // console.log($scope.answered.bool);
+        //$scope.answered.index = index;
+        //console.log('answerIndex: ' + $scope.answered.index);
+      } else {
+        //doChange($scope.optionTwo,  index);
+        console.log('answerTwo: ' + $scope.test.answerTwo);
+        $scope.answeredTwo = true;
+        //$scope.answeredTwo.index = index;
+        //console.log('answerIndex: ' + $scope.answeredTwo.index);
+      }
+    };
 
 
     // Create new user
@@ -101,14 +191,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.listFellows = function() {
-      //Permissions check
-      if ($scope.user === null){
-        $location.path('/');
-      }
-      else if ($scope.user.role !== 'admin'){
-        $location.path('/');
-      }
-      
       $http.get('/admin/fellows').success(function(response) {
         // If successful show success message and clear form
         $scope.fellows = response;
@@ -122,14 +204,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.listInstructors = function() {
-      //Permissions check
-      if ($scope.user === null){
-        $location.path('/');
-      }
-      else if ($scope.user.role !== 'admin'){
-        $location.path('/');
-      }
-
       $http.get('/admin/instructors').success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
@@ -142,14 +216,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.listAdmins = function() {
-      //Permissions check
-      if ($scope.user === null){
-        $location.path('/');
-      }
-      else if ($scope.user.role !== 'admin'){
-        $location.path('/');
-      }
-
       $http.get('/admin/admins').success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
@@ -162,13 +228,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.changeStatus = function() {
-      //Permissions check
-      if ($scope.user === null){
-        $location.path('/');
-      }
-      else if ($scope.user.role !== 'admin'){
-        $location.path('/');
-      }
 
       $http.put('/admin/appt/' + $stateParams.apptId, $scope.data).success(function(response) {
 
@@ -185,14 +244,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     }; 
 
     $scope.changeRoleToFellow = function(trainee_id, index) {
-      //Permissions check
-      if ($scope.user === null){
-        $location.path('/');
-      }
-      else if ($scope.user.role !== 'admin'){
-        $location.path('/');
-      }
-
+      
       console.log(trainee_id);
       console.log($scope.role[index]);
       $scope.trainees.splice(index, 1);
@@ -208,14 +260,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     }; 
 
     $scope.viewInstructor = function(instrId) {
-      //Permissions check
-      if ($scope.user === null){
-        $location.path('/');
-      }
-      else if ($scope.user.role !== 'admin'){
-        $location.path('/');
-      }
-
       $http.get('/admin/appt/' + instrId).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
@@ -228,15 +272,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.rateFellow = function() {
-      //Permissions check
-      if ($scope.user === null){
-        $location.path('/');
-      }
-      else if ($scope.user.role !== 'admin'){
-        $location.path('/');
-      }
-
-      console.log();
       $http.post('/admin/trainee/' + $stateParams.apptId + '/rate', $scope.data).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
@@ -249,16 +284,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
-    $scope.reRoute = function() {
-      if ($scope.user === null){
-        $location.path('/');
-      }
-      else if ($scope.user.role !== 'admin'){
-        $location.path('/');
-      }
-
-      console.log($scope.user);
-    }
 
     // $scope.changeInstrRole = function() {
     //   console.log($scope.apptId);
@@ -273,91 +298,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     //   });
     // }; 
 
-    $scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}];
-    $scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}];
-    $scope.optionOne=[], $scope.optionTwo=[], $scope.questions=[];
-    $scope.selected = '', $scope.testName = '',$scope.answered = { bool: false, index: -1 };
-    $scope.answeredTwo = { bool: false, index: -1 };
-
-  
-    $scope.setShow = function(val) {
-      $scope.selected = val;
-    };
-
-    $scope.isSelected = function(val) {
-      return val === $scope.selected;
-    };
-
-    $scope.addNewChoice = function(num) {
-      var newItemNo;
-      if (num === 1) {
-                newItemNo = $scope.choiceOne.length+1;
-          $scope.choiceOne.push({id: 'choice'+newItemNo});
-      } else {
-         newItemNo = $scope.choiceTwo.length+1;
-           $scope.choiceTwo.push({id: 'choice'+newItemNo});
-      }
-    };
-
-    $scope.deleteChoice = function(index, num) {
-      if (num === 1) {
-            //$scope.choiceOne.splice(index, 1);
-                doDelete($scope.choiceOne, $scope.optionOne, index);
-            if ($scope.answered.index === index) {
-              $scope.answered.bool = false;
-            }
-            // $scope.optionOne.splice(index, 1);
-            // changeIds($scope.choiceOne);
-      } else {
-        doDelete($scope.choiceTwo, $scope.optionTwo, index);
-        if ($scope.answeredTwo.index === index) {
-              $scope.answeredTwo.bool = false;
-            }
-            // $scope.choiceTwo.splice(index, 1);
-            // $scope.optionTwo.splice(index, 1);
-            // changeIds($scope.choiceTwo);
-      }
-    };
-
-    var doDelete = function(choiceArr, optionArr, index) {
-            choiceArr.splice(index, 1);
-            optionArr.splice(index, 1);
-
-            for (var i in choiceArr) {
-              choiceArr[i].id = 'choice' + i;
-            }
-    };
-
-    $scope.showAddChoice = function(choice, num) {
-      if (num === 1)
-         return choice.id === $scope.choiceOne[$scope.choiceOne.length-1].id;
-      else
-        return choice.id === $scope.choiceTwo[$scope.choiceTwo.length-1].id;
-    };
-
-    $scope.changeAnsVal = function(index, num) { console.log("y");
-      if (num === 1) { 
-        doChange($scope.optionOne, index); console.log($scope.optionOne.length);
-        $scope.answered.bool = true;
-        $scope.answered.index = index;
-      } else {
-        doChange($scope.optionTwo, index);
-        $scope.answeredTwo.bool = true;
-        $scope.answeredTwo.index = index;
-      }
-    };
-
-    var doChange = function (array, index) {
-      for (var i in array) {
-          if (parseInt(i,10) !== index) {
-            array[i].answer = 'false';
-            console.log("yea");
-          } else {
-            array[i].answer= 'true';
-          }
-            
-        }
-      };
 
     $scope.createTest = function() {
       console.log();

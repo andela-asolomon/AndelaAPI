@@ -1,7 +1,17 @@
 <section data-ng-controller="AdminController" data-ng-init="viewApplicant()">
   <div class="container">
     <div class="my_wrapper">
-    
+      <div class="link-controls">
+        <ul>
+          <li><a href="/#!/admin/appts">View Applicants</a></li>
+          <li><a href="/#!/admin/trainees">View Trainees</a></li>
+          <li><a href="/#!/admin/fellows">View Fellows</a></li>
+          <li><a href="/#!/admin/test/create">Create Test</a></li>
+          <li><a href="/auth/signout">Signout</a></li>
+        </ul>
+      </div>
+
+      <div class="admin-view">
       <h3>Fellow Details</h3>
       <ul>
         <li>Name: <b data-ng-bind="appt.firstName"></b>
@@ -22,7 +32,7 @@
 
           <div class="form-group">
             <label for="category"><span>Rate:</span>
-                <select data-ng-model="data.rate" id="category">
+                <select data-ng-model="data.rating" id="category">
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -46,7 +56,7 @@
           </div>
         </fieldset>
       </form>
-            
+    </div>  
   </div>
   </div>
 </section>

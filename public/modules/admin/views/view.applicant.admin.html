@@ -1,0 +1,33 @@
+<section data-ng-controller="AdminController" data-ng-init="viewApplicant()">
+  <div class="container">
+    <div class="link-controls">
+      <ul>
+        <li><a href="/#!/admin/appts">View Applicants</a></li>
+        <li><a href="/#!/admin/trainees">View Trainees</a></li>
+        <li><a href="/#!/admin/fellows">View Fellows</a></li>
+        <li><a href="/#!/admin/test/create">Create Test</a></li>
+        <li><a href="/auth/signout">Signout</a></li>
+      </ul>
+    </div>
+
+    <div class="admin-view">
+      {{appt}}
+    <div class="page-header text-center">
+      <h1 style="text-transform: capitalize">{{appt.role}} Details</h1>
+    </div>
+
+      <ul>
+        <li>Name: <b data-ng-bind="appt.firstName"></b> <b data-ng-bind="appt.lastName"></b></li>
+        <li>Email: <b data-ng-bind="appt.email"></b></li>
+        <li>Username: <b data-ng-bind="appt.username"></b></li>
+        <li data-ng-show="appt.role == 'applicant'">Status: <b data-ng-bind="appt.status.name"></b></li>
+        <li data-ng-show="appt.role == 'applicant'">Testscore: <b data-ng-bind="appt.testScore"></b></li>
+        <li data-ng-show="appt.role == 'trainee'">Assessment: <b data-ng-bind="appt.assessment"></b></li>
+        <li data-ng-show="appt.role == 'fellow'">Skillsets: <b data-ng-bind="appt.skillSets"></b></li>
+      </ul>
+    </table>
+    </div>
+  </div>
+  </div>
+</section>
+

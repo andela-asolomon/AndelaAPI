@@ -1,0 +1,31 @@
+div.link-controls{
+  padding-top: 100px !important;
+  width: 200px;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #fbefd5;
+  color: #333 !important;
+}
+
+div.link-controls ul{
+  padding: 10px 20px;
+}
+
+div.link-controls ul li{
+  color: white;
+  margin-bottom: 10px;
+  list-style-type: none;
+  padding-left: 20px;
+  color: #333 !important;
+}
+
+div.link-controls ul li a, .admin-view h1, .admin-view h2{
+  color: #333 !important;
+}
+
+.admin-view{
+  padding-left: 150px;
+  color: #333 !important;
+}

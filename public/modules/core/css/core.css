@@ -1,3 +1,18 @@
+@font-face {
+    font-family: 'proxima';
+    src: url('/modules/core/fonts/Proxima-Nova-Black.otf')%>);
+    src: local("☺"),
+         url('/modules/core/fonts/Proxima-Nova-Black.otf')%>) format('embedded-opentype'),
+         url() format('woff'),
+         url() format('truetype'),
+         url() format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+p{
+  font-family: proxima, sans-serif;
+}
 .container-fluid {
   padding: 0 !important;
   margin: 0 !important;
@@ -587,3 +602,4 @@ a.selected {
 .title{
   margin-top: 40px;
 }
+

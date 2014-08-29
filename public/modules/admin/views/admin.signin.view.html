@@ -1,5 +1,15 @@
-<section class="row" data-ng-controller="AuthenticationController" data-ng-init='reRoute()'>
-    <br><br><br><br><br>
+<section class="row" data-ng-controller="AuthenticationController">
+    <div class="link-controls">
+      <ul>
+        <li><a href="/#!/admin/appts">View Applicants</a></li>
+        <li><a href="/#!/admin/trainees">View Trainees</a></li>
+        <li><a href="/#!/admin/fellows">View Fellows</a></li>
+        <li><a href="/#!/admin/test/create">Create Test</a></li>
+        <li><a href="/auth/signout">Signout</a></li>
+      </ul>
+    </div>
+
+    <div>
     <div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
         <form data-ng-submit="signin()" class="signin form-horizontal" autocomplete="off">
             <fieldset>
@@ -19,6 +29,7 @@
                 </div>
             </fieldset>
         </form>
+    </div>
     </div>
 </section>
 

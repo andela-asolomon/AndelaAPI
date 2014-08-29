@@ -3,7 +3,17 @@
     <div class="col-sm-12 col-lg-12" data-ng-show="user">
         <a class="btn btn-xs btn-primary pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
     </div>
-    
+    <div class="link-controls">
+      <ul>
+        <li><a href="/#!/admin/appts">View Applicants</a></li>
+        <li><a href="/#!/admin/trainees">View Trainees</a></li>
+        <li><a href="/#!/admin/fellows">View Fellows</a></li>
+        <li><a href="/#!/admin/test/create">Create Test</a></li>
+        <li><a href="/auth/signout">Signout</a></li>
+      </ul>
+    </div>
+
+    <div class="admin-view">
     <div class="page-header text-center">
       <h1>Tests</h1>
     </div>
@@ -13,13 +23,11 @@
         <li><strong>Test name: <b data-ng-bind="test.testName"></b></strong></li>
         <li data-ng-repeat="question in test.questions">Question {{$index + 1}}: <b data-ng-bind="question.question"></b>
           <ol>Options:
-            <li data-ng-repeat="option in question.questOptions"><b data-ng-bind="option.option"></b> <b ng-show="option.answer">(Correct Answer)</b></li>
+            <li data-ng-repeat="option in question.questOptions"><b data-ng-bind="option.option"></b> <b data-ng-bind="option.answer"></b></li>
           </ol>
         </li>
       </ul>
-
-
     </div>
   </div>
+  </div>
 </section>
-
