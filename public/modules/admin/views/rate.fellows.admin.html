@@ -12,12 +12,18 @@
       </div>
 
       <div class="admin-view">
+        {{appt}}
       <h3>Fellow Details</h3>
       <ul>
         <li>Name: <b data-ng-bind="appt.firstName"></b>
         <b data-ng-bind="appt.lastName"></b></li>
         <li>Email: <b data-ng-bind="appt.email"></b></li>
         <li>Usename: <b data-ng-bind="appt.username"></b></li>
+        <li>Skillset: 
+          <ul data-ng-repeat="skill in appt.skillSets">
+            <li><b data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b></li>
+          </ul>
+        </li>
       </ul>
 
       <form data-ng-submit='rateFellow()' class="signin form-horizontal" autocomplete="off">
@@ -48,7 +54,7 @@
           </div>
 
           <div class="form-group">
-          <button type="submit" class="btn btn-xs btn-primary" ng-href="/#!/admin/appt">Submit Rating</button>
+          <button type="submit" class="btn btn-xs btn-primary">Submit Rating</button>
           </div>
           
           <div data-ng-show="error" class="text-center text-danger">

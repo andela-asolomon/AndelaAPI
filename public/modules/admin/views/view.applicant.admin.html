@@ -23,8 +23,14 @@
         <li data-ng-show="appt.role == 'applicant'">Status: <b data-ng-bind="appt.status.name"></b></li>
         <li data-ng-show="appt.role == 'applicant'">Testscore: <b data-ng-bind="appt.testScore"></b></li>
         <li data-ng-show="appt.role == 'trainee'">Assessment: <b data-ng-bind="appt.assessment"></b></li>
-        <li data-ng-show="appt.role == 'fellow'">Skillsets: <b data-ng-bind="appt.skillSets"></b></li>
+        <li data-ng-show="appt.role == 'fellow'">Skillset: 
+          <ul data-ng-repeat="skill in appt.skillSets">
+            <li><b data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b></li>
+          </ul>
+        </li>
       </ul>
+
+      <p data-ng-show="appt.role == 'fellow'"><a ng-href="/#!/fellows/{{appt._id}}/rate">Rate Fellow</a> </p>
     </table>
     </div>
   </div>

@@ -275,8 +275,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       $http.post('/admin/trainee/' + $stateParams.apptId + '/rate', $scope.data).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
+        $scope.appt = response;
         console.log('Success - Done', response);
-        $location.path('/admin/fellows');
         
       }).error(function(response) {
         $scope.error = response.message;
