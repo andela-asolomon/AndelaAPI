@@ -85,11 +85,11 @@ p.tag-line{
 
 .header {
   width: 100%;
-  height: 500px;
+  height: 686px;
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  background: url(/modules/core/img/wor.jpg) no-repeat center center scroll;
+  background: url(/modules/core/img/bgg.jpg) no-repeat center center scroll;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
