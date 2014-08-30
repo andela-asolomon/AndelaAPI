@@ -49,6 +49,10 @@ angular.module('admin').config(['$stateProvider',
     state('viewTest', {
       url: '/admin/test',
       templateUrl: 'modules/admin/views/view.tests.admin.html'
+    }).
+    state('editTest', {
+      url: '/admin/test/:testId',
+      templateUrl: 'modules/admin/views/view.test.admin.html'
     });
     
   }

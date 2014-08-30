@@ -1,4 +1,4 @@
-<section data-ng-controller="AdminController" data-ng-init="viewTest()">
+<section data-ng-controller="AdminController" data-ng-init="viewTests()">
   <div class="container">
     <div class="col-sm-12 col-lg-12" data-ng-show="user">
         <a class="btn btn-xs btn-primary pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
@@ -19,15 +19,26 @@
     </div>
 
     <div>
-      <ul data-ng-repeat="test in tests">
-        <li><strong>Test name: <b data-ng-bind="test.testName"></b></strong></li>
-        <li data-ng-repeat="question in test.questions">Question {{$index + 1}}: <b data-ng-bind="question.question"></b>
-          <ol>Options:
-            <li data-ng-repeat="option in question.questOptions"><b data-ng-bind="option.option"></b> <b data-ng-bind="option.answer"></b></li>
-          </ol>
-        </li>
-      </ul>
+      <table class="list list-link">
+        <thead>
+          <tr>
+            <th>Test Name</th>
+            <th>Created On</th>
+            <th>No of questions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-repeat="test in tests">
+            <td><a ng-href="/#!/admin/test/{{test._id}}">{{test.testName}}</a></td>
+            <td><a ng-href="/#!/admin/test/{{test._id}}">{{test.created | date : longDate}}</a></td>
+            <td><a ng-href="/#!/admin/test/{{test._id}}">{{test.questions.length}}</a></td>
+            </td>
+          </tr>               
+        </tbody>
+      </table>
     </div>
+
+
   </div>
   </div>
 </section>

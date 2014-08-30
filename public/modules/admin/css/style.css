@@ -168,11 +168,17 @@ table.list-link tr td a {
   height:100% !important;
   width:100% !important;
 }
-table.list-link tr:hover{
+/*table.list-link tr:hover{
   background: #bea;
-}
+}*/
 
 table.list-link tr td {
   padding-left: 0;
   padding-right: 0;
+}
+
+p.warning, .warning {
+  color: red !important;
+  text-align: center;
+  font-weight: bold;
 }

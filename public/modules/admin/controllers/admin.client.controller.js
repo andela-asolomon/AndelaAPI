@@ -5,10 +5,12 @@
 angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authentication', '$stateParams', '$location',
   function($scope, $http, Authentication, $stateParams, $location) {
 
-    $scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}];
-    $scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}];
-    $scope.optionOne=[];  
-    $scope.optionTwo=[];
+    $scope.user = Authentication.user;
+
+    $scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}]; //answer to question one
+    $scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}]; //answer to question two
+    $scope.optionOne=[];  //options for question one
+    $scope.optionTwo=[]; //oprions for question two
     $scope.questions=[];
     $scope.selected = '', $scope.testName = '',$scope.answered = false;
     $scope.answeredTwo = false;
@@ -228,9 +230,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.changeStatus = function() {
-
+      console.log($scope.data);
       $http.put('/admin/appt/' + $stateParams.apptId, $scope.data).success(function(response) {
-
         // If successful show success message and clear form
         $scope.success = true;
         // $location.path('admin/appt/' + response._id);
@@ -284,24 +285,11 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
-
-    // $scope.changeInstrRole = function() {
-    //   console.log($scope.apptId);
-    //   // console.log(typeof $scope.credentials.role);
-    //   $http.put('/admin/appt/' + $scope.apptId + '/role', $scope.appt).success(function(response) {
-    //     // If successful show success message and clear form
-    //     $scope.success = true;
-        
-    //   }).error(function(response) {
-    //     $scope.error = response.message;
-    //     console.log('Error - can not');
-    //   });
-    // }; 
-
-
     $scope.createTest = function() {
       console.log();
-      $http.post('/admin/test', {questions: $scope.questions, optionOne: $scope.optionOne, optionTwo: $scope.optionTwo, testName: $scope.testName}).success(function(response) {
+      $http.post('/admin/test', {questions: $scope.questions, optionOne: $scope.optionOne, optionTwo: $scope.optionTwo, 
+                                  testName: $scope.testName, answerOne: $scope.test.answerOne, 
+                                  answerTwo: $scope.test.answerTwo}).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
         console.log('Success - Done', response);
@@ -313,11 +301,139 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
-    $scope.viewTest = function() {
+    $scope.viewTests = function() {
       $http.get('/admin/test').success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
         $scope.tests = response;
+        console.log('Success - Done', response);        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log('Error - can not');
+      });
+    };
+
+    $scope.viewTest = function() {
+      $http.get('/admin/test/' + $stateParams.testId).success(function(response) {
+        $scope.test = response;
+
+        $scope.testNameEditorEnabled = false;
+        $scope.questionEditorEnabled = [];
+        $scope.editableQuestion = [];
+        $scope.optionEditorEnabled = [];
+        $scope.editableOption = [];
+        $scope.displayerrmsg = [];
+
+        for (var i in $scope.test.questions){
+          $scope.questionEditorEnabled[i] = false;
+          $scope.optionEditorEnabled[i] = [];
+          $scope.editableOption[i] = [];
+          for (var j in $scope.test.questions[i].questOptions) {
+            $scope.optionEditorEnabled[i][j] = false;
+            $scope.editableOption[i][j] = {};
+          }
+        }
+        
+        $scope.enableEditor = function(field, index, optionIndex) {
+          if (field === 'testName'){
+            $scope.testNameEditorEnabled = true; 
+            $scope.editabletestName = $scope.test.testName; 
+          }
+          if (field === 'question'){
+            $scope.questionEditorEnabled[index] = true; 
+            $scope.editableQuestion[index] = $scope.test.questions[index].question; 
+          }
+
+          if (field === 'option'){
+            $scope.optionEditorEnabled[index][optionIndex] = true; 
+            $scope.editableOption[index][optionIndex].option = 
+                                  $scope.test.questions[index].questOptions[optionIndex].option;
+          }
+        };
+        
+        $scope.disableEditor = function(field, index, optionIndex) {
+          if (field === 'testName'){
+            $scope.testNameEditorEnabled = false;
+          }
+          if (field === 'question'){
+            $scope.questionEditorEnabled[index] = false;
+          }
+          if (field === 'option'){
+            $scope.optionEditorEnabled[index][optionIndex] = false;
+          }
+        };
+        // Checks to see if all answers are set to same (false/true). 
+        // Returns true if all are the same
+        var checkAllanswers = function (questOptions) {
+          var firstOption = questOptions[0].answer
+          for (var i in questOptions) {
+            if (firstOption !== questOptions[i].answer){
+              return false
+            }
+          }
+          return true;
+        }
+
+        $scope.save = function(field, index, optionIndex) {
+          if (field === 'testName'){
+            $scope.test.testName = $scope.editabletestName;
+            $scope.changeTestName($scope.test);
+          }
+          if (field === 'question'){
+            $scope.test.questions[index].question = $scope.editableQuestion[index];
+            $scope.updateQuestion($scope.test, index);
+          }
+          if (field === 'option'){
+            $scope.test.questions[index].questOptions[optionIndex].option = 
+                                                    $scope.editableOption[index][optionIndex].option;
+            if ($scope.editableOption[index][optionIndex].answer === undefined ||
+                              $scope.editableOption[index][optionIndex].answer === 'undefined') {
+              $scope.editableOption[index][optionIndex].answer = false;
+            }
+
+            // if the option's answer field changes, then change others to it's oppossite
+            if ($scope.editableOption[index][optionIndex].answer === true){
+              for (var i in $scope.test.questions[index].questOptions) {
+                if (i === optionIndex) {continue;}
+                $scope.test.questions[index].questOptions[i].answer = false;
+              }
+            }
+            $scope.test.questions[index].questOptions[optionIndex].answer = 
+                                                    $scope.editableOption[index][optionIndex].answer;
+            
+            // Set error message if no answer is selected
+            if (checkAllanswers ($scope.test.questions[index].questOptions)){
+              $scope.displayerrmsg[index] = true;
+            }
+            else{
+              $scope.displayerrmsg[index] = false;
+            }
+            
+            
+            $scope.updateQuestion($scope.test, index);
+          }
+
+          $scope.disableEditor(field, index, optionIndex);
+        };
+
+        console.log('Success - Done', response);        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log('Error - can not');
+      });
+    };
+
+    $scope.changeTestName = function(test) {
+      $http.put('/admin/test/' + test._id, test).success(function(response) {
+        console.log('Success - Done', response);        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log('Error - can not');
+      });
+    };
+
+    $scope.updateQuestion = function(test, quesIndex) {
+      $http.put('/admin/test/' + test._id + '/' + test.questions[quesIndex]._id, test.questions[quesIndex]).success(function(response) {
         console.log('Success - Done', response);        
       }).error(function(response) {
         $scope.error = response.message;

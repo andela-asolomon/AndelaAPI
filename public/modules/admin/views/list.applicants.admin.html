@@ -43,7 +43,7 @@
 
             <td style="text-transform: capitalize"><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.status.name}}<b style="display: block; font-size: 0.9em" data-ng-show="applicant.status.name === 'rejected'">Reason: {{applicant.status.reason}}</b></a></td>
             
-            <td><button class="btn btn-primary btn-xs" ng-href="/#!/admin/editappt/{{applicant._id}}">Change Status</button></td>
+            <td><a class="btn btn-primary btn-sm" style="padding-top: 0 !important" ng-href="/#!/admin/editappt/{{applicant._id}}">Change Status</a></td>
             <td><button class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id, $index)'>Delete Applicant</button></td>
           </tr>               
         </tbody>
