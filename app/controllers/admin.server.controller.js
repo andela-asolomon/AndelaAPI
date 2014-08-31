@@ -8,17 +8,16 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Test = mongoose.model('Test'),
     Question = mongoose.model('Question'),
-    Options = mongoose.model('Options'),
     Bootcamp = mongoose.model('Bootcamp'),
+    WorkHistory = mongoose.model('WorkHistory'),
+    path = require('path'),
     _ = require('lodash');
-var users = require('../../app/controllers/users');
 
 
 /**
  * Admin authorization middleware
  */
 exports.checkPermission = function(req, res, next) {
-  console.log(req.user.role);
     if (req.user._type === 'Instructor' && req.user.role === 'admin') {
         next();
     } else {
@@ -32,69 +31,65 @@ exports.checkPermission = function(req, res, next) {
 * Create users
 */
 exports.createUsers = function(req, res, next) {
-  console.log('createUsers called on the backend with', req.body);
    var instructor = new Instructor(req.body);
    instructor.provider ='local';
-    console.log(req.body.role);
+   
    if (req.body.role !== 'instructor' && req.body.role !== 'admin') {
        return res.send(400, {
-            message: "Error: Only admin or instructors can be created"
+            message: 'Error: Only admin or instructors can be created'
        });
    } else {
         instructor.save(function(err) {
-        // Remove sensitive data before login
-          instructor.password = undefined;
-          instructor.salt = undefined;
-          if (err) {
-             return res.send(400, {
-                message: err
-             });
-          } else {
-            res.jsonp(instructor);
-          }
+           // Remove sensitive data before login
+           instructor.password = undefined;
+           instructor.salt = undefined;
+           if (err) {
+               return res.send(400, { message: err });
+           } else {
+               res.jsonp(instructor);
+           }
        });
    }
-
 };
 
 /**
 * Change applicant's status
 */
 exports.changeStatus = function(req, res) {
-        var applicant = req.applicant; 
+      var applicant = req.applicant; 
       
       if (req.body.status === 'rejected') { 
         if (!req.body.reason || req.body.reason.length === 0) {
-          return res.send(400, {
+           return res.send(400, {
               message: 'Please give reason why applicant was rejected'
-          });
+           });
         }
-        console.log(req.body.reason.length);
-      }  
+      } 
+
       if (req.body.status === 'selected for bootcamp') {
-      	  applicant.role = 'trainee';
+          applicant.role = 'trainee';
       }
 
       if (applicant.role === 'trainee' && req.body.status !== 'selected for bootcamp' ) {
           applicant.role = 'applicant';
       }
+
       if (req.body.reason) { 
           applicant.status.reason = req.body.reason;
       } else {
           applicant.status.reason = '';
       }
 
-      applicant.status.name = req.body.status;
-     // applicant = _.extend(applicant, req.body);
+      applicant.status.name = req.body.status; 
 
       applicant.save(function(err, appt) {
-	        if (err) {
-	            return res.send(400, {
-	                message: err
-	            });
-	        } else {
-	            res.jsonp(appt);
-	        }
+          if (err) {
+              return res.send(400, {
+                  message: err
+              });
+          } else {
+              res.jsonp(appt);
+          }
       });   
 };
 
@@ -111,8 +106,6 @@ exports.changeRole = function(req, res) {
           });
       } else {
           applicant = _.extend(applicant, req.body);
-          
-          
           if (role === 'applicant') {
              applicant.status.name = 'selected for interview';
              applicant.status.reason = '';
@@ -188,10 +181,8 @@ exports.deleteUser = function(req, res) {
 */
 exports.assignBootCamp = function(req, res) {
       var applicant = req.applicant;
-      //applicant.campId = req.params.campId;
       var camp = req.camp;
 
-      
       if (applicant.campId !== req.params.campId){
          Bootcamp.findById(req.params.campId).exec(function(err, boot) {
 
@@ -199,7 +190,7 @@ exports.assignBootCamp = function(req, res) {
               boot.save(function(err) {
                   if (err) {
                      return res.send(400, {
-                        message: "error occurred"
+                        message: 'error occurred'
                       });
                   } else {
                       camp.applicants(applicant).remove(function(err) {
@@ -212,7 +203,7 @@ exports.assignBootCamp = function(req, res) {
           applicant.save(function(err) {
               if (err) {
                   return res.send(400, {
-                      message: "could not assign boot camp"
+                      message: 'could not assign boot camp'
                   });
               } else {
                   res.jsonp(applicant);
@@ -245,7 +236,7 @@ exports.bootCamps = function(req, res) {
      Bootcamp.find().exec(function(err, camps){
          if (err) {
             return res.send(400, {
-                message: "Couldn't find bootcamps"
+                message: 'Could not find bootcamps'
             });
          } else {
             res.jsonp(camps);
@@ -260,11 +251,10 @@ exports.editCamp = function(req, res) {
     var camp = req.camp;
 
     camp = _.extend(camp, req.body);
-
     camp.save(function(err, boot) {
         if (err) {
             return res.send(400, {
-                message: 'Couldn\'t edit camp'
+                message: 'Couldn\'t edit bootcamp'
             });
         } else {
             res.jsonp(boot);
@@ -281,7 +271,7 @@ exports.deleteCamp = function(req, res) {
     camp.remove(function(err, boot) {
         if (err) {
             return res.send(400, {
-                message: "Couldn't delete camp"
+                message: 'Couldn\'t delete camp'
             });
         } else {
             res.jsonp(boot);
@@ -311,11 +301,11 @@ exports.instrRead = function(req, res) {
 };
 
 var doListing = function(req, res, schema, whichRole) {
-  if(schema === "Applicant") {
+  if(schema === 'Applicant') {
      Applicant.find().where({role: whichRole}).populate('campId','camp_name').exec(function (err, users) {
          if (err) {
             return res.send(400, {
-                message: "No " + whichRole + " found"
+                message: 'No ' + whichRole + ' found'
             });
          } else {
             res.jsonp(users);
@@ -325,7 +315,7 @@ var doListing = function(req, res, schema, whichRole) {
       Instructor.find().where({role: whichRole}).exec(function (err, users) {
          if (err) {
             return res.send(400, {
-               message: "No " + whichRole + " found"
+               message: 'No ' + whichRole + ' found'
             });
           } else {
             res.jsonp(users);
@@ -338,23 +328,36 @@ var doListing = function(req, res, schema, whichRole) {
  * List applicants
  */
 exports.listApplicants = function(req, res) {
-   doListing(req, res, "Applicant", "applicant");
+   doListing(req, res, 'Applicant', 'applicant');
 };
 
 /**
  * List fellows
  */
 exports.listFellows = function(req, res) {
-   doListing(req, res, "Applicant", "fellow");
+   doListing(req, res, 'Applicant', 'fellow');
 };
 
 /**
  * List Trainees
  */
 exports.listTrainees = function(req, res) {
-   doListing(req, res, "Applicant", "trainee");
+   doListing(req, res, 'Applicant', 'trainee');
 };
 
+/**
+ * List Instructors
+ */
+exports.listInstructors = function(req, res) {
+   doListing(req, res, 'Instructor', 'instructor');
+};
+
+/**
+ * List Admins
+ */
+exports.listAdmins = function(req, res) {
+   doListing(req, res, 'Instructor', 'admin');
+};
 
 /**
  * Create tests
@@ -363,43 +366,41 @@ exports.createTests = function(req, res) {
     var quest = req.body.questions;
     var questions = [];
 
-    console.log(quest.length);
-     for (var i=0; i<quest.length; i++) {
-          
+    for (var i=0; i<quest.length; i++) {
+          var optionArr = [];
+          var answerArr = [];
           if (i === 0) {
               var options = req.body.optionOne;
-          } else if(i === 1) {
-              var options = req.body.optionTwo;
+              var chosenAnswer = req.body.answerOne;
           } else {
-              var options = req.body.optionThree;
-          }
+              var options = req.body.optionTwo;
+              var chosenAnswer = req.body.answerTwo;
+          } 
 
-          console.log("before: " + options);
-          console.log("options length: " + options.length);
-          var optionArr = [];
           for (var j=0; j<options.length; j++) { 
-             if (!options[j].answer) {
-                options[j].answer = false;
-             }
-             var eachOpt = new Options({option: options[j].option, answer: options[j].answer});
-             console.log(eachOpt);
+             // if (!options[j].answer) {
+             //    options[j].answer = false;
+             // }
+              if (j === parseInt(chosenAnswer, 10)) {
+                  answerArr[j] = true;
+              } else {
+                  answerArr[j] = false;
+              }
+             var eachOpt = new Options({option: options[j], answer: answerArr[j]});
              optionArr.push(eachOpt);
           }
 
           var each = new Question({question: quest[i], questOptions: optionArr});
-          console.log(each);
           questions.push(each); 
-     }
-     var test = new Test({testName: req.body.testName, questions: questions});
-     test.save(function(err) {
-          if (err) {
-              return res.send(400, {
-                  message: err
-              });
-          } else {
-              res.jsonp(test);
-          }
-      });
+    }
+    var test = new Test({testName: req.body.testName, questions: questions});
+    test.save(function(err) {
+      if (err) {
+          return res.send(400, { message: err });
+      } else {
+          res.jsonp(test);
+      }
+    });
 };
 
 /**
@@ -430,7 +431,7 @@ exports.updateQuestion = function(req, res) {
     req.test.save(function(err, test) {
         if (err) {
             return res.send(400, {
-                message: "Error: couldn't update question"
+                message: 'Error: couldn\'t update question'
             });
         } else {
             res.jsonp(test);
@@ -442,32 +443,31 @@ exports.updateQuestion = function(req, res) {
  * Add question to already existing test
  */
 exports.addQuestion = function(req, res) {
-     var quest = req.body.questions;
+     var quest = req.body.question;
      var test = req.test;
      var options = req.body.option;
-     var question = [];
+     //var question = [];
 
-     for (var i=0; i<quest.length; i++) {
-          var optionArr = [];
-          console.log(quest); console.log(options);
-          for (var j=0; j<options.length; j++) {
-               if (!options[j].answer) {
-                  options[j].answer = false;
-                  console.log('here');
-               }
+     //for (var i=0; i<quest.length; i++) {
+         // var optionArr = [], answerArr = [];
+          for (var j = 0; j < options.length; j++) {
+                if (!options[j].answer) {
+                   options[j].answer = false;
+                }
+               // if (j === parseInt(req.body.answer, 10)) {
+               //      answerArr[j] = true;
+               // } else {
+               //      answerArr[j] = false;
+               // }
 
                var eachOpt = new Options({option: options[j].option, answer: options[j].answer});
-               console.log(eachOpt);
                optionArr.push(eachOpt);
           }
 
-          var each = new Question({question: quest[i], questOptions: optionArr});
-          console.log(each);
-          //question.push(each);
+          var each = new Question({question: quest, questOptions: optionArr});
           test.questions.push(each); 
-     }
+     //}
      
-     console.log(test);
      test.save(function(err, test) {
           if (err) {
               return res.send(400, {
@@ -476,7 +476,7 @@ exports.addQuestion = function(req, res) {
           } else {
               res.jsonp(test);
           }
-      });
+     });
 };
 
 /**
@@ -484,47 +484,37 @@ exports.addQuestion = function(req, res) {
  */
 exports.addOption = function(req, res) {
      var test = req.test,
-        question = req.question,
-        option = req.body.option;
+     question = req.question,
+     option = req.body.option;
 
-        question.questOptions.push(new Options({option: option, answer: false}));
-        test.save(function(err, test) {
-          if (err) {
-              return res.send(400, {
-                  message: err
-              });
-          } else {
-              res.jsonp(test);
-          }
-        });
+     question.questOptions.push(new Options({option: option, answer: false}));
+     test.save(function(err, test) {
+        if (err) {
+           return res.send(400, { message: err });
+        } else {
+            res.jsonp(test);
+        }
+     });
 }
 
 /**
- * Update Question's choices
+ * Update choices
  */
 exports.updateChoices = function(req, res) {
-    var test = req.test;
-    var options = test.questions.id(req.params.questId);
-    var bodyVals = req.body.choices;
-    console.log(bodyVals);
-    console.log("test: " + test);
-    // test.questions.id(req.params.questId).questOptions.remove();
-    //     console.log(options);
-    //     test.questions.id(req.params.questId).questOptions.push(bodyVals);
-    //     console.log(test);
-    for (var i=0; i<options.questOptions.length; i++) {
-         // for(var j=i; j<=i; j++) {
-             options.questOptions[i].option = bodyVals[i].option;
-             options.questOptions[i].answer = bodyVals[i].answer;
-         //     options.questOptions.push({option: bodyVals[i]});
-             
-         // }
-         console.log(options);
+    var test = req.test,
+        quest = req.question,
+        choices = req.body.choices;
+    
+    //quest.question = req.body.question;
+    for (var i = 0; i < quest.questOptions.length; i++) {
+        quest.questOptions[i].option = choices[i].option;
+        quest.questOptions[i].answer = choices[i].answer;
+        // if (i === parseInt(req.body.answer, 10)) {
+        //    quest.questOptions[i].answer = true;
+        // } else {
+        //    quest.questOptions[i].answer = false;
+        // }
     }
- 
-    // for (var i=0; i<bodyVals.length; i++) {
-    //     options.questOptions.push({option: bodyVals[i]});
-    // }
 
     test.save(function(err) {
         if (err) {
@@ -546,7 +536,7 @@ exports.deleteTest = function(req, res) {
     test.remove(function(err) {
         if (err) {
             return res.send(400, {
-                message: "Couldn't delete test"
+                message: 'Couldn\'t delete test'
             });
         } else {
             res.jsonp(test);
@@ -565,7 +555,7 @@ exports.deleteQuestion = function(req, res, next) {
     test.save(function(err) {
         if (err) {
             return res.send(400, {
-                message: "Couldn't delete question"
+                message: 'Couldn\'t delete question'
             });
         } else {
             res.jsonp(test);
@@ -581,16 +571,132 @@ exports.deleteOption = function(req, res) {
         question = req.question,
         id = req.params.optionId; 
 
-    question.questOptions.id(id).remove();
-    test.save(function(err) {
-        if (err) {
-            return res.send(400, {
-                message: "Couldn't delete option"
+    var option = question.questOptions.id(id);
+    if (question.questOptions.length === 2) {
+        return res.send(400, { 
+          message: 'A question can only have a minimum of two options'
+        });
+    } else {
+        if (option.answer === true) {
+            return res.send(400, { 
+                message: 'This option is the answer to the question. Change the answer before deleting it'
             });
         } else {
-            res.jsonp(test);
+             option.remove();
+             test.save(function(err, test) {
+               if (err) {
+                    return res.send(400, {
+                        message: 'Couldn\'t delete option'
+                    });
+               } else {
+                    res.jsonp(test);
+               }
+             });
+        }
+    }
+};
+
+/**
+ * Update placement status
+ */
+exports.placementStatus = function(req, res) {
+    var profile = req.profile;
+    
+    if (profile.role === 'fellow') {
+       profile.currPlacement.status = req.body.status;
+       profile.currPlacement.startDate = req.body.startDate;
+       profile.currPlacement.endDate = req.body.endDate;
+
+       profile.save(function(err, user) {
+         if (err) {
+            return res.send(400, { message: 'Couldn\'t save placement status' });
+         } else {
+            res.jsonp(user);
+         }
+       });
+    } else {
+        return res.send(400, { message: 'Only a fellow\'s placement status can be updated' });
+    }
+};
+
+/**
+ * Admin adds fellow's work history
+ */
+exports.addWorkHistory = function(req, res) {
+    var profile = req.profile;
+    console.log(profile);
+    
+    if (profile.role === 'fellow') {
+       var history = new WorkHistory(req.body);
+
+       profile.workHistory.push(history);
+       profile.save(function(err, user) {
+         if (err) {
+            return res.send(400, { message: 'Couldn\'t save work history' });
+         } else {
+            res.jsonp(user);
+         }
+       });
+    } else {
+        return res.send(400, { message: 'Only a fellow\'s work history can be added' });
+    }
+};
+
+/**
+ * Admin edits fellow's work history
+ */
+exports.editWorkHistory = function(req, res) {
+   var history = req.history,
+        profile = req.profile;
+
+    history = _.extend(history, req.body);
+
+    profile.save(function(err, user) {
+        if (err) {
+            return res.send(400, {
+                message: 'Error: could not save work history'
+            });
+        } else {
+            res.jsonp(user);
         }
     });
+};
+
+/**
+ * A particular work history extracted from the whole set 
+ */
+exports.oneWorkHistory = function(req, res)  {
+   res.jsonp(req.history);
+}
+
+/**
+ * Admin deletes fellow's work history
+ */
+exports.deleteWorkHistory = function(req, res) {
+   var profile = req.profile,
+        history = req.history;
+
+    history.remove();
+    profile.save(function(err, user) {
+        if (err) {
+            return res.send(400, {
+                message: 'Couldn\'t delete work history'
+            });
+        } else {
+            res.jsonp(user);
+        }
+    });
+}
+
+/**
+ * Download CV
+ */
+exports.download = function(req, res) {
+     var file = req.param('file'),
+         fileName = path.basename(file);
+
+     res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+     res.download(file);
 };
 
 /**
@@ -600,7 +706,7 @@ exports.listTests = function(req, res) {
     Test.find().sort('-created').exec(function(err, tests) {
         if (err) {
             return res.send(400, {
-                message: "could not list test"
+                message: 'could not list test'
             });
         } else {
             res.jsonp(tests);
@@ -613,20 +719,6 @@ exports.listTests = function(req, res) {
  */
 exports.testRead = function(req, res) {
     res.jsonp(req.test);
-};
-
-/**
- * List Instructors
- */
-exports.listInstructors = function(req, res) {
-   doListing(req, res, "Instructor", "instructor");
-};
-
-/**
- * List Admins
- */
-exports.listAdmins = function(req, res) {
-   doListing(req, res, "Instructor", "admin");
 };
 
 /**
@@ -675,6 +767,14 @@ exports.testByID = function(req, res, next, id) {
         req.test = test;
         next();
     });
+};
+
+/**
+ * Work History middleware
+ */
+exports.historyByID = function(req, res, next, id) {
+    req.history = req.profile.workHistory.id(id);
+    next();
 };
 
 /**

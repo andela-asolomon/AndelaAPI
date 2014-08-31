@@ -52,7 +52,7 @@ exports.signup = function(req, res) {
 		user.role = type;
 		user = new Applicant(user);
 	}
-	var messae = null;
+	var message = null;
 	user.provider = 'local';
 
 	req.camp.applicants.push(user);
@@ -283,7 +283,7 @@ exports.userByID = function(req, res, next, id) {
     User.findById(id).exec(function(err, user) {
         if (err) return next(err);
         if (!user) return next(new Error('Failed to load User ' + id));
-        req.user = user;
+        req.profile = user;
         next();
     });
 };
@@ -291,19 +291,7 @@ exports.userByID = function(req, res, next, id) {
 exports.read = function(req, res) {
 	res.jsonp(req.user);
 };
-/**
- * Bootcamp middleware
- */
-exports.campByID = function(req, res, next, id) {
-	Bootcamp.findOne({
-		_id: id
-	}).exec(function(err, camp) {
-		if (err) return next(err);
-		if (!camp) return next(new Error('Failed to load Camp ' + id));
-		req.camp = camp;
-		next();
-	});
-};
+
 /**
  * Require login routing middleware
  */

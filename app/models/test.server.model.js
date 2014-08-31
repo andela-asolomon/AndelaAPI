@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 /**
- * Options Schema
+ * Option Schema
  */
 var OptionSchema = new Schema({
     option: {
@@ -48,6 +48,6 @@ var TestSchema = new Schema({
 
 });
 
+//mongoose.model('Options', OptionSchema);
 mongoose.model('Test', TestSchema);
 mongoose.model('Question', QuestionSchema);
-mongoose.model('Options', OptionSchema);

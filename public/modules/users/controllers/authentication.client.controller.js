@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$upload', '$location', 'Authentication',
+	function($scope, $http, $upload, $location, Authentication) {
 		$scope.authentication = Authentication;
 
 		//If user is signed in then redirect back home
@@ -10,8 +10,53 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		$scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}];
 		$scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}];
 		$scope.optionOne=[], $scope.optionTwo=[], $scope.questions=[];
+		//$scope.optionOne[]['option']; 
 		$scope.selected = '', $scope.answered = { bool: false, index: -1 };
 		$scope.answeredTwo = { bool: false, index: -1 };
+
+       
+        $scope.download = function(link) {
+         	var path = 'public/modules/core/img/server/Temp/webid.docx';
+         	window.open('admin/download?file='+path, '_parent','');
+        };
+
+        // Upload Image
+		$scope.onFileSelect = function($file) {
+			$scope.file = $file;
+			if ($scope.file) { 
+				if ($scope.file[0].type === 'image/jpeg' || $scope.file[0].type === 'image/png') {
+				    $scope.correctFormat = true; 
+				} else {
+				   $scope.correctFormat = false; 
+			    }
+			}
+
+	    };
+
+	    $scope.removeAlert = function(message) {
+              if (message === "error") {
+                  $scope.error = null;
+              } else {
+              	  $scope.success = null;
+              }
+        };
+
+        // upload file
+		$scope.create = function() {
+			$scope.success = null;
+			$scope.error = null;
+			$scope.upload = $upload.upload({
+	            url: '/instr/updateInfo',
+	            method: 'POST',
+	            data: $scope.details,
+	            file: $scope.file
+	        }).success(function(response) {
+	            $scope.success = 'Your details have been updated successfully';
+	        }).error(function(err) {
+	        	$scope.error = err.message;
+	            console.log('Error uploading file: ' + err  || err.message);
+	        });
+		};
 
 		$scope.setShow = function(val) {
 			$scope.selected = val;
@@ -122,3 +167,18 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 		};
 	}
 ]);
+
+angular.module('users').directive('validFile',function(){
+  return {
+    require:'ngModel',
+    link:function(scope,el,attrs,ngModel){
+      //change event is fired when file is selected
+      el.bind('change',function(){
+        scope.$apply(function(){
+          ngModel.$setViewValue(el.val());
+          ngModel.$render();
+        });
+      });
+    }
+  }
+});

@@ -10,6 +10,11 @@ var mongoose = require('mongoose'),
     Skillset = mongoose.model('Skillset'),
     _ = require('lodash');
 var users = require('../../app/controllers/users');
+var uuid = require('node-uuid'),
+    multiparty = require('multiparty');
+
+var path = require('path'),
+    fs = require('fs');
 
 /**
 Input assessment score for trainee
@@ -23,7 +28,7 @@ exports.createAssmt = function(req, res){
 	trainee.save(function(err) {
 		if (err) {
 		    return res.send(400, {
-		       message: "Error: Couldn't create assessment"
+		       message: 'Error: Couldn\'t create assessment'
 		    });
 		} else {
 		    res.jsonp(trainee);
@@ -34,8 +39,7 @@ exports.createAssmt = function(req, res){
 /*
 *Update assessment
 */
-exports.updateAssmt = function(req, res){
-	// var bootcamp = req.bootcamp;
+exports.updateAssmt = function(req, res) {
 	var assessment = req.assessment,
 	    trainee = req.trainee;
 
@@ -43,7 +47,7 @@ exports.updateAssmt = function(req, res){
 	trainee.save(function(err) {
 		if (err) {
 			return res.send(400, {
-			   message: "Error: update failed"
+			   message: 'Error: update failed'
 		    });
 		} else {
 		    res.jsonp(trainee);
@@ -78,15 +82,15 @@ exports.selectFellow = function(req, res){
 	    role = req.body.role;
       trainee = _.extend(trainee, req.body);
 
-      if (role === "applicant" || role === "admin" || role === "instructor") {
+      if (role === 'applicant' || role === 'admin' || role === 'instructor') {
          return res.send(400, {
-              message: "Error: action couldn't be carried out"
+              message: 'Error: action couldn\'t be carried out'
          });
       } else {
            trainee.save(function(err) {
 	          if (err) {
 	              return res.send(400, {
-	                  message: "could not change applicant role"
+	                  message: 'could not change applicant role'
 	              });
 	          } else {
 	              res.jsonp(trainee);
@@ -96,7 +100,7 @@ exports.selectFellow = function(req, res){
 };
 
 /*
-*Rate a fellow
+*Rate a fellow's skill
 */
 exports.rateFellow = function(req, res) {
 	var skillset = req.body,
@@ -152,28 +156,28 @@ exports.addSkills = function(req, res) {
 };
 
 /*
-*Edit a rating
+*Edit a fellow's rating
 */
 exports.editRating = function(req, res) {
 	var skillset = req.skill,
         fellow = req.trainee;
 
     skillset = _.extend(skillset, req.body);
-    if (req.profile) {
+    if (req.profile) { //if instructor wants to edit his own skills
     	req.profile.save(function(err) {
 	       if (err) {
 	          return res.send(400, {
-	              message: "could not edit rating"
+	              message: 'could not edit rating'
 	          });
 	        } else {
 	              res.jsonp(req.profile);
 	        }
 	    });
-    } else {
+    } else { //for instructor to edit fellow's rating
 	    fellow.save(function(err) {
 	       if (err) {
 	          return res.send(400, {
-	              message: "could not edit rating"
+	              message: 'could not edit rating'
 	          });
 	        } else {
 	              res.jsonp(fellow);
@@ -194,7 +198,7 @@ exports.deleteRating = function(req, res){
     	req.profile.save(function(err) {
 	       if (err) {
 	          return res.send(400, {
-	              message: "could not delete rating"
+	              message: 'could not delete rating'
 	          });
 	        } else {
 	              res.jsonp(req.profile);
@@ -204,7 +208,7 @@ exports.deleteRating = function(req, res){
 	    fellow.save(function(err) {
 	       if (err) {
 	          return res.send(400, {
-	              message: "could not delete rating"
+	              message: 'could not delete rating'
 	          });
 	        } else {
 	              res.jsonp(fellow);
@@ -212,24 +216,6 @@ exports.deleteRating = function(req, res){
 	    });
 	}
 };
-
-/*
-*Instructor can update his experience
-*/
-exports.updateExp = function(req, res) {
-     var profile = req.profile;
-         profile = _.extend(profile, req.body);
-
-     profile.save(function(err) {
-	       if (err) {
-	          return res.send(400, {
-	              message: "could not save experience"
-	          });
-	        } else {
-	              res.jsonp(req.profile);
-	        }
-	 });
-}
 
 /**
  * Show the current trainee/fellow
@@ -258,11 +244,7 @@ exports.skillByID = function(req, res, next, id){
 	if (req.profile && req.profile._type === 'Instructor') {
 		req.skill = req.profile.skillSets.id(id);
 	} else {
-        req.trainee.skillSets.id(id).exec(function(err, skill) {
-           if (err) return next(err);
-		   if (!skill) return next(new Error('Failed to load skill ' + id));
-		   req.skill = skill;
-        });
+        req.skill = req.trainee.skillSets.id(id);
 	}
     next();
 };
@@ -290,11 +272,122 @@ exports.isCreator = function(req, res, next){
  * Instructor authorization middleware
  */
 exports.checkRights = function(req, res, next) {
-    if (req.user._type === "Instructor" && req.user.role === "instructor") {
+    if (req.user._type === 'Instructor' && req.user.role === 'instructor') {
         next();
     } else {
         return res.send(403, {
               message: 'User is not authorized'
         });
     }
+};
+
+/**
+ * Upload image
+ */
+var uploadImage = function(req, res, contentType, tmpPath, destPath, person, experience) {
+    
+    // Server side file type checker.
+    if (contentType !== 'image/png' && contentType !== 'image/jpeg') {
+        fs.unlink(tmpPath);
+        return res.send(400, { 
+        	message: 'Unsupported file type. Only jpeg or png format allowed' 
+        });
+    } else {
+    	fs.readFile(tmpPath , function(err, data) {
+	        fs.writeFile(destPath, data, function(err) {
+	        	if (err) {
+	        	   return res.send(400, { message: 'Destination path doesn\'t exist.' });
+	        	}
+	        	else {
+	               fs.unlink(tmpPath, function(){
+		                
+			        	var path =  person.photo;
+			        	person.photo = destPath;
+				        person.experience = experience;
+
+				        if (fs.existsSync(path)) {
+						    fs.unlink(path);
+						}
+
+				        person.save(function(err, user) {
+				            if (err) {
+				               return res.send(400, { message: 'Error: save operation failed' });
+				            } else {
+				                res.jsonp(user);
+				            }
+				        });
+	               });
+	        	}
+	        }); 
+	    });
+    }
+};
+
+
+/**
+ * Instructor updates experience and photo
+ */
+exports.updateInfo = function(req, res) {
+    //Parse Form
+    var form = new multiparty.Form();
+    form.parse(req, function(err, fields, files) {
+
+    	User.findById('53fc4af2b5023bac19ccf830').exec(function(err, person) {
+	        if (err) {
+               return res.send(400, { message: err });
+	        } else if (!person) {
+	        	return res.send(400, { message: 'Failed to load User ' + req.user._id });
+	        } else {
+	        	var experience = '';
+	        	if (fields.exp) {
+		        	experience = fields.exp[0];
+		        } 
+		
+		         console.log(person); console.log(fields.exp);
+		        if (files.file) {
+		            //if there is a file do upload
+		            var file = files.file[0],     contentType = file.headers['content-type'],
+		                tmpPath = file.path,      extIndex = tmpPath.lastIndexOf('.'),
+		                extension = (extIndex < 0) ? '' : tmpPath.substr(extIndex);
+
+		            // uuid is for generating unique filenames. 
+		            var fileName = uuid.v4() + extension;
+		            
+		            var destPath =  'public/modules/core/img/server/Temp/' + fileName;
+		                 
+		            uploadImage(req, res, contentType, tmpPath, destPath, person, experience);
+		        } else {
+		        	person.experience = experience;
+		        	person.save(function(err, user) {
+			            if (err) {
+			               return res.send(400, { message: 'Error: save operation failed' });
+			            } else {
+			                res.jsonp(user);
+			            }
+			        });   
+		        }
+		    }
+	    });
+    });
+};
+
+/**
+ * Delete photo 
+ */
+exports.deletePhoto = function(req, res) {
+	var profile = req.profile;
+	console.log(profile.photo);
+
+	if (fs.existsSync(profile.photo)) {
+	    fs.unlink(profile.photo);
+	} 
+
+	profile.photo = '';
+    profile.save(function(err, user) {
+	    if (err) {
+	       return res.send(400, { message: 'Error: save operation failed' });
+	    } else {
+	        res.jsonp(user);
+	    }
+	});  
 };
