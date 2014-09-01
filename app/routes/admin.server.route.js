@@ -76,7 +76,7 @@ module.exports = function(app) {
     
     //list and create tests
     app.route('/admin/test')
-        .get( admin.listTests)
+        .get(users.requiresLogin, admin.checkPermission, admin.listTests)
         .post(users.requiresLogin, admin.checkPermission, admin.createTests);
 
     app.route('/admin/test/:testId')
@@ -90,8 +90,8 @@ module.exports = function(app) {
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteQuestion);
 
     app.route('/admin/test/:testId/:questId/options')
-        .post(users.requiresLogin, admin.checkPermission, admin.addOption)
-        .put( admin.updateChoices);
+        .post(users.requiresLogin, admin.checkPermission, admin.addOption);
+        //.put( admin.updateChoices);
 
     app.route('/admin/test/:testId/:questId/:optionId')
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteOption);

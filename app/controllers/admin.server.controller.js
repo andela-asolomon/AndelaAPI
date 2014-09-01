@@ -20,7 +20,7 @@ var mongoose = require('mongoose'),
 exports.checkPermission = function(req, res, next) {
     if (req.user._type === 'Instructor' && req.user.role === 'admin') {
         next();
-    } else {
+    } else { 
         return res.send(403, {
               message: 'User is not authorized'
         });
@@ -99,6 +99,7 @@ exports.changeStatus = function(req, res) {
 exports.changeRole = function(req, res) {
       var applicant = req.applicant;
       var role = req.body.role;
+      console.log(applicant);
 
       if (role === 'instructor' || role === 'admin') {
           return res.send(400, {
@@ -446,27 +447,21 @@ exports.addQuestion = function(req, res) {
      var quest = req.body.question;
      var test = req.test;
      var options = req.body.option;
-     //var question = [];
+     
+     var optionArr = [], answerArr = [];
+     for (var j = 0; j < options.length; j++) {
+           if (j === parseInt(req.body.answer, 10)) {
+                answerArr[j] = true;
+           } else {
+                answerArr[j] = false;
+           }
 
-     //for (var i=0; i<quest.length; i++) {
-         // var optionArr = [], answerArr = [];
-          for (var j = 0; j < options.length; j++) {
-                if (!options[j].answer) {
-                   options[j].answer = false;
-                }
-               // if (j === parseInt(req.body.answer, 10)) {
-               //      answerArr[j] = true;
-               // } else {
-               //      answerArr[j] = false;
-               // }
+           var eachOpt = new Options({option: options[j], answer: answerArr[j]});
+           optionArr.push(eachOpt);
+     }
 
-               var eachOpt = new Options({option: options[j].option, answer: options[j].answer});
-               optionArr.push(eachOpt);
-          }
-
-          var each = new Question({question: quest, questOptions: optionArr});
-          test.questions.push(each); 
-     //}
+     var each = new Question({question: quest, questOptions: optionArr});
+     test.questions.push(each); 
      
      test.save(function(err, test) {
           if (err) {
@@ -495,37 +490,37 @@ exports.addOption = function(req, res) {
             res.jsonp(test);
         }
      });
-}
+};
 
 /**
  * Update choices
  */
-exports.updateChoices = function(req, res) {
-    var test = req.test,
-        quest = req.question,
-        choices = req.body.choices;
+// exports.updateChoices = function(req, res) {
+//     var test = req.test,
+//         quest = req.question,
+//         choices = req.body.choices;
     
-    //quest.question = req.body.question;
-    for (var i = 0; i < quest.questOptions.length; i++) {
-        quest.questOptions[i].option = choices[i].option;
-        quest.questOptions[i].answer = choices[i].answer;
-        // if (i === parseInt(req.body.answer, 10)) {
-        //    quest.questOptions[i].answer = true;
-        // } else {
-        //    quest.questOptions[i].answer = false;
-        // }
-    }
+//     //quest.question = req.body.question;
+//     for (var i = 0; i < quest.questOptions.length; i++) {
+//         quest.questOptions[i].option = choices[i].option;
+//         quest.questOptions[i].answer = choices[i].answer;
+//         // if (i === parseInt(req.body.answer, 10)) {
+//         //    quest.questOptions[i].answer = true;
+//         // } else {
+//         //    quest.questOptions[i].answer = false;
+//         // }
+//     }
 
-    test.save(function(err) {
-        if (err) {
-            return res.send(400, {
-                message: err
-            });
-        } else {
-            res.jsonp(test);
-        }
-    });
-};
+//     test.save(function(err) {
+//         if (err) {
+//             return res.send(400, {
+//                 message: err
+//             });
+//         } else {
+//             res.jsonp(test);
+//         }
+//     });
+// };
 
 /**
  * Delete tests
@@ -725,9 +720,9 @@ exports.testRead = function(req, res) {
  * Applicant middleware
  */
 exports.apptByID = function(req, res, next, id)  {
-    Applicant.findById(id).exec(function(err, user) {
+    Applicant.findById(id).where({_type: 'Applicant'}).exec(function(err, user) {
         if (err) return next(err);
-        if (!user) return next(new Error('Failed to load Applicant ' + id));
+        if (!user) return next(new Error('User is not an applicant'));
         req.applicant = user;
         next();
     });
@@ -737,9 +732,9 @@ exports.apptByID = function(req, res, next, id)  {
  * Instructor middleware
  */
 exports.instrByID = function(req, res, next, id)  {
-     Instructor.findById(id).exec(function(err, user) {
+     Instructor.findById(id).where({_type: 'Instructor'}).exec(function(err, user) {
          if (err) return next(err);
-         if (!user) return next(new Error('Failed to load user ' + id));
+         if (!user) return next(new Error('User is not an instructor'));
          req.instructor = user;
          next();
      });

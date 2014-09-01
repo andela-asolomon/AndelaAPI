@@ -20,7 +20,7 @@ var path = require('path'),
 Input assessment score for trainee
 */
 exports.createAssmt = function(req, res){
-	req.body.instructorId = req.user;
+	req.body.instructorId = req.user.id;
 	req.body.applicantId = req.trainee._id;
     var trainee = req.trainee;
 	trainee.assessments.push(req.body);
@@ -28,7 +28,7 @@ exports.createAssmt = function(req, res){
 	trainee.save(function(err) {
 		if (err) {
 		    return res.send(400, {
-		       message: 'Error: Couldn\'t create assessment'
+		       message: err
 		    });
 		} else {
 		    res.jsonp(trainee);
@@ -195,7 +195,7 @@ exports.deleteRating = function(req, res){
 
     skillset.remove();
      if (req.profile) {
-    	req.profile.save(function(err) {
+    	req.profile.save(function(err, profile) {
 	       if (err) {
 	          return res.send(400, {
 	              message: 'could not delete rating'
@@ -205,7 +205,7 @@ exports.deleteRating = function(req, res){
 	        }
 	    });
     } else {
-	    fellow.save(function(err) {
+	    fellow.save(function(err, fellow) {
 	       if (err) {
 	          return res.send(400, {
 	              message: 'could not delete rating'
@@ -229,7 +229,7 @@ exports.readTrainee = function(req, res) {
 * Particular trainee middleware
 */
 exports.traineeByID = function(req, res, next, id){   
-    Applicant.findById(id).populate('campId','camp_name').exec(function(err, trainee) {
+    Applicant.findById(id).where({_type: 'Applicant'}).populate('campId','camp_name').exec(function(err, trainee) {
 		if (err) return next(err);
 		if (!trainee) return next(new Error('Failed to load trainee ' + id));
 		req.trainee = trainee;
@@ -261,9 +261,9 @@ exports.assessmentByID = function(req, res, next, id){
 /**
 * Check if he is the creator of the assessment middleware
 */
-exports.isCreator = function(req, res, next){
+exports.isCreator = function(req, res, next){ 
 	if (req.assessment.instructorId.toString() !== req.user.id) {
-	   return res.send(403, 'User is not authorized');
+	   return res.send(403, 'User is not authorized'); 
 	}
 	next();
 };
@@ -271,7 +271,7 @@ exports.isCreator = function(req, res, next){
 /**
  * Instructor authorization middleware
  */
-exports.checkRights = function(req, res, next) {
+exports.checkRights = function(req, res, next) { 
     if (req.user._type === 'Instructor' && req.user.role === 'instructor') {
         next();
     } else {
@@ -343,7 +343,6 @@ exports.updateInfo = function(req, res) {
 		        	experience = fields.exp[0];
 		        } 
 		
-		         console.log(person); console.log(fields.exp);
 		        if (files.file) {
 		            //if there is a file do upload
 		            var file = files.file[0],     contentType = file.headers['content-type'],
@@ -376,7 +375,6 @@ exports.updateInfo = function(req, res) {
  */
 exports.deletePhoto = function(req, res) {
 	var profile = req.profile;
-	console.log(profile.photo);
 
 	if (fs.existsSync(profile.photo)) {
 	    fs.unlink(profile.photo);
