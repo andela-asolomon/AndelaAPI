@@ -1,0 +1,49 @@
+<section data-ng-controller="AdminController" data-ng-init="listcamps()">
+    <div class="container">
+
+      <div class="link-controls">
+      <ul>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/appts">View Applicants</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/fellows">View Fellows</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
+      <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/create">Create Instructor</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/auth/signout">Signout</a></li>
+      </ul>
+    </div>
+
+    <div class="admin-view">
+        <div class="page-header text-center">
+          <h1>Bootcamps</h1>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-xs btn-danger"href="/#!/admin/create/camp">Create Bootcamp</a>
+        </div>
+      
+        <div class="list-group">
+            <table class="list list-link">
+                <thead>
+                  <tr>
+                    <th>Camp Name</th>
+                    <th>Start Date</th>                   
+                    <th>Applicants</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr data-ng-repeat="camp in camps">
+                        <td><a ng-href="/#!/admin/camps/{{camp._id}}">{{camp.camp_name}}</a></td>
+                        <td data-ng-bind="camp.created | date"></td>                      
+                        <td data-ng-bind="camp.applicants.length"></td>
+                        <td><a class="fixbtn btn btn-primary btn-xs" data-ng-click="delete_camp(camp)">Delete</a></td>
+                    </tr>               
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+</section>

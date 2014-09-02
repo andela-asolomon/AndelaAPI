@@ -14,25 +14,20 @@ var mongoose 		= require('mongoose'),
  * Show the current Test
  */
 exports.read = function(req, res) {
+	console.log('Getting Test');
 	res.jsonp(req.test);
+	console.log('Request Test');
+	console.log('Request: ' + req.test);
 };
 
-
-// Getting questions from Test Schema
-// exports.viewQuestion = function(req, res, next, id) {
-// 	var user = req.user;
-// 	var message = null;
-
-// 	if (user) {
-// 		Test.findById(id).exec(function(err, test) {
-// 	        if (err) return next(err);
-// 	        if (!test) return next(new Error('Failed to load test ' + id));
-// 	        req.test = test;
-// 	        next();
-// 	    });
-// 	} else {
-// 		res.send(400, {
-// 			message: 'You need to sigin to take test'
-// 		});
-// 	}
-// };
+exports.list = function(req, res) {
+	Test.find().sort('-created').populate('user', 'displayName').exec(function(err, test) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(test);
+		}
+	});
+};

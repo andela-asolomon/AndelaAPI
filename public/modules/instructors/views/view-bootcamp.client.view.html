@@ -1,0 +1,42 @@
+<section data-ng-controller="InstructorsController" data-ng-init="viewBootcamp()">
+    <div class="container">
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/instructors/addSkill">Add To Your Skills</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
+        </div>
+        <div class="admin-view">
+            <div class="page-header text-center">
+              <h1>Applicants</h1>
+            </div>
+
+            <div>
+                <table class="list">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Score</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="capitalize">
+                        <tr data-ng-repeat="applicant in applicants">
+                            <td data-ng-bind="applicant.firstName"></td>
+                            <td data-ng-bind="applicant.lastName"></td>
+                            <td data-ng-bind="applicant.email"></td>
+                            <td data-ng-bind="applicant.score"></td>
+                        </tr>               
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+ 

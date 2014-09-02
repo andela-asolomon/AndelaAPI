@@ -5,7 +5,7 @@
 }
 
 .content {
-  margin-top: 50px;
+  margin-top: 50px !important;
 }
 
 .undecorated-link:hover {
@@ -92,7 +92,7 @@ h2 {
 
 .active {
     font-weight: bold;
-    color: red;
+    background: #C42A2A;
 }
 
 .navbar-brand strong {
@@ -104,9 +104,9 @@ h2 {
   background-color: #9E0808;
 }
 
-.nav > li > a:active{
+/*.nav > li > a:active{
 background-color: yellow;
-}
+}*/
 
 .logo {
     width: 85%;
@@ -184,11 +184,11 @@ a.selected {
 }
 
 .center{
-  text-align: center;
+  text-align: center !important;
 }
 /*footer*/
 
-.footer-col {
+/*.footer-col {
   display: block;
   margin: 50px auto 30px;
   padding-top: 0px;
@@ -206,7 +206,7 @@ a.selected {
   border-right: 0px none white;
   color: white;
   text-align: center;
-}
+}*/
 
 
 .hi-icon-wrap {
@@ -482,17 +482,30 @@ a.selected {
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Proxima';
+  src: url('/modules/core/fonts/ProximaFontFiles/proxima/proximanova-webfont.eot');
+  src: url('/modules/core/fonts/ProximaFontFiles/proxima/proximanova-webfont.eot?#iefix') format('embedded-opentype'),
+       url('/modules/core/fonts/ProximaFontFiles/proxima/proximanova-webfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-.footer-col, .footer-col a{
+footer {
+  display: block;
+  text-decoration: none;
+}
+
+/*.footer-col, .footer-col a{
     color: white;
 }
-
-footer {
-    /*background-color: #ffffff;
-    padding: 25px 0;*/
+*/
+/*footer {
+    background-color: #ffffff;
+    padding: 25px 0;
 }
-
-footer {
+*/
+/*footer {
   background-size: 1px 5px;
   background-position: top center;
   background-repeat: repeat-x;
@@ -502,7 +515,7 @@ footer {
   margin: -5px 0 0;
   background-color: #ffffff;
 }
-
+*/
 .navbar-default .navbar-brand {
     margin-right: 0px !important;
     margin-left: 0px !important;

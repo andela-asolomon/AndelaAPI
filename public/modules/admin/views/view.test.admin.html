@@ -1,0 +1,62 @@
+<section data-ng-controller="AdminController" data-ng-init="viewTest()">
+  <div class="container">
+    <div class="link-controls">
+      <ul>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/appts">View Applicants</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/fellows">View Fellows</a></li>
+      <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/create">Create Instructor</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/auth/signout">Signout</a></li>
+    </ul>
+    </div>
+
+    <div class="admin-view">
+      <div>
+      <p class="pull-right"><a class="btn btn-xs btn-warning" ng-href="/#!/admin/test/add/{{test._id}}">Add more questions</a></p>
+        <div ng-hide="testNameEditorEnabled">
+          <h3 class="testName">Test Name: {{test.testName}} <a ng-href="" ng-click="enableEditor('testName')">Edit</a></h3>
+        </div>
+          
+        <div ng-show="testNameEditorEnabled">
+          <input type="text" ng-model="editabletestName" ng-show="testNameEditorEnabled">
+          <a href="" ng-click="save('testName')">Save</a>
+          or
+          <a href="" ng-click="disableEditor('testName')">Cancel</a>.
+        </div>
+
+        <ul data-ng-repeat="question in test.questions">
+          <li id="questions1">
+            <i ng-hide="questionEditorEnabled[$index]">Question {{$index + 1}}: <b data-ng-bind="question.question"></b> <a href="" ng-click="enableEditor('question', $index)">Edit</a> </i>
+            
+            <div ng-show="questionEditorEnabled[$index]">
+              <textarea style="width: 650px" data-ng-model="editableQuestion[$index]" ng-show="questionEditorEnabled[$index]"></textarea>
+              <a href="" ng-click="save('question', $index)">Save</a>
+              or
+              <a href="" ng-click="disableEditor('question', $index, 'nil')">Cancel</a>.
+            </div>
+
+            <ol>Options:
+              <li data-ng-repeat="option in question.questOptions">
+                <b ng-hide="optionEditorEnabled[$parent.$index][$index]">{{option.option}} <i data-ng-show="option.answer === true"> (Correct answer) </i> <a href="" ng-click="enableEditor('option', $parent.$index, $index)">Edit</a>
+                </b>
+
+                <div ng-show="optionEditorEnabled[$parent.$index][$index]">
+                  <input type="text" data-ng-model="editableOption[$parent.$index][$index].option" ng-show="optionEditorEnabled[$index]">
+                  <input type="checkbox" data-ng-model="editableOption[$parent.$index][$index].answer" value="" id="answer"><label for="answer">Set as answer</label>
+                  <a href="" ng-click="save('option', $parent.$index, $index)">Save</a>
+                  or
+                  <a href="" ng-click="disableEditor('option', $parent.$index, $index)">Cancel</a>.
+                </div>
+              </li>
+            </ol>
+            <p class="warning" data-ng-if="displayerrmsg[$index]" class="warning">Warning: No option on this question is selected as the answer.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

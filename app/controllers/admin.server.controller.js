@@ -18,7 +18,6 @@ var users = require('../../app/controllers/users');
  * Admin authorization middleware
  */
 exports.checkPermission = function(req, res, next) {
-  console.log(req.user.role);
     if (req.user._type === 'Instructor' && req.user.role === 'admin') {
         next();
     } else {
@@ -35,33 +34,28 @@ exports.createUsers = function(req, res, next) {
   console.log('createUsers called on the backend with', req.body);
    var instructor = new Instructor(req.body);
    instructor.provider ='local';
-    console.log(req.body.role);
-   if (req.body.role !== 'instructor' && req.body.role !== 'admin') {
-       return res.send(400, {
-            message: "Error: Only admin or instructors can be created"
-       });
-   } else {
-        instructor.save(function(err) {
-        // Remove sensitive data before login
-          instructor.password = undefined;
-          instructor.salt = undefined;
-          if (err) {
-             return res.send(400, {
-                message: err
-             });
-          } else {
-            res.jsonp(instructor);
-          }
-       });
-   }
 
+   instructor.save(function(err) {
+      // Remove sensitive data before login
+      instructor.password = undefined;
+      instructor.salt = undefined;
+      if (err) {
+        console.log(err);
+         return res.send(400, {
+            message: err
+         });
+      } else {
+        res.jsonp(instructor);
+      }
+   });
 };
 
 /**
 * Change applicant's status
 */
 exports.changeStatus = function(req, res) {
-        var applicant = req.applicant; 
+      var applicant = req.applicant;
+      applicant.status = {name: "", reason: ""}; 
       
       if (req.body.status === 'rejected') { 
         if (!req.body.reason || req.body.reason.length === 0) {
@@ -71,11 +65,11 @@ exports.changeStatus = function(req, res) {
         }
         console.log(req.body.reason.length);
       }  
-      if (req.body.status === 'selected for bootcamp') {
-      	  applicant.role = 'trainee';
+      if (req.body.status.name === 'selected for bootcamp') {
+          applicant.role = 'trainee';
       }
 
-      if (applicant.role === 'trainee' && req.body.status !== 'selected for bootcamp' ) {
+      if (applicant.role === 'trainee' && req.body.status.name !== 'selected for bootcamp' ) {
           applicant.role = 'applicant';
       }
       if (req.body.reason) { 
@@ -85,17 +79,20 @@ exports.changeStatus = function(req, res) {
       }
 
       applicant.status.name = req.body.status;
-     // applicant = _.extend(applicant, req.body);
-
-      applicant.save(function(err, appt) {
-	        if (err) {
-	            return res.send(400, {
-	                message: err
-	            });
-	        } else {
-	            res.jsonp(appt);
-	        }
-      });   
+      Applicant.update(
+          {_id: req.params.apptId},
+          { $set: {'role': applicant.role, 'status': {name: applicant.status.name, reason: applicant.status.reason}}},
+          function(error, appt) {
+            if(error){
+              return res.send(400, {
+                  message: 'fuck dis'
+              });
+            }
+            else{
+              res.jsonp(appt);
+            }
+          }
+      ); 
 };
 
 /**
@@ -103,36 +100,22 @@ exports.changeStatus = function(req, res) {
 */
 exports.changeRole = function(req, res) {
       var applicant = req.applicant;
+      applicant = _.extend(applicant, req.body);
       var role = req.body.role;
-
-      if (role === 'instructor' || role === 'admin') {
-          return res.send(400, {
-               message: 'you cannot change user to an admin or instructor'
-          });
-      } else {
-          applicant = _.extend(applicant, req.body);
-          
-          
-          if (role === 'applicant') {
-             applicant.status.name = 'selected for interview';
-             applicant.status.reason = '';
-          }
-
-          if (role === 'trainee' || role === 'fellow') {
-             applicant.status.name = 'selected for bootcamp';
-             applicant.status.reason = '';
-          }
-
-          applicant.save(function(err) {
-              if (err) {
-                  return res.send(400, {
-                      message: 'could not change applicant role'
-                  });
-              } else {
-                  res.jsonp(applicant);
-              }
-         });
+      
+      if(role === 'applicant') {
+        applicant.status = 'selectedInterview';
       }
+
+      applicant.save(function(err) {
+          if (err) {
+              return res.send(400, {
+                  message: 'could not change applicant role'
+              });
+          } else {
+              res.jsonp(applicant);
+          }
+     });
 };
 
 /**
@@ -140,24 +123,17 @@ exports.changeRole = function(req, res) {
 */
 exports.changeInstrRole = function(req, res) {
       var instructor = req.instructor;
-      
-      if (req.body.role !== 'instructor' && req.body.role !== 'admin'){
-          return res.send(400, {
-                message: 'user\'s role can only be changed to admin or instructor'
-          });
-      } else {
-          instructor = _.extend(instructor, req.body);
+      instructor = _.extend(instructor, req.body);
 
-          instructor.save(function(err) {
-              if (err) {
-                  return res.send(400, {
-                      message: 'could not change instructor role'
-                  });
-              } else {
-                  res.jsonp(instructor);
-              }
-          });
-      }
+      instructor.save(function(err) {
+          if (err) {
+              return res.send(400, {
+                  message: 'could not change instructor role'
+              });
+          } else {
+              res.jsonp(instructor);
+          }
+      });
 };
 
 /**
@@ -166,21 +142,24 @@ exports.changeInstrRole = function(req, res) {
 exports.deleteUser = function(req, res) {
     var person = req.profile;
     
-    if (person._type === 'Instructor' && person.role === 'admin') {
-        return res.send(400, {
-            message: 'You cannot delete another admin'
-        });
-    } else {
-        person.remove(function(err, user) {
-            if (err) {
+    if (person._type === 'instructor') {
+       Instructor.findById(person._id).exec(function(err, user) {
+            if (user.role === 'admin') {
                 return res.send(400, {
-                    message: 'could not delete user'
+                  message: 'You cannot delete another admin'
                 });
-            } else {
-                res.jsonp(user);
             }
-        });
+       });
     }
+    person.remove(function(err) {
+        if (err) {
+            return res.send(400, {
+                message: 'could not delete user'
+            });
+        } else {
+            res.jsonp(person);
+        }
+    });
 };
 
 /**
@@ -261,13 +240,13 @@ exports.editCamp = function(req, res) {
 
     camp = _.extend(camp, req.body);
 
-    camp.save(function(err, boot) {
+    camp.save(function(err) {
         if (err) {
             return res.send(400, {
                 message: 'Couldn\'t edit camp'
             });
         } else {
-            res.jsonp(boot);
+            res.jsonp(camp);
         }
     });
 };
@@ -278,13 +257,13 @@ exports.editCamp = function(req, res) {
 exports.deleteCamp = function(req, res) {
     var camp = req.camp;
 
-    camp.remove(function(err, boot) {
+    camp.remove(function(err) {
         if (err) {
             return res.send(400, {
                 message: "Couldn't delete camp"
             });
         } else {
-            res.jsonp(boot);
+            res.jsonp(camp);
         }
     });
 };
@@ -363,44 +342,46 @@ exports.createTests = function(req, res) {
     var quest = req.body.questions;
     var questions = [];
 
-    console.log(quest.length);
-     for (var i=0; i<quest.length; i++) {
-          
+    for (var i=0; i<quest.length; i++) {
+          var optionArr = [];
+          var answerArr = [];
           if (i === 0) {
               var options = req.body.optionOne;
-          } else if(i === 1) {
-              var options = req.body.optionTwo;
+              var chosenAnswer = req.body.answerOne;
           } else {
-              var options = req.body.optionThree;
-          }
+              var options = req.body.optionTwo;
+              var chosenAnswer = req.body.answerTwo;
+          } 
 
-          console.log("before: " + options);
-          console.log("options length: " + options.length);
-          var optionArr = [];
-          for (var j=0; j<options.length; j++) {
-               var eachOpt = new Options({option: options[j]});
-               console.log(eachOpt);
-               optionArr.push(eachOpt);
+          for (var j=0; j<options.length; j++) { 
+             // if (!options[j].answer) {
+             //    options[j].answer = false;
+             // }
+             console.log(typeof j + typeof chosenAnswer);
+              if (j === parseInt(chosenAnswer, 10)) {
+                  answerArr[j] = true;
+              } else {
+                  answerArr[j] = false;
+              }
+             var eachOpt = new Options({option: options[j], answer: answerArr[j]});
+             optionArr.push(eachOpt);
           }
 
           var each = new Question({question: quest[i], questOptions: optionArr});
-          console.log(each);
           questions.push(each); 
-     }
-     var test = new Test({testName: req.body.testName, questions: questions});
-     test.save(function(err) {
-          if (err) {
-              return res.send(400, {
-                  message: err
-              });
-          } else {
-              res.jsonp(test);
-          }
-      });
+    }
+    var test = new Test({testName: req.body.testName, questions: questions});
+    test.save(function(err) {
+      if (err) {
+          return res.send(400, { message: err });
+      } else {
+          res.jsonp(test);
+      }
+    });
 };
 
 /**
- * Update a particular test's name
+ * Update tests
  */
 exports.updateTestName = function(req, res) {
     var test = req.test;
@@ -422,6 +403,7 @@ exports.updateTestName = function(req, res) {
  */
 exports.updateQuestion = function(req, res) {
     var question = req.question;
+    console.log(req.body);
     question = _.extend(question, req.body);
 
     req.test.save(function(err, test) {
@@ -439,36 +421,41 @@ exports.updateQuestion = function(req, res) {
  * Add question to already existing test
  */
 exports.addQuestion = function(req, res) {
-     var quest = req.body.questions;
+  console.log(req.body.option);
+     var quest = req.body.question;
      var test = req.test;
      var options = req.body.option;
-     var question = [];
+     //var question = [];
 
-     for (var i=0; i<quest.length; i++) {
-          var optionArr = [];
+     //for (var i=0; i<quest.length; i++) {
+          var optionArr = [], answerArr = [];
+          for (var j = 0; j < options.length; j++) {
+               // if (!options[j].answer) {
+               //    options[j].answer = false;
+               // }
+               if (j === parseInt(req.body.answer, 10)) {
+                    answerArr[j] = true;
+               } else {
+                    answerArr[j] = false;
+               }
 
-          for (var j=0; j<options.length; j++) {
-               var eachOpt = new Options({option: options[j]});
-               console.log(eachOpt);
+               var eachOpt = new Options({option: options[j], answer: answerArr[j]});
                optionArr.push(eachOpt);
           }
 
-          var each = new Question({question: quest[i], questOptions: optionArr});
-          console.log(each);
-          //question.push(each);
+          var each = new Question({question: quest, questOptions: optionArr});
           test.questions.push(each); 
-     }
+     //}
      
-     console.log(test);
      test.save(function(err, test) {
           if (err) {
               return res.send(400, {
-                  message: "Error: couldn't add question"
+                  message: err
               });
           } else {
               res.jsonp(test);
           }
-      });
+     });
 };
 
 /**
@@ -479,7 +466,7 @@ exports.addOption = function(req, res) {
         question = req.question,
         option = req.body.option;
 
-        question.questOptions.push(new Options({option: option}));
+        question.questOptions.push(new Options({option: option, answer: false}));
         test.save(function(err, test) {
           if (err) {
               return res.send(400, {
@@ -506,7 +493,8 @@ exports.updateChoices = function(req, res) {
     //     console.log(test);
     for (var i=0; i<options.questOptions.length; i++) {
          // for(var j=i; j<=i; j++) {
-             options.questOptions[i].option = bodyVals[i];
+             options.questOptions[i].option = bodyVals[i].option;
+             options.questOptions[i].answer = bodyVals[i].answer;
          //     options.questOptions.push({option: bodyVals[i]});
              
          // }
@@ -572,16 +560,29 @@ exports.deleteOption = function(req, res) {
         question = req.question,
         id = req.params.optionId; 
 
-    question.questOptions.id(id).remove();
-    test.save(function(err) {
-        if (err) {
-            return res.send(400, {
-                message: "Couldn't delete option"
+    var option = question.questOptions.id(id);
+    if (question.questOptions.length === 2) {
+        return res.send(400, { 
+          message: 'A question can only have a minimum of two options'
+        });
+    } else {
+        if (option.answer === true) {
+            return res.send(400, { 
+                message: 'This option is the answer to the question. Change the answer before deleting it'
             });
         } else {
-            res.jsonp(test);
+             option.remove();
+             test.save(function(err) {
+               if (err) {
+                    return res.send(400, {
+                        message: 'Couldn\'t delete option'
+                    });
+               } else {
+                    res.jsonp(test);
+               }
+             });
         }
-    });
+    }
 };
 
 /**
@@ -607,6 +608,99 @@ exports.testRead = function(req, res) {
 };
 
 /**
+ * Update placement status
+ */
+exports.placementStatus = function(req, res) {
+    var profile = req.profile;
+        console.log(req.body);
+    
+    if (profile.role === 'fellow') {
+       profile.currPlacement.status = req.body.status;
+       profile.currPlacement.startDate = req.body.startDate;
+       profile.currPlacement.endDate = req.body.endDate;
+       console.log(profile);
+       profile.save(function(err, user) {
+         if (err) {
+            console.log('cant save');
+            return res.send(400, { message: 'Couldn\'t save placement status' });
+         } else {
+            res.jsonp(user);
+         }
+       });
+    } else {
+        return res.send(400, { message: 'Only a fellow\'s placement status can be updated' });
+    }
+};
+
+/**
+ * Admin adds fellow's work history
+ */
+exports.addWorkHistory = function(req, res) {
+    var profile = req.profile;
+
+    if (profile.role === 'fellow') {
+       var history = new WorkHistory(req.body);
+
+       profile.workHistory.push(history);
+       profile.save(function(err, user) {
+         if (err) {
+            return res.send(400, { message: 'Couldn\'t save work history' });
+         } else {
+            res.jsonp(user);
+         }
+       });
+    } else {
+        return res.send(400, { message: 'Only a fellow\'s work history can be added' });
+    }
+};
+
+/**
+ * Admin edits fellow's work history
+ */
+exports.editWorkHistory = function(req, res) {
+   var history = req.history,
+        profile = req.profile;
+
+    history = _.extend(history, req.body);
+
+    profile.save(function(err, user) {
+        if (err) {
+            return res.send(400, {
+                message: 'Error: could not save work history'
+            });
+        } else {
+            res.jsonp(user);
+        }
+    });
+};
+
+/**
+ * A particular work history extracted from the whole set 
+ */
+exports.oneWorkHistory = function(req, res)  {
+   res.jsonp(req.history);
+}
+
+/**
+ * Admin deletes fellow's work history
+ */
+exports.deleteWorkHistory = function(req, res) {
+   var profile = req.profile,
+        history = req.history;
+
+    history.remove();
+    profile.save(function(err, user) {
+        if (err) {
+            return res.send(400, {
+                message: 'Couldn\'t delete work history'
+            });
+        } else {
+            res.jsonp(user);
+        }
+    });
+}
+
+/**
  * List Instructors
  */
 exports.listInstructors = function(req, res) {
@@ -624,7 +718,7 @@ exports.listAdmins = function(req, res) {
  * Applicant middleware
  */
 exports.apptByID = function(req, res, next, id)  {
-    Applicant.findById(id).exec(function(err, user) {
+    Applicant.findById(id).where({_type: 'Applicant'}).exec(function(err, user) {
         if (err) return next(err);
         if (!user) return next(new Error('Failed to load Applicant ' + id));
         req.applicant = user;
@@ -636,7 +730,7 @@ exports.apptByID = function(req, res, next, id)  {
  * Instructor middleware
  */
 exports.instrByID = function(req, res, next, id)  {
-     Instructor.findById(id).exec(function(err, user) {
+     Instructor.findById(id).where({_type: 'Instructor'}).exec(function(err, user) {
          if (err) return next(err);
          if (!user) return next(new Error('Failed to load user ' + id));
          req.instructor = user;

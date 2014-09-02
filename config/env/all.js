@@ -18,7 +18,9 @@ module.exports = {
 			],
 			js: [
 				'public/lib/jquery/dist/jquery.js',
+				'public/lib/ng-file-upload/angular-file-upload-html5-shim.min.js',
 				'public/lib/angular/angular.js',
+				'public/lib/ng-file-upload/angular-file-upload.min.js',
 				'public/lib/angular-route/angular-route.js',
 				'public/lib/angular-resource/angular-resource.js', 
 				'public/lib/angular-cookies/angular-cookies.js', 

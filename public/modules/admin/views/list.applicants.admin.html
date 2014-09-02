@@ -1,11 +1,31 @@
 <section data-ng-controller="AdminController" data-ng-init="listApplicants()">
   <div class="container">
-    <div class="page-header text-center">
-      <h1>Applicants</h1>
+
+    <div class="link-controls">
+      <ul>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/appts">View Applicants</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/fellows">View Fellows</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
+      <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/create">Create Instructor</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/auth/signout">Signout</a></li>
+      </ul>
     </div>
 
-    <div class="list-group">
-      <table class="appt">
+    <div class="admin-view">
+    <div class="col-sm-12 col-lg-12" data-ng-show="user">
+        <a class="btn btn-xs btn-danger pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
+    </div>
+    <div class="page-header text-center">
+      <h2>Applicants</h2>
+    </div>
+
+    <div>
+      <table class="list list-link">
         <thead>
           <tr>
             <th>First Name</th>
@@ -20,18 +40,20 @@
         </thead>
         <tbody>
           <tr data-ng-repeat="applicant in applicants">
-            <td data-ng-bind="applicant.firstName"></td>
-            <td data-ng-bind="applicant.lastName"></td>
-            <td data-ng-bind="applicant.email"></td>
-            <td data-ng-bind="applicant.testScore"></td>
-            <th data-ng-bind="applicant.created | date : longDate"></th>
-            <td data-ng-bind="applicant.status.name"></td>
-            <td><a class="btn btn-primary btn-xs" ng-href="/#!/admin/editappt/{{applicant._id}}">Change Status</a></td>
-            <td><a class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id, $index)'>Delete Applicant</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.firstName}}</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.lastName}}</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.email}}</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.testScore}}</a></td>
+            <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.created | date : longDate}}</a></td>
+
+            <td style="text-transform: capitalize"><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.status.name}}<b style="display: block; font-size: 0.9em" data-ng-show="applicant.status.name === 'rejected'">Reason: {{applicant.status.reason}}</b></a></td>
+            
+            <td class="change_status"><a class="btn btn-primary btn-sm" style="padding-top: 0 !important" ng-href="/#!/admin/editappt/{{applicant._id}}">Change Status</a></td>
+            <td><button class="btn btn-danger btn-xs" ng-click='deleteUser(applicant._id, $index)'>Delete Applicant</button></td>
           </tr>               
         </tbody>
       </table>
     </div>
+  </div> <!-- admin-view -->
   </div>
-
 </section>

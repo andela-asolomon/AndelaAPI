@@ -1,67 +1,44 @@
-<div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
-		<form data-ng-submit="signin()" class="signin form-horizontal" autocomplete="off">
-			<fieldset>
-				<div class="form-group">
-					<label for="username">Username</label>
-					<input type="text" id="username" name="username" class="form-control" data-ng-model="credentials.username" placeholder="Username">
-				</div>
-				<div class="form-group">
-					<label for="password">Password</label>
-					<input type="password" id="password" name="password" class="form-control" data-ng-model="credentials.password" placeholder="Password">
-				</div>
-				<div class="text-center form-group">
-					<button type="submit" class="btn btn-primary">Sign in</button>&nbsp; or&nbsp;
-					<a href="/#!/signup">Sign up</a>
-				</div>
-				<div data-ng-show="error" class="text-center text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-			</fieldset>
-		</form>
-		 <form name="test">
-            <div class="form-group">
-                <input type="text" data-ng-model="questions[0]" name="quest" placeholder="Question 1" required>
-            </div>
-            <div class="form-group" data-ng-repeat="choice in choiceOne">
-                <label for="choice" data-ng-show="showChoiceLabel(choice)">Choices</label>
+<section class="row" data-ng-controller="AuthenticationController">
+    <div class="signin">
+        <div class="container">    
+        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+            <div class="panel panel-warning" >
+                    <div class="panel-heading">
+                        <div class="panel-title">Sign In</div>
+                    </div>     
 
-                <input type="text" data-ng-hide="isSelected('optionOne'+$index)" data-ng-model="optionOne[$index]" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
-                <button type="button" data-ng-click="setShow('optionOne'+$index)">
-                    Edit
-                </button>
+                    <div style="padding-top:30px" class="panel-body" >
 
-                <span data-ng-show="isSelected('optionOne'+$index)">{{optionOne[$index]}}
-                 <button type="button" data-ng-click="setShow(null)">back</button>
-                </span>
+                        <div data-ng-show="error" style="margin-top:10px" class="alert alert-danger col-sm-12">
+                                <strong data-ng-bind="error"></strong>
+                        </div>
+                            
+                        <form data-ng-submit="signin()" class="form-horizontal" role="form" autocomplete="off">
+                                    
+                            <div style="margin-bottom: 25px" class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+                                <input id="login-username" type="text" class="form-control" name="username" value="" data-ng-model="credentials.username" placeholder="username">                                        
+                            </div>
 
-                <button type="button" data-ng-click="deleteChoice($index, 1)" data-ng-show="choiceOne.length > 2">Delete</button>
-                <button type="button" data-ng-click="addNewChoice(1)" data-ng-show="showAddChoice(choice,1)">
-                    Add another choice
-                </button>
-            </div>
-            <div class="form-group">
-                <input type="text" data-ng-model="questions[1]" name="quest" placeholder="Question 2" required>
-            </div>
-            <div class="form-group" data-ng-repeat="choice in choiceTwo">
-                <label for="choice" data-ng-show="showChoiceLabel(choice)">Choices</label>
-                <input type="text"  data-ng-hide="isSelected('optionTwo'+$index)" data-ng-model="optionTwo[$index]" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
-                <button type="button" data-ng-click="setShow('optionTwo'+$index)">
-                    Edit
-                </button>
-                <span data-ng-show="isSelected('optionTwo'+$index)">{{optionTwo[$index]}}
-                 <button type="button" data-ng-click="setShow(null)">back</button>
-                </span>
-                <button type="button" data-ng-click="deleteChoice($index, 2)" data-ng-show="choiceTwo.length > 2">
-                    Delete
-                </button>
-                <button type="button" data-ng-click="addNewChoice(2)" data-ng-show="showAddChoice(choice,2)">
-                    Add another choice
-                </button>
-            </div>
-              <button type="submit" data-ng-disabled="test.$invalid" class="btn btn-large btn-primary">Submit</button>
-            </form>
-            {{questions[0]}}{{optionOne}}
-            {{questions[1]}}{{optionTwo}}
+                            <div style="margin-bottom: 25px" class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                                <input id="login-password" type="password" class="form-control" name="password" placeholder="password" data-ng-model="credentials.password">
+                            </div>
+
+                            <div style="margin-bottom: 25px" class="input-group">
+                                <input type="hidden" data-ng-init="credentials.type = 'employer'" value="employer">
+                            </div>
+                                
+                            <div style="margin-top:25px" class="form-group">
+                                <div class="col-sm-12 controls">
+                                    <button type="submit" class="btn btn-lg btn-success btn-block">
+                                    <i class="fa fa-sign-in"></i> Sign in</button>
+                                </div>
+                            </div>
+                        </form>                          
+                    </div>  
+                </div>
+            </div> 
         </div>
-	</div>
+    </div>
 </section>

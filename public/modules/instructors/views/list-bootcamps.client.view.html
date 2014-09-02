@@ -1,0 +1,43 @@
+<section data-ng-controller="InstructorsController" data-ng-init="listBootcamps()">
+    <div class="container">
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/instructors/addSkill">Add To Your Skills</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
+        </div>
+        <div class="admin-view">
+            <div class="page-header text-center">
+              <h1>Bootcamps</h1>
+            </div>
+            <div>
+                <table class="list">
+                    <thead>
+                      <tr>
+                        <th>Bootcamp Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Number of Applicants</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr data-ng-repeat="bootcamp in bootcamps">
+                            <td data-ng-bind="bootcamp.camp_name"></td>
+                            <td data-ng-bind="bootcamp.start_date | date"></td>
+                            <td data-ng-bind="bootcamp.end_date | date"></td>
+                            <td data-ng-bind="bootcamp.applicants.length"></td>
+                            <td><a class="btn btn-primary btn-xs" data-ng-href="/#!/instructors/bootcamps/{{bootcamp._id}}">view</a></td>
+                        </tr>               
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+ 

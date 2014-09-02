@@ -5,9 +5,13 @@ var test = require('../../app/controllers/test'),
 	admin = require('../../app/controllers/admin');
 
 module.exports = function(app) {
+
+	app.route('/test').get(test.list);
 	// Viewing a specifib question
 	app.route('/test/:testId')
-		.get(users.requiresLogin, test.read);
+	//commented by Ayoola
+	//	.get(users.requiresLogin, test.read);
+	.get(test.read);
 
 	//Finish by binding the test middleware
 	app.param('testId', admin.testByID);

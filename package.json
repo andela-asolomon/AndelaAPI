@@ -34,6 +34,8 @@
     "mongoose": "~3.8.8",
     "mongoose-schema-extend": "^0.1.7",
     "morgan": "~1.1.0",
+    "multiparty": "^3.3.2",
+    "node-uuid": "^1.4.1",
     "passport": "~0.2.0",
     "passport-facebook": "~1.0.2",
     "passport-google-oauth": "~0.1.5",

@@ -1,0 +1,46 @@
+<section data-ng-controller="AdminController" data-ng-init="viewcamp()">
+    <div class="container">
+
+    <ul>
+    <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+    <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+    <li><a href="/#!/admin/appts">View Applicants</a></li>
+    <li><a href="/#!/admin/trainees">View Trainees</a></li>
+    <li><a href="/#!/admin/fellows">View Fellows</a></li>
+    <li><a href="/#!/admins">View Admininistrators</a></li>
+    <li><a href="/#!/admin/test/create">Create Test</a></li>
+    <li><a href="/#!/admin/create">Create Instructor</a></li>
+    <li><a href="/#!/admin/instrs">View Instructors</a></li>
+    <li><a href="/auth/signout">Signout</a></li>
+    </ul>
+
+    <div class="admin-view">
+    <div class="page-header text-center">
+      <h1>Bootcamp</h1>
+    </div>
+    <a href="/#!/admin/create/camp" class="btn btn-primary">Create Bootcamp</a>
+        <div class="list-group">
+            <p data-ng-bind="camp.camp_name"></p>
+            <p data-ng-bind="camp.start_date | date"></p>
+            <p data-ng-bind="camp.end_date | date"></p>
+            
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr class="success">
+                    <td>FirstName</td>
+                    <td>LastName</td>
+                    <td>Email</td>
+                </tr>
+            </thead>
+            <tbody>
+             <tr data-ng-repeat="applicant in camp.applicants">
+                <td data-ng-bind="applicant.firstName"></td>
+                <td data-ng-bind="applicant.lastName"></td>
+                <td data-ng-bind="applicant.email"></td>
+            </tr>
+          </tbody>
+          </table>
+    </div>
+    </div>
+</section>

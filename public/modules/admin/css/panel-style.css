@@ -1,0 +1,73 @@
+div.link-controls{
+  padding-top: 100px !important;
+  width: 240px;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #fbefd5;
+  color: #333 !important;
+}
+
+div.link-controls ul{
+  padding: 10px 20px;
+}
+
+div.link-controls ul li{
+  color: white; 
+  margin-bottom: 10px; padding-left: 10px;
+  list-style-type: none;
+  color: #333 !important;
+}
+
+div.link-controls ul li a, .admin-view h1, .admin-view h2{
+  color: #333 !important;
+}
+
+.admin-view{
+  padding-left: 190px;
+  color: #333 !important;
+}
+
+.testName{
+  text-align: center; letter-spacing: -1px;
+}
+.testName a{
+  font-size: 0.7em; letter-spacing: -1px; padding-left: 10px;
+}
+ul.test {
+  margin: 1.5em;
+}
+ul.test li {
+  list-style: none;
+  padding: .2em 0.2em .5em;
+  margin-bottom: 1em; font-weight: normal;
+  color: #666; 
+}
+
+ul.test>li:first-child {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+
+ul.test li.test-name{
+  text-align: center !important;
+}
+
+ul #questions1{
+  padding-left: 50px !important;
+  margin-bottom: 1em; list-style: none;
+  background: #f7f7f7; border: 1px solid #E4E4E4;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+ul #questions1 li b{
+  font-weight: bold !important;
+}
+#questions1 li{
+  list-style-type: decimal !important;
+  padding-left: 0 !important;
+  margin-left: 50px !important;
+  margin-bottom: 10px;
+}

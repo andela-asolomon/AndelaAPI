@@ -7,13 +7,17 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 /**
- * Options Schema
+ * Option Schema
  */
 var OptionSchema = new Schema({
     option: {
         type: String,
         trim: true,
         required: 'Option cannot be blank'
+    },
+    answer: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -44,6 +48,7 @@ var TestSchema = new Schema({
 
 });
 
+//mongoose.model('Options', OptionSchema);
 mongoose.model('Test', TestSchema);
 mongoose.model('Question', QuestionSchema);
 mongoose.model('Options', OptionSchema);

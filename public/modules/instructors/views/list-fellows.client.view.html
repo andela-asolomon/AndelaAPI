@@ -1,0 +1,47 @@
+<section data-ng-controller="InstructorsController" data-ng-init="listFellows()">
+    <div class="container">
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/instructors/addSkill">Add To Your Skills</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
+        </div>
+        <div class="admin-view">
+            <div class="page-header text-center">
+                <h1>List of Fellows</h1>
+            </div>
+            <div>
+                <table class="list">
+                    <thead>
+                      <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Score</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody class="capitalize">
+                        <tr data-ng-repeat="fellow in fellows" data-ng-href="/#!/instructors/fellows/{{fellow._id}}">
+                            <td data-ng-bind="fellow.firstName"></td>
+                            <td data-ng-bind="fellow.lastName"></td>
+                            <td data-ng-bind="fellow.email"></td>
+                            <td data-ng-bind="fellow.testScore"></td>
+                            <td><a class="btn btn-primary btn-xs" data-ng-href="/#!/instructors/fellows/{{fellow._id}}" ng-click="view(fellow)">View</a></td>          
+                        </tr>               
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> 
+</section>
+
+
+ 
+
+ 

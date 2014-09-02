@@ -1,18 +1,38 @@
 'use strict';
 
-// Setting up route
+//Setting up route
 angular.module('applicant').config(['$stateProvider',
 	function($stateProvider) {
-		// Users state routing
+		// Applicant state routing
 		$stateProvider.
-		state('listCamps', {
-			url:'/camps',
-			templateUrl:'modules/applicant/views/applicant.client.view.html'
+		state('applicantsprofile', {
+			url: '/profile/applicant',
+			templateUrl: 'modules/applicant/views/applicantion.client.view.html'
 		}).
-
-		state('signup', {
-			url: '/123/signup',
+		state('fellowsprofile', {
+			url: '/profile/fellows',
+			templateUrl: 'modules/applicant/views/list.fellow.client.view.html'
+		}).
+		state('traineesprofile', {
+			url: '/profile/trainee',
+			templateUrl: 'modules/applicant/views/trainee.client.view.html'
+		}).
+		state('fellow-profile', {
+			url: '/profile/:applicantId',
+			templateUrl: 'modules/applicant/views/fellow.client.view.html'
+		}).
+		state('logged_in-profile', {
+			url: '/logged_in_user/:logged_inId',
+			templateUrl: 'modules/applicant/views/logged_in.user.client.view.html'
+		}).
+		state('application', {
+			url: '/new_applicant',
 			templateUrl: 'modules/applicant/views/applicant.client.view.html'
+		}).
+		state('error_page', {
+			url: '/errorpage',
+			templateUrl: 'modules/applicant/views/error.client.view.html'
 		});
+		
 	}
 ]);

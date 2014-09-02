@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-	<title>{{title}}</title>
+	<title>The {{title}}</title>
 
 	<!-- General META -->
 	<meta charset="utf-8">
@@ -59,14 +59,23 @@
 
 	<!--Application JavaScript Files-->
 	{% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>
-	{% endfor %} 
+	{% endfor %}
 
 	{% if process.env.NODE_ENV === 'development' %}
 	<!--Livereload script rendered -->
 	<script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
-	<script type="text/javascript" src="app.js"></script>
+	
 
 	{% endif %}
 </body>
-
+	<footer style="padding-top: 40px; padding-bottom: 20px;">
+		<div class="container">
+			<h3>Angular Institue</h3>
+			        <div class="text-center center-block">
+			            <br />
+			                <a href="https://www.facebook.com/bootsnipp"><i id="social" class="fa fa-facebook-square fa-3x social-fb"></i></a>
+				            <a href="https://twitter.com/bootsnipp"><i id="social" class="fa fa-twitter-square fa-3x social-tw"></i></a>
+				            <a href="https://plus.google.com/+Bootsnipp-page"><i id="social" class="fa fa-google-plus-square fa-3x social-gp"></i></a>
+				            <a href="mailto:bootsnipp@gmail.com"><i id="social" class="fa fa-envelope-square fa-3x social-em"></i></a>
+	</footer>
 </html>

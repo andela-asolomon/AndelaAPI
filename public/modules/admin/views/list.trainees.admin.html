@@ -1,0 +1,63 @@
+<section data-ng-controller="AdminController" data-ng-init="viewTrainees()">
+  <div class="container">
+    <div class="col-sm-12 col-lg-12" data-ng-show="user">
+        <a class="btn btn-xs btn-primary pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
+    </div>
+    <div class="link-controls">
+      <ul>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/appts">View Applicants</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/fellows">View Fellows</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
+      <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/create">Create Instructor</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/auth/signout">Signout</a></li>
+      </ul>
+    </div>
+
+    <div class="admin-view">
+    <div class="page-header text-center">
+      <h1>Trainees</h1>
+    </div>
+
+    <div>
+      <table class="list list-link">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Assessments</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="trainee in trainees">
+            <td><a ng-href="/#!/admin/appt/{{trainee._id}}">{{trainee.firstName}} </a></td>
+            <td><a ng-href="/#!/admin/appt/{{trainee._id}}">{{trainee.lastName}} </a></td>
+            <td><a ng-href="/#!/admin/appt/{{trainee._id}}">{{trainee.email}} </a></td>
+            <td><a ng-href="/#!/admin/appt/{{trainee._id}}">View Full Profile</a></td>
+            <td>
+              <form data-ng-submit='changeRoleToFellow(trainee._id, $index)' class="form_trainee signin form-horizontal" autocomplete="off">
+                <fieldset>
+                  <div class="form-group">
+                    <select data-ng-model="role[$index]" id="category">
+                      <option value="applicant">Applicant</option>
+                      <option value="fellow" selected="selected">Fellow</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                  <button type="submit" class="btn btn-xs btn-primary">Change Role</button>
+                  </div>
+                </fieldset>
+              </form>
+            </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  </div>
+</section>

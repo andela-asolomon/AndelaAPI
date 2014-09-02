@@ -1,11 +1,135 @@
-<section data-ng-controller="CampsController" data-ng-init="find()">
-	<div class="page-header">
-		<h1>Boot Camps</h1>
-		<h4>Apply To Be A Fellow</h4>
-	</div>
-	<div class="list-group">
-		<a data-ng-repeat="camp in camps" data-ng-href="#!/{{camp._id}}/camp.name" class="list-group-item">
-			<h3 class="list-group-item-heading" data-ng- bind="camp.name"></h3>
-		</a>
-	</div>
+<section>
+    <div class="container" ng-controller="ApplicantController" data-ng-init="findCamp()">
+        <div style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Applicant Sign Up
+                    </div>
+                </div>
+
+                <div style="padding-top: 30px" class="panel-body">
+                    <div data-ng-show="error" style="margin-top: 10px" class="alert alert-danger col-sm-12">
+                        <strong data-ng-bind="error"></strong>
+                    </div>
+
+                    <form name="userForm" data-ng-submit="signup()" novalidate role="form" class="form-horizontal" autocomplete="off">
+                        <div id="first_step" ng-show="field === 1">
+                            <div style="margin-bottom: 25px" class="form-group" ng-class="{ 'has-error' : userForm.username.$invalid && !userForm.username.$pristine }">
+                                <label for="username" class="control-label col-xs-2">Username: </label>
+                                    <div class="col-xs-10">
+                                        <input type="text" name="username" class="form-control" data-ng-model="user.username" required ng-minlength="3" ng-maxlength="8" Placeholder="Username"/>
+                                    </div>
+                                    <p ng-show="userForm.username.$error.minlength" class="help col-sm-12">Username is too short.</p>
+                                    <p ng-show="userForm.username.$error.maxlength" class="help col-sm-12">Username is too long.</p>
+                            </div>
+                            <div style="margin-bottom: 25px" class="form-group" ng-class="{ 'has-error' : userForm.password.$invalid && !userForm.password.$pristine }">
+                                <label for="password" class="control-label col-xs-2">Password: </label>
+                                    <div class="col-xs-10">
+                                        <input type="password" name="password" class="form-control" data-ng-model="user.password" required ng-minlength="6" ng-maxlength="12" Placeholder="Password"/>
+                                    </div>
+                                    <p ng-show="userForm.password.$error.minlength" class="help col-sm-12">Password is too short.</p>
+                                    <p ng-show="userForm.password.$error.maxlength" class="help col-sm-12">Password is too long.</p>
+                            </div>
+                            <div style="margin-bottom: 25px" class="form-group" ng-class="{ 'has-error' : userForm.cpassword.$invalid && !userForm.cpassword.$pristine }">
+                                <label for="password" class="control-label col-xs-2">Re Enter Password: </label>
+                                    <div class="col-xs-10">
+                                        <input type="password" name="cpassword" class="form-control" data-ng-model="cpassword" required ng-minlength="6" ng-maxlength="12" Placeholder="Re enter Password"/>
+                                    </div>
+                                    <p ng-if="userForm.password === userForm.cpassword" class="help col-sm-12">Please enter a valid password</p>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-offset-2 col-xs-10">
+                                 <input class="btn btn-primary" type="button" ng-click="show_next(1)" ng-disabled="userForm.username.$invalid || userForm.password.$invalid || userForm.cpassword.$invalid" name="submit_first" id="submit_first" value="Next" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Step Two Starts Here -->
+                        <div id="second_step" ng-show="field === 2">
+                            <div style="margin-bottom: 25px" class="form-group" ng-class="{ 'has-error' : userForm.firstname.$invalid && !userForm.firstname.$pristine }">
+                                <label for="firstName" class="control-label col-xs-2">First Name: </label>
+                                    <div class="col-xs-10">
+                                        <input type="text" name="firstname" class="form-control" data-ng-model="user.firstName" required ng-minlength="3" ng-maxlength="12" Placeholder="First Name"/>
+                                    </div>
+                                    <p ng-show="userForm.firstname.$error.minlength" class="help col-sm-12">First Name is too short.</p>
+                                    <p ng-show="userForm.firstname.$error.maxlength" class="help col-sm-12">First Name is too long.</p>
+                            </div>
+                            <div style="margin-bottom: 25px" class="form-group" ng-class="{ 'has-error' : userForm.lastname.$invalid && !userForm.lastname.$pristine }">
+                                <label for="lastName" class="control-label col-xs-2">Last Name: </label>
+                                    <div class="col-xs-10">
+                                        <input type="text" name="lastname" class="form-control" data-ng-model="user.lastName" required ng-minlength="3" ng-maxlength="12" Placeholder="Last Name"/>
+                                    </div>
+                                    <p ng-show="userForm.lastname.$error.minlength" class="help col-sm-12">Last Name is too short.</p>
+                                    <p ng-show="userForm.lastname.$error.maxlength" class="help col-sm-12">Last Name is too long.</p>
+                            </div>
+                            <div style="margin-bottom: 25px" class="form-group" ng-class="{ 'has-error' : userForm.email.$invalid && !userForm.email.$pristine }">
+                                <label for="email" class="control-label col-xs-2">Email Address: </label>
+                                    <div class="col-xs-10">
+                                        <input type="email" name="email" class="form-control" data-ng-model="user.email" required ng-minlength="3" ng-maxlength="50" Placeholder="Email Address" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" />
+                                    </div>
+                                    <p ng-show="userForm.email.$error.email" class="help">Please enter a valid Email Address.</p>
+                            </div>
+                            <div style="margin-bottom: 25px" class="form-group">
+                                <label class="control-label col-xs-2">Upload CV, in .pdf or .doc</label>
+                                    <div class="col-xs-10">
+                                        <input type="file" class="form-control" data-ng-file-select="onFileSelect($files)" accept="application/doc, application/docx, application/pdf" required/>
+                                        <span class="text text-danger" ng-show="files &&!correctFormat">File formats allowed are doc, docx and pdf</span>
+                                    </div>
+
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-offset-2 col-xs-10">
+                                 <input class="btn btn-primary" type="button" ng-click="show_prev(2)" name="submit_second" id="submit_second" value="Prev" />
+                                 <input class="btn btn-primary" type="button" ng-click="show_next(2)" ng-disabled="userForm.firstname.$invalid || userForm.email.$invalid || !correctFormat" name="submit_second" id="submit_first" value="Next" />
+                                </div>
+                            </div>
+                        </div>
+                        <div id="question" ng-show="field === 3">
+                            <table class="col-xs-offset-2 col-xs-10">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-9" style="vertical-align:top">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div data-ng-init="findOneQuestion()">
+                                                                            <div class="container">
+                                                                                <div class="page-header">
+                                                                                    <h3 class="list-group-item-heading" data-ng-bind="qusetions.testName"></h3>
+                                                                                </div>
+                                                                                <div data-ng-repeat="test in questions.questions">
+                                                                                    <iquestion class="ng-isolate-scope" text="{{test.question}}">
+                                                                                        <strong>
+                                                                                            Q: <span class="list-group-item-text" data-ng-bind="test.question"></span>
+                                                                                        </strong>
+                                                                                        <div data-ng-repeat="option in test.questOptions ">
+                                                                                            <input data-ng-click="assess( test._id, option._id, $index)" type="radio" name="{{test._id}}" value="{{option._id}">
+                                                                                            <span data-ng-bind="option.option"></span>
+                                                                                        </div>                                                                                    </iquestion>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <button type="submit" class="btn btn-primary" ng-click="show_prev(3)" name="submit_third" id="submit_third" value="Prev" >Prev</button>
+                            <button type="submit" class="btn btn-large btn-primary" ng-disabled="userForm.$invalid">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
