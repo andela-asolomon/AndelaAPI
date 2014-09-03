@@ -26,8 +26,12 @@ angular.module('applicant').config(['$stateProvider',
 			templateUrl: 'modules/applicant/views/logged_in.user.client.view.html'
 		}).
 		state('application', {
-			url: '/new_applicant',
+			url: '/signup',
 			templateUrl: 'modules/applicant/views/applicant.client.view.html'
+		}).
+		state('sucess', {
+			url: '/succespage',
+			templateUrl: 'modules/applicant/controllers/sucess.html'
 		}).
 		state('error_page', {
 			url: '/errorpage',

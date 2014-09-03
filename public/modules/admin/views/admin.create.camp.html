@@ -1,5 +1,5 @@
-<section class="row" data-ng-controller="AdminController">
-    
+<section class="row" data-ng-controller="AdminController" style="padding-top: 150px;">
+  <div class="container" data-ng-show="user.role === 'admin'">
     <div class="link-controls">
       <ul>
       <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
@@ -9,37 +9,47 @@
       <li><a href="/#!/admin/fellows">View Fellows</a></li>
       <li><a href="/#!/admins">View Admininistrators</a></li>
       <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
       <li><a href="/#!/admin/create">Create Instructor</a></li>
       <li><a href="/#!/admin/instrs">View Instructors</a></li>
-      <li><a href="/auth/signout">Signout</a></li>
+      <!-- <li><a href="/auth/signout">Signout</a></li> -->
       </ul>
     </div>
 
 
     <div class="admin-view">
-        <h3 class="col-md-12 text-center">Create new Camp</h3>
-
-        <div class="col-xs-offset-2 col-xs-8 col-md-offset-5 col-md-2">
-            <form data-ng-submit="createCamp()" name="create_camp_form" class="signin form-horizontal" novalidate autocomplete="off">
+        
+        <div class="col-xs-offset-2 col-xs-8 col-md-offset-3 col-md-4">
+          <h3 class="text-center">Create new Bootcamp</h3><br>
+            <form data-ng-submit="createCamp()" name="create_camp_form" class="signin form-horizontal" autocomplete="off">
                 <fieldset>
                     <div class="form-group">
-                        <label for="camp_name">Camp Name</label>
-                        <input type="text" required id="camp_name" name="camp_name" class="form-control" data-ng-model="credentials.camp_name" placeholder="Camp Name">
+                        <label for="camp_name">Bootcamp Name</label>
+                        <input type="text" id="camp_name" name="camp_name" class="form-control" data-ng-model="credentials.camp_name" required>
                     </div>
                     <div class="form-group">
                         <label for="start_date">Start date</label>
-                        <input type="datetime-local" id="start_date" name="start_date" class="form-control" data-ng-model="credentials.start_date" placeholder="Start date"/>
+                        <input type="text" id="start_date" name="start_date" class="form-control" data-ng-model="credentials.start_date" placeholder="M/D/YY" required>
                     </div>
-                   <div class="form-group">
+                    <div class="form-group">
                         <label for="end_date">End date</label>
-                        <input type="datetime-local" id="end_date" name="end_date" class="form-control" data-ng-model="credentials.end_date" placeholder="End date"/>
+                        <input type="text" id="end_date" name="end_date" class="form-control" data-ng-model="credentials.end_date" placeholder="M/D/YY" required>
                     </div>
-                   <div class="text-center form-group">
-                        <input type="submit" value="Create Camp" class="btn btn-large btn-primary">
+                    <div class="text-center form-group">
+                        <input type="submit" data-ng-disabled="create_camp_form.$invalid" value="Create Camp" class="btn btn-large btn-primary">
+                    </div>
+
+                    <div data-ng-show="error" class="text-center text-danger">
+                        <strong data-ng-bind="error"></strong>
                     </div>
                    
                 </fieldset>
             </form>
         </div>
+    </div>
+    </div>
+
+    <div class="container" data-ng-show="user.role !== 'admin'">
+      <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
     </div>
 </section>

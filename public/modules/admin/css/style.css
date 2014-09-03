@@ -279,4 +279,13 @@ ul.skillset li:before {
 }
 table.list-link tr td a.fixbtn{
   height: auto !important;
+  width: 90% !important;
+  margin-left: 4% !important;
+  line-height: .5; color: white !important;
+}
+
+b.reqLogin {
+  padding: 80px 90px;
+  display: block;
+  font-weight: bold;
 }

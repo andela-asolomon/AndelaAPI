@@ -1,5 +1,5 @@
-<section data-ng-controller="AdminController" data-ng-init="viewApplicant()">
-  <div class="container">
+<section data-ng-controller="AdminController" data-ng-init="viewApplicant()" class="pad">
+  <div class="container" data-ng-show="user.role === 'admin'">
     <div class="my_wrapper">
       <div class="link-controls">
       <ul>
@@ -10,9 +10,10 @@
       <li><a href="/#!/admin/fellows">View Fellows</a></li>
       <li><a href="/#!/admins">View Admininistrators</a></li>
       <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
       <li><a href="/#!/admin/create">Create Instructor</a></li>
       <li><a href="/#!/admin/instrs">View Instructors</a></li>
-      <li><a href="/auth/signout">Signout</a></li>
+      <!-- <li><a href="/auth/signout">Signout</a></li> -->
       </ul>
       </div>
 
@@ -155,14 +156,14 @@
           <div class="dates">
           <label class="startDate">
               <span>Start Date:</span>
-              <input type="text" data-ng-model="data.startDate" id="startDate" required>
+              <input type="text" data-ng-model="data.startDate" id="startDate" placeholder="M/DD/YY" required>
           </label>
           </div>
 
           <div class="dates">
           <label class="endDate">
               <span>End Date:</span>
-              <input type="text" data-ng-model="data.endDate" id="endDate" required>
+              <input type="text" data-ng-model="data.endDate" id="endDate" placeholder="M/DD/YY" required>
           </label>
           </div>
 
@@ -199,14 +200,14 @@
           <div class="from">
           <label class="startDate">
               <span>From:</span>
-              <input type="text" data-ng-model="data.from" id="from" placeholder="MM/DD/YY" required>
+              <input type="text" data-ng-model="data.from" id="from" placeholder="M/DD/YY" required>
           </label>
           </div>
 
           <div class="to">
           <label class="endDate">
               <span>To:</span>
-              <input type="text" data-ng-model="data.to" id="to" placeholder="MM/DD/YY" required>
+              <input type="text" data-ng-model="data.to" id="to" placeholder="M/DD/YY" required>
           </label>
           </div>
 
@@ -222,5 +223,9 @@
 
     </div>  
   </div>
+  </div>
+
+  <div class="container" data-ng-show="user.role !== 'admin'">
+    <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
 </section>

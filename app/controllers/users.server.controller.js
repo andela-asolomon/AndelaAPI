@@ -125,7 +125,7 @@ exports.signup = function(req, res) {
 			console.log(typeof req.camp);
 			req.camp.applicants.push(user);
 
-			user.cvPath = 'modules/core/img/server/tmp';
+			user.cvPath = destPath;
 				user.status.name = 'pending';
 				user.status.reason = '';
 				
@@ -142,17 +142,17 @@ exports.signup = function(req, res) {
 						console.log('Error');
 					} 
 					else {
-						req.login(user, function(err) {
-		   					if (err) {
-								res.send(400, err);
-							} 
-							else {
-								user.password = undefined;
-								user.salt = undefined;
+						// req.login(user, function(err) {
+		   	// 				if (err) {
+						// 		res.send(400, err);
+						// 	} 
+						// 	else {
+						// 		user.password = undefined;
+						// 		user.salt = undefined;
 								res.jsonp(user);
 
-							}
-		   			   });
+							// }
+		   		// 	   });
 					}
 				});
 				}
@@ -184,6 +184,26 @@ exports.signin = function(req, res, next) {
 			});
 		}
 	})(req, res, next);
+};
+
+/**
+ * Check unique username
+ */
+exports.uniqueUsername = function(req, res) {
+	console.log(req.body);
+	User.find().where({username: req.body.username}).exec(function(err, user) {
+         if (err) {
+         	 return res.send(401, {
+			    message: err
+		     });
+         } else if (!user) {
+              return res.send(401, {
+			    message: 'unknown user'
+		     });
+         } else {
+             res.jsonp(user);
+         }
+       });
 };
 
 /**

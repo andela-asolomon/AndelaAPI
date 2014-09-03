@@ -5,6 +5,7 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 	function($scope, $rootScope, $upload, $stateParams, $location, Authentication, $http) {
 		$scope.user = Authentication.user;
 
+
 				// instructor sigin 
 		$scope.instructor_signin = function() {
 			$http.post('/auth/signin', $scope.credentials).success(function(response) {
@@ -41,6 +42,7 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 
 		// for bootcamps
 		$scope.listBootcamps = function() {
+
 			$scope.appl_length= 0;
 		  	$http.get('/instr/bootcamps').success(function(response) {
 		    // If successful show success message and clear form
@@ -51,21 +53,27 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 		  	});
 		};
 
+		// if $locaton.path('/')
+
 
 		$scope.viewBootcamp = function() {
-			console.log($stateParams.bootcampId);
+			console.log($stateParams.bootcampId.length);
+			if ($stateParams.bootcampId.length < 20) {
+				$location.path('/');
+			}else{
 			
-		  	$http.get('/instr/camp/' + $stateParams.bootcampId).success(function(response) {
-		    // If successful show success message and clear form
-		    	console.log('/instr/camp/' + $stateParams.bootcampId);
-		    	$scope.success = true;
-		    	$scope.bootcamp = response;
-		    	console.log($scope.bootcamp);
-		    	$scope.applicants = $scope.bootcamp.applicants;
-		    	// console.log($scope.applicants);
-			}).error(function(response) {
-			    $scope.error = response.message;
-			}); 
+			  	$http.get('/instr/camp/' + $stateParams.bootcampId).success(function(response) {
+			    // If successful show success message and clear form
+			    	console.log('/instr/camp/' + $stateParams.bootcampId);
+			    	$scope.success = true;
+			    	$scope.bootcamp = response;
+			    	console.log($scope.bootcamp);
+			    	$scope.applicants = $scope.bootcamp.applicants;
+			    	// console.log($scope.applicants);
+				}).error(function(response) {
+				    $scope.error = response.message;
+				}); 
+			}
 		};
 
 
@@ -89,26 +97,30 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 
 				
 		$rootScope.viewTrainee = function() {
+			if ($stateParams.applicantId.length < 20) {
+				$location.path('/');
+			}else{
 			
-			$rootScope.traineeId = $stateParams.applicantId;
-			$http.get('/instr/trainee/' + $rootScope.traineeId).success(function(response) {
-		    // If successful show success message and clear form
-		    	$scope.success = true;
-		    	$rootScope.trainee = response;
-	
-		    	$rootScope.assessments = $rootScope.trainee.assessments;   	    	
-		    	angular.forEach($rootScope.trainee.assessments, function(assessment, key){
-		    		$rootScope.assessment = assessment; 
-		    		console.log(assessment); 
-		    		console.log(user._id); 
-		    		console.log(assessment.instructorId);
-		    	});
-		 
-		    	// $location.path('instructors' + applicant._id);
-		  	}).error(function(response) {
-		    $scope.error = response.message;
+				$rootScope.traineeId = $stateParams.applicantId;
+				$http.get('/instr/trainee/' + $rootScope.traineeId).success(function(response) {
+			    // If successful show success message and clear form
+			    	$scope.success = true;
+			    	$rootScope.trainee = response;
+		
+			    	$rootScope.assessments = $rootScope.trainee.assessments;   	    	
+			    	angular.forEach($rootScope.trainee.assessments, function(assessment, key){
+			    		$rootScope.assessment = assessment; 
+			    		console.log(assessment); 
+			    		console.log(user._id); 
+			    		console.log(assessment.instructorId);
+			    	});
+			 
+			    	// $location.path('instructors' + applicant._id);
+			  	}).error(function(response) {
+			    $scope.error = response.message;
 
-		  	});
+			  	});
+			}
 		};
 
 
@@ -122,6 +134,10 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 			});
 
 			console.log($scope.assessment);
+			// console.log($stateParams);
+			// console.log($scope.assessment.assessment_name);
+			
+				// $scope.enterNew = false;
 			$http.post('/instr/trainee/'+ $stateParams.applicantId, $scope.assessment).success(function(response) {
 				
 				$location.path('/instructors/trainees/' + $stateParams.applicantId);
@@ -166,6 +182,22 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 		};
  
 
+		// $scope.selectFellow = function() {
+		// 	console.log($scope.trainee.role);
+		// 	$scope.trainee.role = "fellow";
+		// 	console.log($scope.trainee);
+			
+		//   	$http.put('/instr/trainee/' + $stateParams.applicantId, $scope.trainee).success(function(response) {
+		//     // If successful show success message and clear form
+		    
+		//     	$scope.success = true;
+		//     	$location.path('instructors/fellow_selected/' + $scope.traineeId);
+		//   	}).error(function(response) {
+		//     $scope.error = response.message;
+		//   	});
+		// };
+		
+
 		// for fellows
 		$scope.listFellows = function() {
 		  	$http.get('/instr/fellows').success(function(response) {
@@ -182,22 +214,27 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 
 
 		$scope.viewFellow = function() {
-			$http.get('/instr/trainee/' + $stateParams.fellowId).success(function(response) {
-		    // If successful show success message and clear form
-		    	$scope.success = true;
-		    	$scope.fellow = response;
-		    	angular.forEach($scope.fellow.skillSets, function(skillSets, key){
-		    		$scope.skillSets = skillSets;  
-		    		console.log(user._id); 
-		    		console.log($scope.fellow);
-		    	});
-		    	
-		    	// $location.path('instructors' + applicant._id);
-		  	}).error(function(response) {
-		    $scope.error = response.message;
+			if ($stateParams.fellowId.length < 20) {
+				$location.path('/');
+			}else{
+				$http.get('/instr/trainee/' + $stateParams.fellowId).success(function(response) {
+			    // If successful show success message and clear form
+			    	$scope.success = true;
+			    	$scope.fellow = response;
+			    	angular.forEach($scope.fellow.skillSets, function(skillSets, key){
+			    		$scope.skillSets = skillSets;  
+			    		console.log(user._id); 
+			    		console.log($scope.fellow);
+			    	});
+			    	
+			    	// $location.path('instructors' + applicant._id);
+			  	}).error(function(response) {
+			    $scope.error = response.message;
 
-		  	});
+			  	});
+			}
 		};
+
 
 		$scope.ratefellow = function() {
 	      //Permissions check
@@ -229,7 +266,18 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 			});   
 		};
 
-	
+		// $rootScope.editRate= function(index, skillSets) {
+		// 	$rootScope.skillSets = skillSets;
+		// 	$rootScope.index = index;
+		// 	console.log($rootScope.skillSets);
+		// };
+
+		// $scope.editingRate = function(){
+		// 	$scope.skillSetsNow = $scope.skillSets;
+		// 	console.log($scope.skillSetsNow);
+
+		// };
+		
 		$scope.editFellowRate= function(){
 		console.log($scope.skillSets);
 		console.log($stateParams);
@@ -269,13 +317,6 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
             }
         };
 
-        $scope.showImage = function(img) {
-            img = img.substring(6);
-            return img;
-      
-        };
-
-        
 
         // upload file
 		$scope.create = function() {
@@ -315,7 +356,13 @@ angular.module('instructors').controller('InstructorsController', ['$scope', '$r
 		};
 
 
-
+		 $scope.showImage = function(img) {
+		 	if (img) {
+               img = img.substring(6);
+            	return img;
+		 	}
+            
+        };
 
 
 		// instructor rates his skills

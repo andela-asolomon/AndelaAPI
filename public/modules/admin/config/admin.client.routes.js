@@ -21,6 +21,10 @@ angular.module('admin').config(['$stateProvider',
       url: '/admin/appts',
       templateUrl: 'modules/admin/views/list.applicants.admin.html'
     }).
+    state('listInstrs', {
+      url: '/admin/instrs',
+      templateUrl: 'modules/admin/views/list.instructors.admin.html'
+    }).
     state('viewcamp', {
       url: '/admin/camps/:campId',
       templateUrl: 'modules/admin/views/view.bootcamp.admin.html'

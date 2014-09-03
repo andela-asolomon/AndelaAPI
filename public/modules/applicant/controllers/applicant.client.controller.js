@@ -99,7 +99,8 @@ angular.module('applicant').controller('ApplicantController', ['$scope', '$uploa
                 $scope.files = $files;
                 console.log($scope.files);
                 if($scope.files) {
-                  if ($scope.files[0].type === 'application/pdf' || $scope.files[0].type === 'application/doc' || $scope.files[0].type === 'application/docx') {
+                  if ($scope.files[0].type === 'application/pdf' || $scope.files[0].type === 'application/msword' 
+                       || $scope.files[0].type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                       $scope.correctFormat = true;
                   } else {
                       $scope.correctFormat = false;
@@ -144,7 +145,9 @@ angular.module('applicant').controller('ApplicantController', ['$scope', '$uploa
                     file: $scope.files[0]
                 })
                 .success(function(response) {
-                    $location.path(''); 
+                  console.log('response: ' + response);
+                  console.log(response);
+                    $location.path('/succespage'); 
                 })
                 .error(function(err) {
                     console.log(err);
@@ -165,6 +168,8 @@ angular.module('applicant').controller('ApplicantController', ['$scope', '$uploa
               });
             };
 
+
+
             $scope.show_profile = function(){
                  var url = '/users/' + $stateParams.logged_inId;
                  console.log('params: ' + $stateParams.logged_inId);
@@ -179,5 +184,79 @@ angular.module('applicant').controller('ApplicantController', ['$scope', '$uploa
 
               }); 
             };
+
+          $scope.sucess = function(){
+                 
+                 // console.log('params: ' + $stateParams.logged_inId);
+                 
+              //   $http.get(url).success(function(response) {
+              //     console.log('response: ' + response);
+              //       $scope.user_profile = response;
+              //   }).error(function(response) {
+              //     $scope.error = response.message;
+              //     $http.get('/auth/signout');
+              //      $location.path('/errorpage');
+
+              // }); 
+            };
               
 }]);
+
+angular.module('applicant').directive('ngConfirmField', function () {
+  return {
+    require: 'ngModel',
+    scope: {
+      confirmAgainst: '=',
+    },
+    link: function (scope, iElement, iAttrs, ngModelCtrl) {
+
+      var updateValidity = function () {
+        var viewValue = ngModelCtrl.$viewValue;
+        var isValid = isFieldValid();
+        if(ngModelCtrl.$viewValue)
+        ngModelCtrl.$setValidity('noMatch', isValid);
+        // If the field is not valid, return undefined.
+        return isValid ? viewValue : undefined;
+      };
+
+      // Test the confirm field view value matches the confirm against value.
+      var isFieldValid = function () {
+        return ngModelCtrl.$viewValue === scope.confirmAgainst;
+      };
+
+      // Convert data from view format to model format
+      ngModelCtrl.$parsers.push(updateValidity);
+
+      // Watch for changes in the confirmAgainst model.
+      scope.$watch('confirmAgainst', updateValidity);
+    }
+  };
+});
+
+angular.module('applicant').directive('ensureUnique', ['$http', function($http) {
+  return {
+    require: 'ngModel',
+    link: function(scope, ele, attrs, c, ngModel) {
+      attrs.$observe('ngModel', function(value){
+      scope.$watch(value, function(newValue) {
+        $http({
+          method: 'POST',
+          url: '/users/check/uniqueUsername',
+          data: {'username': newValue}
+        }).success(function(data, status, headers, cfg) {
+          console.log(data);
+          if (data.length>0) {
+             c.$setValidity('unique', false);
+          } else {
+             c.$setValidity('unique', true);
+          }
+        }).error(function(data, status, headers, cfg) {
+          c.$setValidity('unique', true);
+        });
+      });
+    });
+    }
+  }
+}]);
+
+

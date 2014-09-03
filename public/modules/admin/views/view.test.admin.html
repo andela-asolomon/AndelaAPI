@@ -1,5 +1,5 @@
-<section data-ng-controller="AdminController" data-ng-init="viewTest()">
-  <div class="container">
+<section data-ng-controller="AdminController" data-ng-init="viewTest()" class="pad">
+  <div class="container" data-ng-show="user.role === 'admin'">
     <div class="link-controls">
       <ul>
       <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
@@ -7,11 +7,13 @@
       <li><a href="/#!/admin/appts">View Applicants</a></li>
       <li><a href="/#!/admin/trainees">View Trainees</a></li>
       <li><a href="/#!/admin/fellows">View Fellows</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
       <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
       <li><a href="/#!/admin/create">Create Instructor</a></li>
       <li><a href="/#!/admin/instrs">View Instructors</a></li>
-      <li><a href="/auth/signout">Signout</a></li>
-    </ul>
+      <!-- <li><a href="/auth/signout">Signout</a></li> -->
+      </ul>
     </div>
 
     <div class="admin-view">
@@ -43,7 +45,7 @@
               <li data-ng-repeat="option in question.questOptions">
                 <b ng-hide="optionEditorEnabled[$parent.$index][$index]">{{option.option}} <i data-ng-show="option.answer === true"> (Correct answer) </i> <a href="" ng-click="enableEditor('option', $parent.$index, $index)">Edit</a>
                 </b>
-
+                <a style="text-align: right; margin-left: 10px;" ng-click="deleteOption(test._id, question._id, option._id, $parent.$index, $index)">(Delete Option)</a>
                 <div ng-show="optionEditorEnabled[$parent.$index][$index]">
                   <input type="text" data-ng-model="editableOption[$parent.$index][$index].option" ng-show="optionEditorEnabled[$index]">
                   <input type="checkbox" data-ng-model="editableOption[$parent.$index][$index].answer" value="" id="answer"><label for="answer">Set as answer</label>
@@ -53,10 +55,17 @@
                 </div>
               </li>
             </ol>
+
+            <a class="pull-right" style="margin-right: 70px" ng-click="deleteQuestion(test._id, question._id, $index)">Delete Question</a>
             <p class="warning" data-ng-if="displayerrmsg[$index]" class="warning">Warning: No option on this question is selected as the answer.</p>
+
           </li>
         </ul>
       </div>
     </div>
+  </div>
+
+  <div class="container" data-ng-show="user.role !== 'admin'">
+    <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
 </section>

@@ -1,20 +1,20 @@
-<section data-ng-controller="AdminController" data-ng-init="viewTest()">
-    <div class="container">
-
-        <div class="link-controls">
-      <ul>
-      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
-      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
-      <li><a href="/#!/admin/appts">View Applicants</a></li>
-      <li><a href="/#!/admin/trainees">View Trainees</a></li>
-      <li><a href="/#!/admin/fellows">View Fellows</a></li>
-      <li><a href="/#!/admins">View Admininistrators</a></li>
-      <li><a href="/#!/admin/test/create">Create Test</a></li>
-      <li><a href="/#!/admin/create">Create Instructor</a></li>
-      <li><a href="/#!/admin/instrs">View Instructors</a></li>
-      <li><a href="/auth/signout">Signout</a></li>
-      </ul>
-        </div>
+<section data-ng-controller="AdminController" data-ng-init="viewTest()" class="pad">
+    <div class="container" data-ng-show="user.role === 'admin'">
+      <div class="link-controls">
+        <ul>
+        <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+        <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+        <li><a href="/#!/admin/appts">View Applicants</a></li>
+        <li><a href="/#!/admin/trainees">View Trainees</a></li>
+        <li><a href="/#!/admin/fellows">View Fellows</a></li>
+        <li><a href="/#!/admins">View Admininistrators</a></li>
+        <li><a href="/#!/admin/test/create">Create Test</a></li>
+        <li><a href="/#!/admin/test">View All Tests</a></li>
+        <li><a href="/#!/admin/create">Create Instructor</a></li>
+        <!-- <li><a href="/#!/admin/instrs">View Instructors</a></li> -->
+        <!-- <li><a href="/auth/signout">Signout</a></li> -->
+        </ul>
+      </div>
 
         <div class="admin-view">
         <form name="test" class="basic-grey" data-ng-submit="createQuestion()">
@@ -42,5 +42,11 @@
         </form>
         </div>
     </div>
+
+
+    <div class="container" data-ng-show="user.role !== 'admin'">
+      <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
+    </div>
+
 </section>
 

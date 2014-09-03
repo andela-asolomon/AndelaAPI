@@ -61,6 +61,10 @@ angular.module('instructors').config(['$stateProvider',
 			url: '/instructors/editProfile',
 			templateUrl: 'modules/instructors/views/edit-profile.client.view.html'
 		}).
+		state('change_Password', {
+			url: '/change-password',
+			templateUrl: 'modules/users/views/settings/change-password.client.view.html'
+		}).
 		state('addSkills', {
 			url: '/instructors/addSkill',
 			templateUrl: 'modules/instructors/views/skills.client.view.html'

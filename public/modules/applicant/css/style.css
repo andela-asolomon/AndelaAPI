@@ -74,3 +74,11 @@
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
 }
+
+.main_content{
+  height: 100%;
+  width: 60%;
+  margin: 0 auto;
+  font-size: 1.2em;
+  line-height: 1.0em;
+}

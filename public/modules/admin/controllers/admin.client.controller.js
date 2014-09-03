@@ -111,7 +111,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $location.path('/admins');
       }).error(function(response) {
         $scope.error = response.message;
-        console.log($scope.error);
+        console.log('Error - can not');
       });
     };
 
@@ -119,12 +119,15 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     * Create camp
     */
     $scope.createCamp = function() {
-      console.log('create camp');
       console.log($scope.credentials);
       $http.post('/admin/camp', $scope.credentials).success(function(response){
         $location.path('/admin/camps');
       }).error(function(response) {
         $scope.error = response.message;
+        if ($scope.error.type === 'date'){
+          $scope.error = "Please follow the date pattern specified M/D/YY e.g (use 2/5/2014 for 5th Feb 2014)"
+        }
+        console.log($scope.error);
        });
     };
     
@@ -133,7 +136,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $http.get('/admin/camp/' + $stateParams.campId).success(function(response) {
         // If successful show success message and clear form
           $scope.camp = response;
-          console.log($scope.camp.applicants);
+          console.log($scope.camp);
       }).error(function(response) {
           $scope.error = response.message;
 
@@ -334,6 +337,101 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
+    $scope.deleteAdmin = function(userId, index) {
+      $scope.admins.splice(index, 1);
+    
+      $http.delete('/admin/user/' + userId).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+
+        // $scope.appt = response;
+        console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log($scope.error);
+        // console.log('Error - can not');
+      });
+    };
+
+    $scope.deleteInstr = function(userId, index) {
+      $scope.instructors.splice(index, 1);
+    
+      $http.delete('/admin/user/' + userId).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+
+        // $scope.appt = response;
+        console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log($scope.error);
+        // console.log('Error - can not');
+      });
+    };
+
+    $scope.deleteTest = function(testId, index) {
+      $scope.tests.splice(index, 1);
+    
+      $http.delete('/admin/test/' + testId).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+
+        // $scope.appt = response;
+        console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log($scope.error);
+      });
+    };
+
+    $scope.deleteQuestion = function(testId, questionId, index) {
+      $scope.test.questions.splice(index, 1);
+      $http.delete('/admin/test/' + testId + '/' + questionId).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+
+        // $scope.appt = response;
+        console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log($scope.error);
+      });
+    };
+
+    $scope.deleteOption = function(testId, questionId, optionId, queIndex, index) {
+      $scope.test.questions[queIndex].questOptions.splice(index, 1);
+      $http.delete('/admin/test/' + testId + '/' + questionId + '/' + optionId).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+
+        // $scope.appt = response;
+        console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log($scope.error);
+      });
+    };
+
+    $scope.deleteCamp = function(campId, index) {
+      $scope.camps.splice(index, 1);
+      $http.delete('/admin/camp/' + campId).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+
+        // $scope.appt = response;
+        console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log($scope.error);
+      });
+    };
+
     $scope.deleteFellow = function(userId, index) {
       $scope.fellows.splice(index, 1);
     
@@ -380,6 +478,19 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       $http.get('/admin/admins').success(function(response) {
         // If successful show success message and clear form
         $scope.admins = response;
+        $scope.success = true;
+        console.log('Success - Done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log('Error - can not');
+      });
+    };
+
+    $scope.listInstructors = function() {
+      $http.get('/admin/instructors').success(function(response) {
+        // If successful show success message and clear form
+        $scope.instructors = response;
         $scope.success = true;
         console.log('Success - Done', response);
         
@@ -441,6 +552,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         
       }).error(function(response) {
         $scope.error = response.message;
+        if ($scope.error.type === 'date'){
+          $scope.error = "Please follow the date pattern specified M/D/YY e.g (use 2/5/2014 for 5th Feb 2014)"
+        }
         console.log('Error - can not');
       });
     };
@@ -476,6 +590,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         console.log('Success - Done', response);
       }).error(function(response) {
         $scope.error = response.message;
+        if ($scope.error.type === 'date'){
+          $scope.error = "Please follow the date pattern specified M/D/YY e.g (use 2/5/2014 for 5th Feb 2014)"
+        }
         console.log('Error - can not');
       });
     };

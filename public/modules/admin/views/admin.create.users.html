@@ -1,4 +1,5 @@
-<section class="row" data-ng-controller="AdminController" data-ng-init='reRoute()'>
+<section class="row" data-ng-controller="AdminController" style="padding-top: 100px;">
+    <div class="container" data-ng-show="user.role === 'admin'">
     <div class="link-controls">
       <ul>
       <ul>
@@ -9,9 +10,10 @@
       <li><a href="/#!/admin/fellows">View Fellows</a></li>
       <li><a href="/#!/admins">View Admininistrators</a></li>
       <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
       <li><a href="/#!/admin/create">Create Instructor</a></li>
       <li><a href="/#!/admin/instrs">View Instructors</a></li>
-      <li><a href="/auth/signout">Signout</a></li>
+      <!-- <li><a href="/auth/signout">Signout</a></li> -->
       </ul>
     </div>
 
@@ -52,10 +54,15 @@
                     <button type="submit" class="btn btn-large btn-primary">Create</button>
                 </div>
                 <div data-ng-show="error" class="text-center text-danger">
-                    <strong data-ng-bind="error.errors.password.message"></strong>
+                    <strong data-ng-bind="error"></strong>
                 </div>
             </fieldset>
         </form>
     </div>
+    </div>
+    </div>
+
+    <div class="container" data-ng-show="user.role !== 'admin'">
+      <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
     </div>
 </section>

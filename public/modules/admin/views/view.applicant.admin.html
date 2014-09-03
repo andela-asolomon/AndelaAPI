@@ -1,5 +1,5 @@
-<section data-ng-controller="AdminController" data-ng-init="viewApplicant()">
-  <div class="container">
+<section data-ng-controller="AdminController" data-ng-init="viewApplicant()" class="pad">
+  <div class="container" data-ng-show="user.role === 'admin'">
     <div class="link-controls">
       <ul>
       <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
@@ -9,9 +9,10 @@
       <li><a href="/#!/admin/fellows">View Fellows</a></li>
       <li><a href="/#!/admins">View Admininistrators</a></li>
       <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
       <li><a href="/#!/admin/create">Create Instructor</a></li>
-      <li><a href="/#!/admin/instrs">View Instructors</a></li>
-      <li><a href="/auth/signout">Signout</a></li>
+      <!-- <li><a href="/#!/admin/instrs">View Instructors</a></li> -->
+      <!-- <li><a href="/auth/signout">Signout</a></li> -->
       </ul>
     </div>
 
@@ -31,7 +32,11 @@
             <p><span><i class="glyphicon glyphicon-envelope"></i></span>{{appt.email}}</p>
               
             <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-gift"></i></span>Test score: {{appt.testScore}}</p>
+
+            <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-calendar"></i></span>Status: {{user_profile.status || 'Pending'}}</p>
+
             <p data-ng-show="appt.role == 'trainee'"><span><i class="glyphicon glyphicon-gift"></i></span>{{appt.assessment}}</p>
+
             <p data-ng-show="appt.role == 'fellow'"><span data-ng-hide="appt.skillSets.length === 0"><i class="glyphicon glyphicon-certificate"></i>   Skillsets</span>
               <strong data-ng-repeat="skill in appt.skillSets">
                 <i><b data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b></i> 
@@ -52,6 +57,10 @@
     </table>
     </div>
   </div>
+  </div>
+
+  <div class="container" data-ng-show="user.role !== 'admin'">
+    <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
 </section>
 

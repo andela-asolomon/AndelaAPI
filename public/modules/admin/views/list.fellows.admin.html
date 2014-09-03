@@ -1,5 +1,5 @@
-<section data-ng-controller="AdminController" data-ng-init="listFellows()">
-  <div class="container">
+<section data-ng-controller="AdminController" data-ng-init="listFellows()" class="pad">
+  <div class="container" data-ng-show="user.role === 'admin'">
     <div class="link-controls">
       <ul>
       <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
@@ -9,9 +9,10 @@
       <li><a href="/#!/admin/fellows">View Fellows</a></li>
       <li><a href="/#!/admins">View Admininistrators</a></li>
       <li><a href="/#!/admin/test/create">Create Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
       <li><a href="/#!/admin/create">Create Instructor</a></li>
       <li><a href="/#!/admin/instrs">View Instructors</a></li>
-      <li><a href="/auth/signout">Signout</a></li>
+      <!-- <li><a href="/auth/signout">Signout</a></li> -->
       </ul>
     </div>
 
@@ -47,6 +48,10 @@
       </table>
     </div>
   </div>
+  </div>
+
+  <div class="container" data-ng-show="user.role !== 'admin'">
+    <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
 </section>
 
