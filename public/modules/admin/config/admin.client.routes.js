@@ -13,6 +13,10 @@ angular.module('admin').config(['$stateProvider',
       url: '/admin/create',
       templateUrl: 'modules/admin/views/admin.create.users.html'
     }).
+    state('createInst', {
+      url: '/admin/createInst',
+      templateUrl: 'modules/admin/views/admin.create.inst.html'
+    }).
     state('adminWelcome', {
       url: '/admin/welcome',
       templateUrl: 'modules/admin/views/admin.welcome.html'
@@ -34,7 +38,7 @@ angular.module('admin').config(['$stateProvider',
       templateUrl: 'modules/admin/views/view.applicant.admin.html'
     }).
     state('editAppt', {
-      url: '/admin/editappt/:apptId',
+      url: '/admin/editappt/:bootcampId/:apptId',
       templateUrl: 'modules/admin/views/edit.appt.form.admin.html'
     }).
     state('listTrainees', {

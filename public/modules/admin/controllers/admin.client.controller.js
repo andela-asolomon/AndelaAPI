@@ -75,8 +75,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
             }
     };
 
-    $scope.search_filter = '';
-
     $scope.showAddChoice = function(choice, num) {
       if (num === 1)
          return choice.id === $scope.choiceOne[$scope.choiceOne.length-1].id;
@@ -104,14 +102,26 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
 
     // Create new user
-    $scope.create = function() {
-      console.log('createInstructor called');
+    $scope.create = function(role) {
+      if (role === 'admin'){
+        $scope.credentials.role = 'admin';
+      }
+      if (role === 'inst'){
+        $scope.credentials.role = 'instructor';
+      }
+      // console.log('createInstructor called', $scope.credentials);
       $http.post('/admin/create', $scope.credentials).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
-        console.log('Success - Done');
+        console.log('Success - Done', response);
         $scope.passwordDetails = null;
-        $location.path('/admins');
+        if (response.role === 'instructor') {
+          $location.path('/admin/instrs');  
+        }
+        else{
+          $location.path('/admins'); 
+        }
+        
       }).error(function(response) {
         $scope.error = response.message;
         console.log('Error - can not');
@@ -329,7 +339,20 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
 
     $scope.deleteUser = function(userId, index) {
-      $scope.applicants.splice(index, 1);
+      $scope.camp.applicants.splice(index, 1);
+
+      $http.put('/admin/camp/' + $scope.camp._id, $scope.camp).success(function(response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+
+        // $scope.appt = response;
+        console.log('Edit bootcamp done', response);
+        
+      }).error(function(response) {
+        $scope.error = response.message;
+        console.log($scope.error);
+        // console.log('Error - can not');
+      });
     
       $http.delete('/admin/user/' + userId).success(function(response) {
         // If successful show success message and clear form
@@ -343,6 +366,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         console.log($scope.error);
         // console.log('Error - can not');
       });
+
+
     };
 
     $scope.deleteAdmin = function(userId, index) {
@@ -515,7 +540,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $scope.success = true;
         // $location.path('admin/appt/' + response._id);
         console.log('Success - Done', response);
-        $location.path('/admin/appts');
+        $location.path('/admin/camps/' + $stateParams.bootcampId);
 
       }).error(function(response) {
         $scope.error = response.message;
@@ -572,7 +597,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       $http.post('/admin/trainee/' + $stateParams.apptId + '/rate', $scope.data).success(function(response) {
         // If successful show success message and clear form
         $scope.data.skill = "";
-        $scope.data.rating = "1";
+        // $scope.data.rating = 1;
         $scope.success = true;
         $scope.appt = response;
         console.log('Success - Done', response);

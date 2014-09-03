@@ -54,17 +54,17 @@ exports.createUsers = function(req, res, next) {
 * Change applicant's status
 */
 exports.changeStatus = function(req, res) {
-      var applicant = req.applicant;
-      applicant.status = {name: "", reason: ""}; 
+      var applicant = req.applicant; 
+      console.log(req.body);
       
-      if (req.body.status === 'rejected') { 
-        if (!req.body.reason || req.body.reason.length === 0) {
-          return res.send(400, {
+      if (req.body.status.name === 'rejected') { 
+        if (!req.body.status.reason || req.body.status.reason.length === 0) {
+           return res.send(400, {
               message: 'Please give reason why applicant was rejected'
-          });
+           });
         }
-        console.log(req.body.reason.length);
-      }  
+      } 
+
       if (req.body.status.name === 'selected for bootcamp') {
           applicant.role = 'trainee';
       }
@@ -72,29 +72,42 @@ exports.changeStatus = function(req, res) {
       if (applicant.role === 'trainee' && req.body.status.name !== 'selected for bootcamp' ) {
           applicant.role = 'applicant';
       }
-      if (req.body.reason) { 
-          applicant.status.reason = req.body.reason;
+
+      if (req.body.status.reason) { 
+          applicant.status.reason = req.body.status.reason;
       } else {
           applicant.status.reason = '';
       }
 
-      applicant.status.name = req.body.status;
-      Applicant.update(
-          {_id: req.params.apptId},
-          { $set: {'role': applicant.role, 'status': {name: applicant.status.name, reason: applicant.status.reason}}},
-          function(error, appt) {
-            if(error){
-              return res.send(400, {
-                  message: 'fuck dis'
-              });
-            }
-            else{
-              res.jsonp(appt);
-            }
-          }
-      ); 
-};
+      applicant.status.name = req.body.status.name;
 
+      console.log('roleee'); 
+      console.log(applicant.status);
+      console.log('role done');
+
+      Applicant.update(
+         {_id: req.params.apptId},
+         {$set: {'role': applicant.role, 'status.name': applicant.status.name, 'status.reason': applicant.status.reason}},
+          function (err, appt) {
+             if (err) {
+                return res.send(400, {message: err });
+             } else {
+                 res.jsonp(appt);
+                 console.log('heres appt from db', appt);
+             }
+          }
+
+      );
+      // applicant.save(function(err, appt) {
+      //     if (err) {
+      //         return res.send(400, {
+      //             message: err
+      //         });
+      //     } else {
+      //         res.jsonp(appt);
+      //     }
+      // });   
+};
 /**
 * Change applicant's role
 */
@@ -227,6 +240,7 @@ exports.bootCamps = function(req, res) {
                 message: "Couldn't find bootcamps"
             });
          } else {
+            console.log(camps[1]);
             res.jsonp(camps);
          }
      });  
@@ -251,23 +265,32 @@ exports.editCamp = function(req, res) {
     });
 };
 
+
 /**
 * Delete bootcamp
 */
 exports.deleteCamp = function(req, res) {
-    var camp = req.camp;
+    var camp = req.camp,
+        campId = camp._id;
 
-    camp.remove(function(err) {
+    camp.remove(function(err, bootCamp) {
         if (err) {
             return res.send(400, {
-                message: "Couldn't delete camp"
+                message: 'Couldn\'t delete camp'
             });
         } else {
-            res.jsonp(camp);
+            User.find().where({campId: campId}).remove(function(err, user) {
+                 if (err) {
+                    return res.send(400, {
+                        message: 'Couldn\'t delete user'
+                    });
+                 } else {
+                     res.jsonp(bootCamp);
+                 }
+            });
         }
     });
 };
-
 /**
  * Show the current bootcamp
  */
@@ -297,6 +320,7 @@ var doListing = function(req, res, schema, whichRole) {
                 message: "No " + whichRole + " found"
             });
          } else {
+            console.log(users);
             res.jsonp(users);
          }
      });
@@ -379,6 +403,7 @@ exports.createTests = function(req, res) {
       }
     });
 };
+
 
 /**
  * Update tests
@@ -742,11 +767,18 @@ exports.instrByID = function(req, res, next, id)  {
  * Bootcamp middleware
  */
 exports.campByID = function(req, res, next, id) {
-    Bootcamp.findById(id).exec(function(err, camp) {
+    Bootcamp.findById(id).populate('applicants').exec(function(err, camp) {
         if (err) return next(err);
         if (!camp) return next(new Error('Failed to load bootcamp ' + id));
-        req.camp = camp;
-        next();
+        Applicant.populate(camp.applicants, {path:'status'},
+                   function(err, data){
+                        //cb(null, camp);
+                        req.camp = camp;
+                        console.log(req.camp);
+                        next();
+                   }
+        );
+        
     });
 };
 

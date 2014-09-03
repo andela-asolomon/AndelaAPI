@@ -413,16 +413,16 @@ exports.read = function(req, res) {
 /**
  * Bootcamp middleware
  */
-exports.campByID = function(req, res, next, id) {
-	Bootcamp.findOne({
-		_id: id
-	}).exec(function(err, camp) {
-		if (err) return next(err);
-		if (!camp) return next(new Error('Failed to load Camp ' + id));
-		req.camp = camp;
-		next();
-	});
-};
+// exports.campByID = function(req, res, next, id) {
+// 	Bootcamp.findOne({
+// 		_id: id
+// 	}).exec(function(err, camp) {
+// 		if (err) return next(err);
+// 		if (!camp) return next(new Error('Failed to load Camp ' + id));
+// 		req.camp = camp;
+// 		next();
+// 	});
+// };
 /**
  * Require login routing middleware
  */

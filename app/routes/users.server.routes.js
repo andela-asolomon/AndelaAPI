@@ -50,7 +50,7 @@ module.exports = function(app) {
 	app.param('userId', users.userByID);
 
 	// Finish by binding the bootcamp middleware
-	app.param('campId', users.campByID);
+	app.param('campId', admin.campByID);
 
 	//Finish by binding the test middleware
 	app.param('testId', admin.testByID);
