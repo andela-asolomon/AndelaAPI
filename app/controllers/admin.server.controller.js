@@ -83,7 +83,8 @@ exports.changeStatus = function(req, res) {
           applicant.status.reason = '';
       }
 
-      applicant.status.name = req.body.status; 
+      console.log(req.body);
+      applicant.status.name = req.body.status.name; 
 
       Applicant.update(
          {_id: req.params.apptId },
