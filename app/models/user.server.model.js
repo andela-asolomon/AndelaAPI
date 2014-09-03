@@ -115,34 +115,6 @@ var AssessmentSchema = new Schema({
  });
 
 /**
- * Work History Schema
- */
-var WorkHistorySchema = new Schema({
- 	company: {
- 		type: String,
- 		trim: true,
-        required: 'Name of company is important'
- 	},
- 	jobDescription: {
- 		type: String,
-        required: 'Job description is important'
- 	},
- 	location: {
- 		type: String,
- 		required: 'Job location is important'
- 	},
- 	from: {
- 		type: Date,
- 		required: 'Start date is important'
- 	},
- 	to: {
- 		type: Date,
- 		required: 'End date is important'
- 	}
-
- });
-
-/**
  * 
  * Applicant Schema, Trainee and Fellow
  */
@@ -180,19 +152,7 @@ var WorkHistorySchema = new Schema({
  		type: Schema.ObjectId,
  		ref: 'Bootcamp'
  	},
- 	currPlacement: {
- 		status: {
- 			type: String
- 		},
- 		startDate: {
-            type: Date
- 		},
- 		endDate: {
-            type: Date
- 		}
- 	},
- 	assessments: [AssessmentSchema],
- 	workHistory: [WorkHistorySchema]
+ 	assessments: [AssessmentSchema]
 });
 
 /**
@@ -232,7 +192,11 @@ var BootcampSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	applicants: [ApplicantSchema]
+	applicants: [ApplicantSchema],
+	user: {
+		type: Schema.ObjectId,
+		ref: 'admin' 
+	}
 });
  
 /**
@@ -379,4 +343,3 @@ mongoose.model('Instructor', InstructorSchema);
 mongoose.model('Bootcamp', BootcampSchema);
 mongoose.model('Skillset', SkillsetSchema);
 mongoose.model('Assessment', AssessmentSchema);
-mongoose.model('WorkHistory', WorkHistorySchema);

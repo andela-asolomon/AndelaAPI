@@ -7,19 +7,15 @@ var users = require('../../app/controllers/users'),
     admin = require('../../app/controllers/admin'),
     instr = require('../../app/controllers/instructor');
 
-
+//var app = module.exports = express();
+//require('./routes')({app: app});
 module.exports = function(app) {
     // Admin Routes
     app.route('/admin')
         .get(users.requiresLogin, admin.checkPermission, admin.listApplicants);
-    
-    //create users
+
     app.route('/admin/create')
         .post(users.requiresLogin, admin.checkPermission, admin.createUsers);
-
-    //download applicant's cv
-    app.route('/admin/download')
-        .get(users.requiresLogin, admin.checkPermission, admin.download);
 
     app.route('/admin/trainees')
         .get(users.requiresLogin, admin.checkPermission, admin.listTrainees);
@@ -37,50 +33,37 @@ module.exports = function(app) {
         .get(users.requiresLogin, admin.checkPermission, admin.listAdmins);
 
     app.route('/admin/appt/:apptId')
-        .get(users.requiresLogin, admin.checkPermission, admin.apptRead) //get one particular applicant
-        .put(users.requiresLogin, admin.checkPermission, admin.changeStatus); // change applicant's status
+        .get(users.requiresLogin, admin.checkPermission, admin.apptRead)
+        .put(users.requiresLogin, admin.checkPermission, admin.changeStatus);
 
-    //change applicant/fellow/trainee role
+    app.route('/admin/appt/:apptId/camp/:campId')
+        .put(users.requiresLogin, admin.checkPermission, admin.assignBootCamp);
+
     app.route('/admin/appt/:apptId/role')
         .put(users.requiresLogin, admin.checkPermission, admin.changeRole);
 
     app.route('/admin/instr/:instrId')
-        .get(users.requiresLogin, admin.checkPermission, admin.instrRead)  //get one particular instructor
-        .put(users.requiresLogin, admin.checkPermission, admin.changeInstrRole); //change instructor/admin role
+        .get(users.requiresLogin, admin.checkPermission, admin.instrRead)
+        .put(users.requiresLogin, admin.checkPermission, admin.changeInstrRole);
 
     app.route('/admin/user/:userId')
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteUser);
 
-    //current work placement status of a fellow
-    app.route('/admin/fellow/:userId/placement')
-        .put(users.requiresLogin, admin.checkPermission, admin.placementStatus);
-    
-    //for adding work history of fellow
-    app.route('/admin/fellow/:userId/workhist')
-        .post(users.requiresLogin, admin.checkPermission, admin.addWorkHistory);
-
-    app.route('/admin/fellow/:userId/workhist/:histId')
-        .get(users.requiresLogin, admin.checkPermission, admin.oneWorkHistory) //one particular past work
-        .put(users.requiresLogin, admin.checkPermission, admin.editWorkHistory)
-        .delete(users.requiresLogin, admin.checkPermission, admin.deleteWorkHistory);
-    
-    //create and list bootcamps
     app.route('/admin/camp')
         .get(users.requiresLogin, admin.checkPermission,  admin.bootCamps)
         .post(users.requiresLogin, admin.checkPermission, admin.createBootCamp);
-    
+
     app.route('/admin/camp/:campId')
-        .get(users.requiresLogin, admin.checkPermission, admin.read) //one particular bootcamp
+        .get(users.requiresLogin, admin.checkPermission, admin.read)
         .put(users.requiresLogin, admin.checkPermission, admin.editCamp)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteCamp);
-    
-    //list and create tests
+
     app.route('/admin/test')
         .get(users.requiresLogin, admin.checkPermission, admin.listTests)
-        .post(users.requiresLogin, admin.checkPermission, admin.createTests);
+        .post(users.requiresLogin,  admin.createTests);
 
     app.route('/admin/test/:testId')
-        .get(users.requiresLogin, admin.checkPermission, admin.testRead) //one particular test
+        .get(users.requiresLogin, admin.checkPermission, admin.testRead)
         .post(users.requiresLogin, admin.checkPermission, admin.addQuestion)
         .put(users.requiresLogin, admin.checkPermission, admin.updateTestName)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteTest);
@@ -90,8 +73,8 @@ module.exports = function(app) {
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteQuestion);
 
     app.route('/admin/test/:testId/:questId/options')
-        .post(users.requiresLogin, admin.checkPermission, admin.addOption);
-        //.put( admin.updateChoices);
+        .post(users.requiresLogin, admin.checkPermission, admin.addOption)
+        .put(users.requiresLogin, admin.checkPermission, admin.updateChoices);
 
     app.route('/admin/test/:testId/:questId/:optionId')
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteOption);
@@ -120,7 +103,4 @@ module.exports = function(app) {
 
     // Finish by binding the question middleware
     app.param('questId', admin.questByID);
-
-    // Finish by binding the history middleware
-    app.param('histId', admin.historyByID);
  };
