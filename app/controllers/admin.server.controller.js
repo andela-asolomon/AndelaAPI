@@ -69,11 +69,12 @@ exports.changeStatus = function(req, res) {
         }
       } 
 
-      if (req.body.status === 'selected for bootcamp') {
+      if (req.body.status.name === 'selected for bootcamp') {
           applicant.role = 'trainee';
+          console.log('role changed to trainee');
       }
 
-      if (applicant.role === 'trainee' && req.body.status !== 'selected for bootcamp' ) {
+      if (applicant.role === 'trainee' && req.body.status.name !== 'selected for bootcamp' ) {
           applicant.role = 'applicant';
       }
 
@@ -84,11 +85,11 @@ exports.changeStatus = function(req, res) {
       }
 
       console.log(req.body);
-      applicant.status.name = req.body.status.name; 
+      applicant.status.name = req.body.status.name;
 
       Applicant.update(
          {_id: req.params.apptId },
-         {$set: {'role': applicant.role, 'status': {name: applicant.status.name, reason: applicant.status.reason}}},
+         {$set: {'role': applicant.role, 'status.name': applicant.status.name, 'status.reason': applicant.status.reason}},
           function (err, appt) {
              if (err) {
                 return res.send(400, {message: err });

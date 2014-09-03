@@ -163,10 +163,12 @@ var WorkHistorySchema = new Schema({
  	status: {
  		name: {
  			type: String,
- 			enum: ['pending', 'rejected', 'selected for bootcamp', 'selected for interview']
+ 			enum: ['pending', 'rejected', 'selected for bootcamp', 'selected for interview'],
+ 			default: 'pending'
  		},
  		reason: {
-            type: String
+            type: String,
+            default: ""
  		}
  	},
  	portfolio: {
@@ -232,7 +234,7 @@ var BootcampSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	applicants: [ApplicantSchema]
+	applicants: [{ type: Schema.Types.ObjectId, ref: 'Applicant' }]
 });
  
 /**
