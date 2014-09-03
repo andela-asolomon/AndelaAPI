@@ -13,7 +13,7 @@
                         <strong data-ng-bind="error"></strong>
                     </div>
 
-                    <form name="userForm" data-ng-submit="signup()" novalidate role="form" class="form-horizontal" autocomplete="off">
+                    <form name="userForm" data-ng-submit=" signup()" novalidate role="form" class="form-horizontal" autocomplete="off">
                         <div id="first_step" ng-show="field === 1">
                             <div style="margin-bottom: 25px" class="form-group" data-ng-class="{ 'has-error' : userForm.username.$invalid && !userForm.username.$pristine }">
                                 <label for="username" class="control-label col-xs-2">Username: </label>
@@ -120,8 +120,8 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <button type="submit" class="btn btn-primary" ng-click="show_prev(3)" name="submit_third" id="submit_third" value="Prev" >Prev</button>
-                            <button type="submit" class="btn btn-large btn-primary" ng-disabled="userForm.$invalid">Submit</button>
+                            <button type="button" class="btn btn-primary" ng-click="show_prev(3)" name="submit_third" id="submit_third" value="Prev" >Prev</button>
+                            <button type="button" class="btn btn-large btn-primary" ng-disabled="userForm.$invalid" ng-click='signup()'>Submit</button>
                         </div>
                     </form>
                 </div>
