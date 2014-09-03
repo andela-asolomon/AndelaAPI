@@ -48,7 +48,7 @@
                                 <label for="firstName" class="control-label col-xs-2">First Name: </label>
                                     <div class="col-xs-10">
                                         <input type="text" name="firstname" class="form-control" data-ng-model="user.firstName" required Placeholder="First Name"/>
-                                        <p data-ng-show="userForm.firstname.$error.required && !userForm.firstname.$pristine" class="help-block">Please enter your first name.</p>
+                                        <p data-ng-show="userForm.firstName.$error.required && !userForm.firstname.$pristine" class="help-block">Please enter your first name.</p>
                                     </div>
                             </div>
                             <div style="margin-bottom: 25px" class="form-group" ng-class="{ 'has-error' : userForm.lastname.$invalid && !userForm.lastname.$pristine }">
