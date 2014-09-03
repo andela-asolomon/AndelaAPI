@@ -142,17 +142,17 @@ exports.signup = function(req, res) {
 						console.log('Error');
 					} 
 					else {
-						// req.login(user, function(err) {
-		   	// 				if (err) {
-						// 		res.send(400, err);
-						// 	} 
-						// 	else {
-						// 		user.password = undefined;
-						// 		user.salt = undefined;
+						req.login(user, function(err) {
+		   					if (err) {
+								res.send(400, err);
+							} 
+							else {
+								user.password = undefined;
+								user.salt = undefined;
 								res.jsonp(user);
 
-							// }
-		   		// 	   });
+							}
+		   			   });
 					}
 				});
 				}

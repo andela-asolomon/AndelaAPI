@@ -29,9 +29,9 @@ angular.module('applicant').config(['$stateProvider',
 			url: '/signup',
 			templateUrl: 'modules/applicant/views/applicant.client.view.html'
 		}).
-		state('sucess', {
-			url: '/succespage',
-			templateUrl: 'modules/applicant/controllers/sucess.html'
+		state('success', {
+			url: '/successpage',
+			templateUrl: 'modules/applicant/views/success.client.view.html'
 		}).
 		state('error_page', {
 			url: '/errorpage',

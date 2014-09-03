@@ -23,7 +23,10 @@
     <div class="page-header text-center">
       <h1>Fellows</h1>
     </div>
-
+     <div data-ng-init="listcamps()">
+      <label for="category">View Fellows by Bootcamp</label>
+      <select ng-model="search_filter" ng-options="camp for camp in camp_options"></select><br>
+    </div>
     <div>
       <table class="list list-link">
         <thead>
@@ -37,7 +40,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr data-ng-repeat="fellow in fellows">
+          <tr data-ng-repeat="fellow in fellows | filter: search_filter ">
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.firstName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.lastName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.email}}</a></td>

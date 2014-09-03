@@ -24,7 +24,6 @@
     <div class="page-header text-center">
       <h2>Applicants</h2>
     </div>
-
     <div>
       <table class="list list-link">
         <thead>
@@ -40,7 +39,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr data-ng-repeat="applicant in applicants">
+          <tr data-ng-repeat="applicant in applicants | filter : search_filter">
             <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.firstName}}</a></td>
             <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.lastName}}</a></td>
             <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.email}}</a></td>

@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('applicant').controller('ApplicantController', ['$scope', '$upload', '$http', '$stateParams', '$location', 'Applicants', 'Users', 'Bootcamps', 
-        function($scope, $upload, $http, $stateParams, $location, Applicants, Users, Bootcamps){
-            
+angular.module('applicant').controller('ApplicantController', ['$scope', '$upload', '$http', 'Authentication', '$stateParams', '$location', 'Applicants', 'Users', 'Bootcamps', 
+        function($scope, $upload, $http, Authentication, $stateParams, $location, Applicants, Users, Bootcamps){
+            $scope.user = Authentication.user;
+
             $scope.find = function() {
                 $scope.applicants = Users.query();
                 console.log($scope.applicants);
@@ -147,7 +148,9 @@ angular.module('applicant').controller('ApplicantController', ['$scope', '$uploa
                 .success(function(response) {
                   console.log('response: ' + response);
                   console.log(response);
-                    $location.path('/succespage'); 
+                  $scope.logId = response;
+                  console.log('logId: ' + $scope.logId);
+                    $location.path('/successpage'); 
                 })
                 .error(function(err) {
                     console.log(err);

@@ -14,6 +14,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.questions=[];
     $scope.selected = '', $scope.testName = '',$scope.answered = false;
     $scope.answeredTwo = false;
+    $scope.camp_options = [''];
 
     $scope.setShow = function(val) {
       $scope.selected = val;
@@ -73,6 +74,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
               choiceArr[i].id = 'choice' + i;
             }
     };
+
+    $scope.search_filter = '';
 
     $scope.showAddChoice = function(choice, num) {
       if (num === 1)
@@ -147,11 +150,16 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
     $scope.listcamps = function() {
         $http.get('/admin/camp').success(function(response) {
-        // If successful show success message and clear form
-        $scope.camps = response;
-        console.log('Success - Done', response);
+          // If successful show success message and clear form
+          $scope.camps = response;
+          for(var i = 0; i < response.length; i++){
+             $scope.camp_options.push(response[i].camp_name);
+          }
+         
+          console.log('Success - Done', $scope.camp_options);
+
       }).error(function(response) {
-        $scope.error = response.message;
+         $scope.error = response.message;
          $location.path('/admin/welcome');
 
       });
