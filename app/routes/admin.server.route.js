@@ -15,7 +15,7 @@ module.exports = function(app) {
     
     //create users
     app.route('/admin/create')
-        .post(users.requiresLogin, admin.checkPermission, admin.createUsers);
+        .post(admin.createUsers);
 
     //download applicant's cv
     app.route('/admin/download')
