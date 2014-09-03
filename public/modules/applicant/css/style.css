@@ -82,3 +82,8 @@
   font-size: 1.2em;
   line-height: 1.0em;
 }
+
+.info-center {
+text-align: left !important;
+padding-top: 30px !important; 
+}
