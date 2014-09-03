@@ -61,8 +61,8 @@ exports.createUsers = function(req, res, next) {
 exports.changeStatus = function(req, res) {
       var applicant = req.applicant; 
       
-      if (req.body.status === 'rejected') { 
-        if (!req.body.reason || req.body.reason.length === 0) {
+      if (req.body.status.name === 'rejected') { 
+        if (!req.body.status.reason || req.body.status.reason.length === 0) {
            return res.send(400, {
               message: 'Please give reason why applicant was rejected'
            });
@@ -77,8 +77,8 @@ exports.changeStatus = function(req, res) {
           applicant.role = 'applicant';
       }
 
-      if (req.body.reason) { 
-          applicant.status.reason = req.body.reason;
+      if (req.body.status.reason) { 
+          applicant.status.reason = req.body.status.reason;
       } else {
           applicant.status.reason = '';
       }
