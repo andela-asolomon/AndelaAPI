@@ -1,0 +1,67 @@
+<section class="row" data-ng-controller="InstructorsController">
+
+    <div class="container" data-ng-show="user.role === 'instructor'">
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/addSkill">Add To Your Skills</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/change-password">Change Your Password</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
+        </div>
+        <div class="admin-view">
+            <div class="title col-md-offset-4 col-md-4">
+                <h1>Assess Trainee</h1>
+            </div>
+            <div class="col-md-offset-4 col-md-4">
+                <form class="basic-grey" data-ng-submit="createAssessment()">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="control-label" for="assessment_name">Assessment Name</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="assessment_name" id="assessment_name" class="form-control" placeholder="" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <em>{{dt | date:'fullDate'}}</em>
+                        
+                            <div>
+                                <p class="input-group">
+                                  <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                                  <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                  </span>
+                                </p>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label" for="score">Score</label>
+                            <div class="controls">
+                                <input type="text" data-ng-model="score" id="score" class="form-control" placeholder="" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-large btn-success myButton">
+                        </div>
+        				<div data-ng-show="error" class="text-danger">
+        					<strong data-ng-bind="error"></strong>
+        				</div>
+                    </fieldset>
+                </form>
+            </div>
+     	</div>
+
+    </div>
+    <div data-ng-show="user.role !== 'instructor'">
+        <div class="row">
+            <div class="alert alert-danger col-md-offset-2 col-md-6">
+                <a class="close" data-dismiss="alert" data-ng-click="removeAlert('error')" href="#">×</a>
+                <span><h4>You are not permitted to view this page</h4></span>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,37 +1,54 @@
-<section data-ng-controller="AdminController" data-ng-init="viewApplicant()">
-  <div class="container">
-    <br><br><br>
-      <h3>Change Status of {{appt.firstName}} {{appt.lastName}} </h3>
+<section data-ng-controller="AdminController" data-ng-init="viewApplicant()" class="pad">
+  <div class="container" data-ng-show="user.role === 'admin'">
+    <div class="link-controls">
+      <ul>
+      <li><a href="/#!/admin/fellows">View All Fellows</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/#!/admin/test/create">Create Registration Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
+      </ul>
+    </div>
 
-      <form data-ng-submit='changeStatus()' class="signin form-horizontal" autocomplete="off">
+    <div class="admin-view">
+
+      <form data-ng-submit='changeStatus()' class="basic-grey" autocomplete="off">
+        <h3 style="text-align: center; margin-bottom: 20px"><span>Change Status of: {{appt.firstName}} {{appt.lastName}}</span></h3>
         <fieldset>
-          <div class="form-group">
-            <label for="category"><span>Status</span>
-                <select data-ng-model="data.status" id="category">
-                  <option value="pending">pending</option>
-                  <option value="rejected">rejected</option>
-                  <option value="selected for bootcamp">selected for bootcamp</option>
-                  <option value="selected for interview">selected for interview</option>
-                </select>
+          <label>
+            <span>Subject :</span>
+            <select data-ng-model="data.status.name" id="category">
+            <option value="pending">Pending</option>
+            <option value="rejected">Rejected</option>
+            <option value="selected for bootcamp">Selected for bootcamp</option>
+            <option value="selected for interview">Selected for interview</option>
+            </select>
+          </label>  
+
+          <div data-ng-if="data.status.name === 'rejected'">
+            <label for="apptId">
+                <span>Reason :</span>
+                <input type="text" data-ng-model="data.status.reason" id="apptId" placeholder="Short description why rejected" required>
             </label>
           </div>
 
-          <div class="form-group" data-ng-if="data.status === 'rejected'">
-          <label for="apptId">
-              <b>Reason:</b>
-              <input type="text" data-ng-model="data.reason" id="apptId" placeholder="reason" required>
+          <label>
+            <span>&nbsp;</span> 
+            <button type="submit" class="button" ng-href="/#!/admin/appt">Change Status</button>
           </label>
-          </div>
 
-          <div class="form-group">
-          <button type="submit" class="btn btn-xs btn-primary" ng-href="/#!/admin/appt">Change Status</button>
-          </div>
-          
           <div data-ng-show="error" class="text-center text-danger">
               <strong data-ng-bind="error"></strong>
           </div>
         </fieldset>
       </form>
+    </div>
   </div>
 
+  <div class="container" data-ng-show="user.role !== 'admin'">
+    <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
+  </div>
 </section>

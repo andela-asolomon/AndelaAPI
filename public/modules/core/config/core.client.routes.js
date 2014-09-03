@@ -5,7 +5,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 	function($stateProvider, $urlRouterProvider) {
 		// Redirect to home view when route not found
 		$urlRouterProvider.otherwise('/');
-
+		
 		// Home state routing
 		$stateProvider.
 		state('home', {
@@ -17,7 +17,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			templateUrl: 'modules/core/views/mission.client.view.html'
 		}).
 		state('about', {
-			url: '/meet_the_team',
+			url: '/meet_team',
 			templateUrl: 'modules/core/views/about.client.view.html'
 		}).
 		state('andela_network', {

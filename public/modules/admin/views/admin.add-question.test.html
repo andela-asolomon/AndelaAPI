@@ -1,0 +1,49 @@
+<section data-ng-controller="AdminController" data-ng-init="viewTest()" class="pad">
+    <div class="container" data-ng-show="user.role === 'admin'">
+      <div class="link-controls">
+        <ul>
+      <li><a href="/#!/admin/fellows">View All Fellows</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/#!/admin/test/create">Create Registration Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
+      </ul>
+      </div>
+
+        <div class="admin-view">
+        <form name="test" class="basic-grey" data-ng-submit="createQuestion()">
+            <h3><span>Add more questions to test</span></h3>
+            <div class="form-group">
+                <p>Test Name: {{test.testName}}</p>
+            </div>
+
+            <div class="form-group">
+                <input type="text" data-ng-model="question" name="quest" placeholder="Question 1" required>
+            </div>
+            <div class="form-group" data-ng-repeat="choice in choiceOne">
+                <label for="choice" data-ng-show="showChoiceLabel(choice)">Choices</label>
+
+                <input type="text" data-ng-hide="isSelected('optionOne'+$index)" data-ng-model="optionOne[$index]" name="choice" placeholder="{{'option ' + ($index+1)}}" required>
+                
+                <input type="radio" name="option" value="{{$index}}" data-ng-model="test.answerOne" data-ng-change="changeAnsVal($index, 1)">Answer
+
+                <button type="button" data-ng-click="deleteChoice($index, 1)" data-ng-show="choiceOne.length > 2">Delete</button>
+                <button type="button" data-ng-click="addNewChoice(1)" data-ng-show="showAddChoice(choice,1)">
+                    Add another choice
+                </button>
+            </div>
+          <button type="submit" data-ng-disabled="test.$invalid || !answered" class="button">Submit</button>
+        </form>
+        </div>
+    </div>
+
+
+    <div class="container" data-ng-show="user.role !== 'admin'">
+      <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
+    </div>
+
+</section>
+

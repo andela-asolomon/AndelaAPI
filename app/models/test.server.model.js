@@ -51,3 +51,4 @@ var TestSchema = new Schema({
 //mongoose.model('Options', OptionSchema);
 mongoose.model('Test', TestSchema);
 mongoose.model('Question', QuestionSchema);
+mongoose.model('Options', OptionSchema);

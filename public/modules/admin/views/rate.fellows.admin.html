@@ -1,0 +1,228 @@
+<section data-ng-controller="AdminController" data-ng-init="viewApplicant()" class="pad">
+  <div class="container" data-ng-show="user.role === 'admin'">
+    <div class="my_wrapper">
+      <div class="link-controls">
+      <ul>
+      <li><a href="/#!/admin/fellows">View All Fellows</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/#!/admin/test/create">Create Registration Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
+      </ul>
+      </div>
+
+      <div class="admin-view">
+      <h3>Fellow Details</h3>
+      <ul class="fellow-edit">
+        <li>Name: <b data-ng-bind="appt.firstName"></b>
+        <b data-ng-bind="appt.lastName"></b></li>
+        <li>Email: <b data-ng-bind="appt.email"></b></li>
+        <li>Usename: <b data-ng-bind="appt.username"></b></li>
+        <li data-ng-show="appt.skillSets">Skillset(s): 
+          <ul class="skillset" data-ng-repeat="skill in appt.skillSets">
+            <li>
+              <div ng-hide="skillNameEditorEnabled[$index]">
+                <b>{{skill.skill}} <a href="" ng-click="enableskillEditor('skillName', $index)">Edit</a></b>
+              </div>
+
+              <div ng-show="skillNameEditorEnabled[$index]">
+                <input type="text" ng-model="editableSkillName[$index]" ng-show="skillNameEditorEnabled[$index]">
+                <a href="" ng-click="saveskill('skillName', $index)">Save</a>
+                or
+                <a href="" ng-click="disableskillEditor('skillName', $index)">Cancel</a>.
+              </div>
+
+              <div ng-hide="skillScoreEditorEnabled[$index]">
+                <b>{{skill.rating}} <a href="" ng-click="enableskillEditor('skillScore', $index)">Edit</a></b>
+              </div>
+
+              <div ng-show="skillScoreEditorEnabled[$index]">
+                <select data-ng-model="editableSkillScore[$index]" ng-show="skillScoreEditorEnabled[$index]">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+                
+                <a href="" ng-click="saveskill('skillScore', $index)">Save</a>
+                or
+                <a href="" ng-click="disableskillEditor('skillScore', $index)">Cancel</a>.
+              </div>
+            </li>
+          </ul>
+        </li>
+
+        <li data-ng-show="appt.currPlacement">Current Placement:
+          <div ng-hide="currPlacementEditorEnabled">
+            <p>Company: {{appt.currPlacement.status}} <a ng-href="" ng-click="enableCurrPlacementEditor('company')">Edit</a></p>
+          </div>
+
+          <div ng-show="currPlacementEditorEnabled">
+            <input type="text" ng-model="editableCurrCompany" ng-show="currPlacementEditorEnabled">
+            <a href="" ng-click="saveCurrPlacement('company')">Save</a>
+            or
+            <a href="" ng-click="disableCurrPlacementEditor('company')">Cancel</a>.
+          </div>
+
+          <div ng-hide="startDateEditorEnabled">
+            <p>Start Date: {{appt.currPlacement.startDate | date : longDate}} <a ng-href="" ng-click="enableCurrPlacementEditor('startDate')">Edit</a></p>
+          </div>
+
+          <div ng-show="startDateEditorEnabled">
+            <input type="text" ng-model="editableStartDate" placeholder="MM/DD/YY" ng-show="startDateEditorEnabled">
+            <a href="" ng-click="saveCurrPlacement('startDate')">Save</a>
+            or
+            <a href="" ng-click="disableCurrPlacementEditor('startDate')">Cancel</a>.
+          </div>
+
+          <div ng-hide="endDateEditorEnabled">          
+            <p>End Date: {{appt.currPlacement.endDate | date : longDate}} <a ng-href="" ng-click="enableCurrPlacementEditor('endDate')">Edit</a></p>
+          </div>
+
+          <div ng-show="endDateEditorEnabled">
+            <input type="text" ng-model="editableEndDate" placeholder="MM/DD/YY" ng-show="endDateEditorEnabled">
+            <a href="" ng-click="saveCurrPlacement('endDate')">Save</a>
+            or
+            <a href="" ng-click="disableCurrPlacementEditor('endDate')">Cancel</a>.
+          </div>
+        </li>
+
+        <li>
+          <p>Work History:</p>
+          
+          <ol>
+            <li data-ng-repeat="workHist in appt.workHistory">
+              <b>Company: {{workHist.company}}</b><br>
+              <b>Job Description: {{workHist.jobDescription}}</b><br>
+              <b>Location: {{workHist.location}}</b><br>
+              <b>From: {{workHist.from | date : longDate}}</b><br>
+              <b>From: {{workHist.to | date : longDate}}</b>
+            </li>
+          </ol>
+        </li>
+      </ul>
+
+
+      <form data-ng-submit='rateFellow()' class="basic-grey skill" autocomplete="off">
+        <fieldset>
+        <p><span>Add new skill</span></p>
+          <label class="skill">
+              <span>Skill:</span>
+              <input type="text" data-ng-model="data.skill" id="skill" required>
+          </label>
+
+          <label class="inline" for="category"><span>Rate:</span>
+              <select data-ng-model="data.rating" id="category" ng-init="data.rating = 1">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+          </label>
+
+          <button type="submit" class="btn btn-xs btn-primary">Submit Rating</button>
+
+        </fieldset>
+      </form>
+
+
+      <form data-ng-submit='addPlacement()' class="basic-grey placement" autocomplete="off">
+        <fieldset>
+          <p>
+            <span>Add Current Placement</span>
+          </p>
+          <label class="placement">
+              <span>Current Placement:</span>
+              <input type="text" data-ng-model="data.status" id="placement" required>
+          </label>
+          <div class="dates">
+          <label class="startDate">
+              <span>Start Date:</span>
+              <input type="text" data-ng-model="data.startDate" id="startDate" placeholder="M/DD/YY" required>
+          </label>
+          </div>
+
+          <div class="dates">
+          <label class="endDate">
+              <span>End Date:</span>
+              <input type="text" data-ng-model="data.endDate" id="endDate" placeholder="M/DD/YY" required>
+          </label>
+          </div>
+
+          <button type="submit" class="btn btn-xs btn-primary">Add Placement</button>
+
+          <div data-ng-show="error" class="text-center text-danger">
+              <strong data-ng-bind="error"></strong>
+          </div>
+
+        </fieldset>
+      </form>
+
+
+      <form data-ng-submit='addWorkHistory()' class="basic-grey placement" autocomplete="off">
+        <fieldset>
+          <p>
+            <span>Add Work History</span>
+          </p>
+          <label class="company">
+              <span>Company:</span>
+              <input type="text" data-ng-model="data.company" id="company" required>
+          </label>
+
+          <label class="jobDescription">
+              <span>Job Description:</span>
+              <input type="text" data-ng-model="data.jobDescription" id="jobDescription" required>
+          </label>
+
+          <label class="location">
+              <span>Location:</span>
+              <input type="text" data-ng-model="data.location" id="location" required>
+          </label>
+
+          <div class="from">
+          <label class="startDate">
+              <span>From:</span>
+              <input type="text" data-ng-model="data.from" id="from" placeholder="M/DD/YY" required>
+          </label>
+          </div>
+
+          <div class="to">
+          <label class="endDate">
+              <span>To:</span>
+              <input type="text" data-ng-model="data.to" id="to" placeholder="M/DD/YY" required>
+          </label>
+          </div>
+
+          <button type="submit" class="btn btn-xs btn-primary">Submit</button>
+
+          <div data-ng-show="error" class="text-center text-danger">
+              <strong data-ng-bind="error"></strong>
+          </div>
+
+        </fieldset>
+      </form>
+
+
+    </div>  
+  </div>
+  </div>
+
+  <div class="container" data-ng-show="user.role !== 'admin'">
+    <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
+  </div>
+</section>

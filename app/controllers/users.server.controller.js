@@ -13,6 +13,11 @@ var mongoose 		= require('mongoose'),
 
 var admin = require('../../app/controllers/admin');
 
+var uuid = require('node-uuid'),
+    multiparty = require('multiparty');
+
+var path = require('path'),
+    fs = require('fs');
 
 /**
  * Get the error message from error object
@@ -38,58 +43,130 @@ var getErrorMessage = function(err) {
 	return message;
 };
 
-
 /**
- * Signup
- */
+*   CV Upload
+*
+*/
+
+var uploadCV = function(req, res, contentType, tmpPath, destPath) {
+    
+        // Server side file type checker.
+        if (contentType !== 'application/doc' &&contentType !== 'application/docx' && contentType !== 'application/pdf') {
+            fs.unlink(tmpPath);
+            console.log('contenttypefail');
+            return res.status(400).send('Unsupported file type.');
+        }
+
+        fs.readFile(tmpPath , function(err, data) {
+            fs.writeFile(destPath, data, function(err) {
+					
+                fs.unlink(tmpPath, function(){
+                    if(err) {
+                        console.log('CV not saved error');
+                        console.log(err);
+                        throw err;
+                    }
+                });
+            }); 
+        });
+};
+
+
 exports.signup = function(req, res) {
+	console.log('Request from Applicant');
+	console.log('req: ' + req);
+		//Parse Form
+	   var form = new multiparty.Form();
+	    form.parse(req, function(err, fields, files) {
+	        if(err){
+	            console.log('error parsing form');
+	            console.log(err);
+	        } 
+	        // var songObj = {title: fields.title[0] , artist: fields.artist[0], genre: fields.genre[0], rating: fields.rating[0]}
+	        // var song = new Song(songObj);
+	        // song.user = req.user;
 
-	var type = req.body.type;
-	var user;
+	        // var type = req.body.type;
+	         var user = { firstName: fields.firstName[0], lastName: fields.lastName[0], 
+	         				 password: fields.password[0], email: fields.email[0], 
+	         				 username: fields.username[0], testScore: fields.testScore[0], role: fields.type[0]  }
 
-	if (type === 'applicant') {
-		user = req.body;
-		user.role = type;
-		user = new Applicant(user);
-	}
-	var message = null;
-	user.provider = 'local';
 
-	req.camp.applicants.push(user);
+	        console.log('test score:'+ fields.testScore[0]);
+	        console.log('role:' + fields.type[0]);
+			
 
-	req.camp.save(function(err) {
-		if (err) {
-			return res.send(400, {
-				message: err
-			});
-		} 
-		else {
-			user.save(function(err) {
+	    if (user.role === 'applicant') {
+			//user = req.body;
+			//user.role = type;
+			user = new Applicant(user);
+			
+			user.campId = req.camp._id;
+			console.log(user.campId);
+
+			if(files.file[0]){
+		            //if there is a file do upload
+		            console.log(files);
+		            var file = files.file[0];
+		            console.log(file);
+		            var contentType = file.headers['content-type'];
+		            var tmpPath = file.path;
+		            var extIndex = tmpPath.lastIndexOf('.');
+		            var extension = (extIndex < 0) ? '' : tmpPath.substr(extIndex);
+		            // uuid is for generating unique filenames. 
+		            // var fileName = uuid.v4() + extension;
+		            var destPath =  path.resolve('public/modules/core/img/server' + tmpPath);	        
+		    }
+		
+
+			var message = null;
+			user.provider = 'local';
+			console.log(req.camp);
+			console.log(typeof req.camp);
+			req.camp.applicants.push(user);
+
+			user.cvPath = destPath;
+				user.status.name = 'pending';
+				user.status.reason = '';
+				
+			req.camp.save(function(err) {
 				if (err) {
-					console.log('Error');
+					return res.send(400, {
+						message: err
+					});
 				} 
 				else {
-					req.login(user, function(err) {
-   					if (err) {
-						res.send(400, err);
+					uploadCV(req, res, contentType, tmpPath, destPath, user);
+					user.save(function(err) {
+					if (err) {
+						console.log('Error');
 					} 
 					else {
-						user.password = undefined;
-						user.salt = undefined;
+						req.login(user, function(err) {
+		   					if (err) {
+								res.send(400, err);
+							} 
+							else {
+								user.password = undefined;
+								user.salt = undefined;
+								res.jsonp(user);
 
-						res.jsonp(user);
+							}
+		   			   });
 					}
-	   			});
+				});
 				}
-			});
-		}
-	});
+		    });
+	     }
+	  });
+	
 };
 
 /**
  * Signin after passport authentication
  */
 exports.signin = function(req, res, next) {
+	console.log(req.body);
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
 			res.send(400, info);
@@ -108,16 +185,27 @@ exports.signin = function(req, res, next) {
 		}
 	})(req, res, next);
 };
-exports.list = function(req, res) { Applicant.find().where({role: 'fellow'}).populate('user', 'displayName').exec(function(err, fellows) {
-		if (err) {
-			return res.send(400, {
-				message: getErrorMessage(err)
-			});
-		} else {
-			res.jsonp(fellows);
-		}
-	});
+
+/**
+ * Check unique username
+ */
+exports.uniqueUsername = function(req, res) {
+	console.log(req.body);
+	User.find().where({username: req.body.username}).exec(function(err, user) {
+         if (err) {
+         	 return res.send(401, {
+			    message: err
+		     });
+         } else if (!user) {
+              return res.send(401, {
+			    message: 'unknown user'
+		     });
+         } else {
+             res.jsonp(user);
+         }
+       });
 };
+
 /**
  * Update user details
  */
@@ -133,6 +221,7 @@ exports.update = function(req, res) {
 		// Merge existing user
 		user = _.extend(user, req.body);
 		user.updated = Date.now();
+		user.displayName = user.firstName + ' ' + user.lastName;
 
 		user.save(function(err) {
 			if (err) {
@@ -156,6 +245,32 @@ exports.update = function(req, res) {
 	}
 };
 
+
+ exports.getCamp = function(req, res) {
+	res.jsonp(req.camp);
+ };
+
+exports.getCamps = function(req, res) {  Bootcamp.find().exec(function(err, bootcamps) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(bootcamps);
+		}
+	});
+};
+
+exports.list = function(req, res) { Applicant.find().where({role: 'fellow'}).populate('user', 'displayName').exec(function(err, fellows) {
+		if (err) {
+			return res.send(400, {
+				message: getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(fellows);
+		}
+	});
+};
 
 // viewing Applicants data page
 exports.appView = function(req, res, id) { 
@@ -280,18 +395,34 @@ exports.oauthCallback = function(strategy) {
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
-    User.findById(id).exec(function(err, user) {
-        if (err) return next(err);
-        if (!user) return next(new Error('Failed to load User ' + id));
-        req.profile = user;
-        next();
-    });
+	User.findOne({
+		_id: id
+	}).exec(function(err, user) {
+		if (err) return next(err);
+		if (!user) return next(new Error('Failed to load User ' + id));
+		req.profile = user;
+		next();
+	});
 };
 
 exports.read = function(req, res) {
-	res.jsonp(req.user);
+	res.jsonp(req.profile);
 };
 
+
+/**
+ * Bootcamp middleware
+ */
+// exports.campByID = function(req, res, next, id) {
+// 	Bootcamp.findOne({
+// 		_id: id
+// 	}).exec(function(err, camp) {
+// 		if (err) return next(err);
+// 		if (!camp) return next(new Error('Failed to load Camp ' + id));
+// 		req.camp = camp;
+// 		next();
+// 	});
+// };
 /**
  * Require login routing middleware
  */

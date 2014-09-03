@@ -1,23 +1,63 @@
-<section data-ng-controller="AdminController" data-ng-init="viewApplicant()">
-  <div class="container">
-    <br><br><br><br><br>
-    <table class="appt">
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-        <tr data-ng-repeat="applicant in applicants">
-        <td data-ng-bind="appt.firstName"></td>
-        <td data-ng-bind="appt.lastName"></td>
-        <td data-ng-bind="appt.email"></td>
-        <td data-ng-bind="appt.status.name"></td>
-      </tr>
+<section data-ng-controller="AdminController" data-ng-init="viewApplicant()" class="pad">
+  <div class="container" data-ng-show="user.role === 'admin'">
+    <div class="link-controls">
+      <ul>
+      <li><a href="/#!/admin/fellows">View All Fellows</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/#!/admin/test/create">Create Registration Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
+      </ul>
+    </div>
+
+    <div class="admin-view">
+    <div class="page-header text-center">
+      <h2 style="text-transform: capitalize">{{appt.role}} Details</h2>
+    </div>
+
+    <div style="margin-left: 100px;" class="row text-center">
+      <div>
+        <div class="col-sm-2 col-md-2">
+            <img src="http://thetransformedmale.files.wordpress.com/2011/06/bruce-wayne-armani.jpg"
+            alt="" class="img-rounded img-responsive" />
+        </div>
+        <div class="col-sm-6 col-md-6 viewuser">
+            <p><span><i class="glyphicon glyphicon-user"></i></span>Name: {{appt.firstName}} {{appt.lastName}}</p>
+            <p><span><i class="glyphicon glyphicon-envelope"></i></span>{{appt.email}}</p>
+              
+            <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-gift"></i></span>Test score: {{appt.testScore}}</p>
+
+            <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-calendar"></i></span>Status: {{user_profile.status || 'Pending'}}</p>
+
+            <p data-ng-show="appt.role == 'trainee'"><span><i class="glyphicon glyphicon-gift"></i></span>{{appt.assessment}}</p>
+
+            <p data-ng-show="appt.role == 'fellow'"><span data-ng-hide="appt.skillSets.length === 0"><i class="glyphicon glyphicon-certificate"></i>   Skillsets</span>
+              <strong data-ng-repeat="skill in appt.skillSets">
+                <i><b data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b></i> 
+              </strong>
+
+            <p data-ng-show="appt.role == 'fellow'">
+              <span data-ng-hide="appt.workHistory.length === 0"><i class="glyphicon glyphicon-gift"></i>   Work History</span>
+              <strong data-ng-repeat="workHist in appt.workHistory">
+                <b>Company: {{workHist.company}}</b><br>
+                <b>Job Description: {{workHist.jobDescription}}</b><br>
+                <b>Location: {{workHist.location}}</b><br>
+                <b>From: {{workHist.from | date : longDate}}</b><br>
+                <b>From: {{workHist.to | date : longDate}}</b>  
+              </strong>
+            </p>
+              <br><br>
+      <p data-ng-show="appt.role == 'fellow'"><a class="btn btn-danger btn-xs" ng-href="/#!/fellows/{{appt._id}}/rate">Edit Fellow</a> </p>
+    </table>
+    </div>
+  </div>
+  </div>
+
+  <div class="container" data-ng-show="user.role !== 'admin'">
+    <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
 </section>
+

@@ -23,17 +23,32 @@ exports.createAssmt = function(req, res){
 	req.body.instructorId = req.user.id;
 	req.body.applicantId = req.trainee._id;
     var trainee = req.trainee;
-	trainee.assessments.push(req.body);
+	//trainee.assessments.push(req.body);
 	
-	trainee.save(function(err) {
-		if (err) {
-		    return res.send(400, {
-		       message: err
-		    });
-		} else {
-		    res.jsonp(trainee);
-		}
-	});
+	Applicant.update(
+      { 
+        _id: req.trainee._id, 
+      },
+      { $push: { 
+        "assessments": req.body }
+      },
+      function(err, trainee) {
+      	  if (err) {
+             return res.send(400, {message: err });
+          } else {
+             res.jsonp(trainee);
+          }
+      }
+    );
+	// trainee.save(function(err) {
+	// 	if (err) {
+	// 	    return res.send(400, {
+	// 	       message: err
+	// 	    });
+	// 	} else {
+	// 	    res.jsonp(trainee);
+	// 	}
+	// });
 };
 
 /*
@@ -44,34 +59,66 @@ exports.updateAssmt = function(req, res) {
 	    trainee = req.trainee;
 
 	assessment = _.extend(assessment , req.body);
-	trainee.save(function(err) {
-		if (err) {
-			return res.send(400, {
-			   message: 'Error: update failed'
-		    });
-		} else {
-		    res.jsonp(trainee);
-		}
-	});
+	
+
+	Applicant.update({_id: trainee._id, 'assessments._id': assessment._id}, 
+	      {$set: 
+	      	  {  'assessments.$.assessment_name' : assessment.assessment_name,
+	             'assessments.$.assessment_date' : assessment.assessment_date, 
+	             'assessments.$.score ': req.body.score
+	      	  }
+
+	      }, 
+          function(err, trainee) {
+          	  if (err) {
+                 return res.send(400, {message: err });
+              } else {
+                 res.jsonp(trainee);
+              }
+          }
+    ); 
+	// trainee.save(function(err) {
+	// 	if (err) {
+	// 		return res.send(400, {
+	// 		   message: 'Error: update failed'
+	// 	    });
+	// 	} else {
+	// 	    res.jsonp(trainee);
+	// 	}
+	// });
 };
 
 /*
 *delete an assessment
 */
-exports.deleteAssmt = function(req, res){
+exports.deleteAssmt = function(req, res) {
 	var assessment = req.assessment,
 	    trainee = req.trainee;
 
-	assessment.remove();
-	trainee.save(function(err) {
-		if (err) {
-			return res.send(400, {
-				message: err
-			});
-		} else {
-			res.jsonp(trainee);
-		}
-	});
+
+    Applicant.update(
+	    { '_id': trainee._id }, 
+	    { $pull: { 'assessments': { '_id': assessment._id } }  
+	    }, function (err, trainee) {
+	    	if (err) {
+				return res.send(400, {
+					message: err
+				});
+			} else {
+				res.jsonp(trainee);
+			}
+	    }
+    );
+// 	assessment.remove();
+// 	trainee.save(function(err) {
+// 		if (err) {
+// 			return res.send(400, {
+// 				message: err
+// 			});
+// 		} else {
+// 			res.jsonp(trainee);
+// 		}
+// 	});
 };
 
 /*
@@ -87,15 +134,29 @@ exports.selectFellow = function(req, res){
               message: 'Error: action couldn\'t be carried out'
          });
       } else {
-           trainee.save(function(err) {
-	          if (err) {
-	              return res.send(400, {
-	                  message: 'could not change applicant role'
-	              });
-	          } else {
-	              res.jsonp(trainee);
-	          }
-	      });
+
+      	     Applicant.update({_id: trainee._id}, 
+			      {$set: 
+			      	  { 'role' : role }
+
+			      }, 
+		          function(err, trainee) {
+		          	  if (err) {
+		                 return res.send(400, {message: 'could not change applicant role' });
+		              } else {
+		                 res.jsonp(trainee);
+		              }
+		          }
+            ); 
+       //     trainee.save(function(err) {
+	      //     if (err) {
+	      //         return res.send(400, {
+	      //             message: 'could not change applicant role'
+	      //         });
+	      //     } else {
+	      //         res.jsonp(trainee);
+	      //     }
+	      // });
      }
 };
 
@@ -115,16 +176,30 @@ exports.rateFellow = function(req, res) {
 			   message: 'Error: rating is a 10 point system'
 	    });
 	} else {
-		fellow.skillSets.push(skillset);
-		fellow.save(function(err) {
-			if (err) {
-			    return res.send(400, {
-			       message: 'Error: Couldn\'t rate fellow'
-			    });
-			} else {
-			    res.jsonp(fellow);
-			}
-		});
+		 Applicant.update(
+		    { _id: fellow._id }, 
+		    { $push: { 'skillSets':  skillset }
+		    }, 
+		    function (err, fellow) {
+		    	if (err) {
+					return res.send(400, {
+						message: 'Error: Couldn\'t rate fellow'
+					});
+				} else {
+					res.jsonp(fellow);
+				}
+	        }
+        );
+		// fellow.skillSets.push(skillset);
+		// fellow.save(function(err) {
+		// 	if (err) {
+		// 	    return res.send(400, {
+		// 	       message: 'Error: Couldn\'t rate fellow'
+		// 	    });
+		// 	} else {
+		// 	    res.jsonp(fellow);
+		// 	}
+		// });
 	}
 };
 
@@ -136,17 +211,31 @@ exports.addSkills = function(req, res) {
 	var skill = req.body;
 	User.findById(req.user._id).exec(function(err, user) {
         if (user._type === 'Instructor') {
-        	user.skillSets.push(skill);
+        	 Instructor.update(
+			    { _id: user._id }, 
+			    { $push: { 'skillSets':  skill }
+			    }, 
+			    function (err, user) {
+			    	if (err) {
+						return res.send(400, {
+							message: 'Error: Couldn\'t add skill'
+						});
+					} else {
+						res.jsonp(user);
+					}
+		        }
+	         );
+	   //      	user.skillSets.push(skill);
 
-            user.save(function(err) {
-				if (err) {
-				    return res.send(400, {
-				       message: 'Error: Couldn\'t add skill'
-				    });
-				} else {
-				    res.jsonp(user);
-				}
-			});
+   //          user.save(function(err) {
+			// 	if (err) {
+			// 	    return res.send(400, {
+			// 	       message: 'Error: Couldn\'t add skill'
+			// 	    });
+			// 	} else {
+			// 	    res.jsonp(user);
+			// 	}
+			// });
         } else {
         	return res.send(400, {
 			       message: 'Error: You are not authorized to carryout this operation'
@@ -164,25 +253,55 @@ exports.editRating = function(req, res) {
 
     skillset = _.extend(skillset, req.body);
     if (req.profile) { //if instructor wants to edit his own skills
-    	req.profile.save(function(err) {
-	       if (err) {
-	          return res.send(400, {
-	              message: 'could not edit rating'
-	          });
-	        } else {
-	              res.jsonp(req.profile);
-	        }
-	    });
+    	Instructor.update({'_id': req.profile._id, 'skillSets._id': skillset._id}, 
+	      {$set: 
+	      	  { 'skillSets.$.skill' : skillset.skill,
+	            'skillSets.$.rating' : skillset.rating
+	      	  }
+
+	      }, 
+          function(err, user) {
+          	  if (err) {
+                 return res.send(400, {message: 'could not edit rating' });
+              } else {
+                 res.jsonp(user);
+              }
+          }
+        ); 
+    	// req.profile.save(function(err) {
+	    //    if (err) {
+	    //       return res.send(400, {
+	    //           message: 'could not edit rating'
+	    //       });
+	    //     } else {
+	    //           res.jsonp(req.profile);
+	    //     }
+	    // });
     } else { //for instructor to edit fellow's rating
-	    fellow.save(function(err) {
-	       if (err) {
-	          return res.send(400, {
-	              message: 'could not edit rating'
-	          });
-	        } else {
-	              res.jsonp(fellow);
-	        }
-	    });
+	    Applicant.update({'_id': fellow._id, 'skillSets._id': skillset._id}, 
+	      {$set: 
+	      	  { 'skillSets.$.skill' : skillset.skill,
+	            'skillSets.$.rating' : skillset.rating
+	      	  }
+
+	      }, 
+          function(err, fellow) {
+          	  if (err) {
+                 return res.send(400, { message: 'could not edit rating' });
+              } else {
+                 res.jsonp(fellow);
+              }
+          }
+        ); 
+	    // fellow.save(function(err) {
+	    //    if (err) {
+	    //       return res.send(400, {
+	    //           message: 'could not edit rating'
+	    //       });
+	    //     } else {
+	    //           res.jsonp(fellow);
+	    //     }
+	    // });
 	}
 };
 
@@ -193,27 +312,54 @@ exports.deleteRating = function(req, res){
 	var skillset = req.skill,
         fellow = req.trainee;
 
-    skillset.remove();
+    //skillset.remove();
      if (req.profile) {
-    	req.profile.save(function(err, profile) {
-	       if (err) {
-	          return res.send(400, {
-	              message: 'could not delete rating'
-	          });
-	        } else {
-	              res.jsonp(req.profile);
-	        }
-	    });
+    	
+    	Instructor.update(
+		    { _id: req.profile._id }, 
+		    { $pull: { 'skillSets': { '_id': skillset._id } }  
+		    }, function (err, user) {
+		    	if (err) {
+					return res.send(400, {
+						message: 'could not delete rating'
+					});
+				} else {
+					res.jsonp(user);
+				}
+		    }
+	    );
+    	// req.profile.save(function(err, profile) {
+	    //    if (err) {
+	    //       return res.send(400, {
+	    //           message: 'could not delete rating'
+	    //       });
+	    //     } else {
+	    //           res.jsonp(req.profile);
+	    //     }
+	    // });
     } else {
-	    fellow.save(function(err, fellow) {
-	       if (err) {
-	          return res.send(400, {
-	              message: 'could not delete rating'
-	          });
-	        } else {
-	              res.jsonp(fellow);
-	        }
-	    });
+        Applicant.update(
+		    { '_id': fellow._id }, 
+		    { $pull: { 'skillSets': { '_id': skillset._id } }  
+		    }, function (err, fellow) {
+		    	if (err) {
+					return res.send(400, {
+						message: 'could not delete rating'
+					});
+				} else {
+					res.jsonp(fellow);
+				}
+		    }
+	    );
+	    // fellow.save(function(err, fellow) {
+	    //    if (err) {
+	    //       return res.send(400, {
+	    //           message: 'could not delete rating'
+	    //       });
+	    //     } else {
+	    //           res.jsonp(fellow);
+	    //     }
+	    // });
 	}
 };
 
@@ -302,20 +448,31 @@ var uploadImage = function(req, res, contentType, tmpPath, destPath, person, exp
 	               fs.unlink(tmpPath, function(){
 		                
 			        	var path =  person.photo;
-			        	person.photo = destPath;
-				        person.experience = experience;
+			        	// person.photo = destPath;
+				        // person.experience = experience;
 
 				        if (fs.existsSync(path)) {
 						    fs.unlink(path);
 						}
 
-				        person.save(function(err, user) {
-				            if (err) {
-				               return res.send(400, { message: 'Error: save operation failed' });
-				            } else {
-				                res.jsonp(user);
-				            }
-				        });
+				        Instructor.update(
+				             {_id: person._id},
+				             {$set: { photo: destPath, experience: experience } },
+				              function (error, user) {
+				                 if (error) {
+				                    return res.send(400, { message: 'Error: save operation failed' });
+				                 } else {
+				                     res.jsonp(user);
+				                 }
+				              }
+				        );
+				        // person.save(function(err, user) {
+				        //     if (err) {
+				        //        return res.send(400, { message: 'Error: save operation failed' });
+				        //     } else {
+				        //         res.jsonp(user);
+				        //     }
+				        // });
 	               });
 	        	}
 	        }); 
@@ -332,11 +489,11 @@ exports.updateInfo = function(req, res) {
     var form = new multiparty.Form();
     form.parse(req, function(err, fields, files) {
 
-    	User.findById('53fc4af2b5023bac19ccf830').exec(function(err, person) {
+    	User.findById(req.user.id).exec(function(err, person) {
 	        if (err) {
                return res.send(400, { message: err });
 	        } else if (!person) {
-	        	return res.send(400, { message: 'Failed to load User ' + req.user._id });
+	        	return res.send(400, { message: 'Failed to load User ' + person._id });
 	        } else {
 	        	var experience = '';
 	        	if (fields.exp) {
@@ -356,14 +513,25 @@ exports.updateInfo = function(req, res) {
 		                 
 		            uploadImage(req, res, contentType, tmpPath, destPath, person, experience);
 		        } else {
-		        	person.experience = experience;
-		        	person.save(function(err, user) {
-			            if (err) {
-			               return res.send(400, { message: 'Error: save operation failed' });
-			            } else {
-			                res.jsonp(user);
-			            }
-			        });   
+		        	Instructor.update(
+			             {_id: person._id},
+			             {$set: { experience: experience } },
+			              function (error, user) {
+			                 if (error) {
+			                    return res.send(400, { message: 'Error: save operation failed' });
+			                 } else {
+			                     res.jsonp(user);
+			                 }
+			              }
+				    );
+		        	// person.experience = experience;
+		        	// person.save(function(err, user) {
+			        //     if (err) {
+			        //        return res.send(400, { message: 'Error: save operation failed' });
+			        //     } else {
+			        //         res.jsonp(user);
+			        //     }
+			        // });   
 		        }
 		    }
 	    });
@@ -380,12 +548,23 @@ exports.deletePhoto = function(req, res) {
 	    fs.unlink(profile.photo);
 	} 
 
-	profile.photo = '';
-    profile.save(function(err, user) {
-	    if (err) {
-	       return res.send(400, { message: 'Error: save operation failed' });
-	    } else {
-	        res.jsonp(user);
-	    }
-	});  
+	Instructor.update(
+	     {_id: profile._id},
+	     {$set: { photo: '' } },
+	      function (error, user) {
+	         if (error) {
+	            return res.send(400, { message: 'Error: save operation failed' });
+	         } else {
+	             res.jsonp(user);
+	         }
+	      }
+	);
+	// profile.photo = '';
+ //    profile.save(function(err, user) {
+	//     if (err) {
+	//        return res.send(400, { message: 'Error: save operation failed' });
+	//     } else {
+	//         res.jsonp(user);
+	//     }
+	// });  
 };

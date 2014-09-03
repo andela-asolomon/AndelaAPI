@@ -1,24 +1,21 @@
 table.list{
-  font-size: 1.125em;
+  /*font-size: 1.125em;*/
   margin: 0 auto;
   width: 100%
 }
 
 table.list {
   line-height: 1.0;
-  text-shadow: 1px 1px 0px #fff;
+  /*text-shadow: 1px 0 0 #ddd;*/
   margin:5px 0; background: #fafafa;
   border:#ccc 1px solid;
-  -moz-box-shadow: 0 1px 2px #d1d1d1;
-  -webkit-box-shadow: 0 1px 2px #d1d1d1;
-  box-shadow: 0 1px 2px #d1d1d1;
 }
 table.list th {
   padding:10px; color: #fff; text-transform: uppercase;
-  border:1px solid #5b2f01; text-shadow: 0 0 1px #fff5e4;
-  border-bottom:1px solid #e0e0e0; background: #946134;
-  background: -webkit-gradient(linear, left top, left bottom, from(#946134), to(#5b2f01));
-  background: -moz-linear-gradient(top, #946134, #5b2f01);
+  border:1px solid #e0e0e0; text-shadow: 0 0 1px #fff5e4;
+  border-bottom:1px solid #e0e0e0; background: #fbefd5;
+  background: -webkit-gradient(linear, left top, left bottom, from(#ed3526), to(#ef4b3e));
+  background: -moz-linear-gradient(top, #ed3526, #ef4b3e);
 }
 table.list th:first-child {
   text-align: left;
@@ -48,7 +45,247 @@ table.list tr:nth-child(even){
   background: #f3f3f3;
 }
 
-/*form.role_admin div.form-group, form.role_admin label {
-  display: none !important;
-  padding:0 !important; margin: 0 !important;
-}*/
+form.form_trainee div{
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+form.form_trainee div select, form.form_trainee div select option{
+  width: 100% !important;
+  padding: 1px;
+  margin-bottom: 3px !important;
+}
+section.content, .content {
+  margin-top: 75px !important;}
+
+.admin-test .nav-tabs > li > a {
+  margin-right: 20px !important;
+  border: 1px solid #ddd !important;
+}
+.list-group li{
+  font-weight: bold;
+}
+.list-group li b{
+  font-weight: normal;
+}
+.page-header {
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+  border-bottom: none !important;
+  }
+
+
+/* Basic Grey */
+.basic-grey {
+    margin-left:auto;
+    margin-right:auto;
+    max-width: 500px;
+    background: #F7F7F7;
+    padding: 25px 15px 25px 30px;
+    color: #888;
+    text-shadow: 1px 1px 1px #ddd;
+    border:1px solid #E4E4E4;
+}
+.basic-grey h1 {
+    font-size: 25px;
+    padding: 0px 0px 10px 40px;
+    display: block;
+    border-bottom:1px solid #E4E4E4;
+    margin: -10px -15px 30px -10px;;
+    color: #888; 
+}
+.basic-grey h1>span {
+    display: block;
+    font-size: 11px;
+}
+.basic-grey label {
+    display: block;
+    margin: 0px;
+}
+.basic-grey label>span {
+    float: left;
+    width: 20%;
+    text-align: right;
+    padding-right: 10px;
+    margin-top: 10px;
+    color: #888;
+}
+.basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey textarea, .basic-grey select {
+    border: 1px solid #DADADA;
+    color: #333;
+    height: 30px;
+    margin-bottom: 16px;
+    margin-right: 6px;
+    margin-top: 2px;
+    outline: 0 none;
+    padding: 3px 3px 3px 5px;
+    width: 70%;
+    font-size: 12px;
+    line-height:15px;
+    box-shadow: inset 0px 1px 4px #ECECEC;
+    -moz-box-shadow: inset 0px 1px 4px #ECECEC;
+    -webkit-box-shadow: inset 0px 1px 4px #ECECEC;
+}
+.basic-grey textarea{
+    padding: 5px 3px 3px 5px;
+}
+.basic-grey select {
+    text-indent: 0.01px;
+    text-overflow: '';
+    width: 70%;
+    height: 35px;
+    line-height: 25px;
+}
+.basic-grey textarea{
+    height:100px;
+}
+.basic-grey .button {
+    background: #E27575;
+    border: none;
+    padding: 10px 25px 10px 25px;
+    color: #FFF;
+    box-shadow: 1px 1px 5px #B6B6B6;
+    border-radius: 3px;
+    text-shadow: 1px 1px 1px #9E3F3F;
+    cursor: pointer;
+}
+.basic-grey .button:hover {
+    background: #CF7A7A
+}
+.basic-grey .form-group{
+  padding: 0 !important;
+  
+}
+.basic-grey.skill label.inline{
+  display: inline;
+  width: 100px;
+}
+.basic-grey.skill label.inline select{
+  width: 50px;
+  height: auto;
+  line-height: 1.5;
+  padding: 5px; margin: 5px;
+}
+
+.basic-grey.skill label.inline span, .basic-grey.skill label.skill span{
+  text-align: left; width: 50px;
+}
+table.list-link tr td {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+table.list-link tr td a {
+  display:inline-block; padding-left: 5px;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  text-decoration: none !important;
+  height:100% !important; color: #333;
+  width:100% !important;
+}
+table.list-link tr:hover{
+  background: #d7d7d7;
+}
+
+table.list-link tr td {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+p.warning, .warning {
+  color: red !important;
+  text-align: center;
+  font-weight: bold;
+}
+
+table.list-link .change_status a{
+  padding: 0 !important;
+  height: auto !important;
+  color: #fff;
+}
+
+li div{
+  margin: 0 !important;
+  padding: 0 !important;
+  margin-top: -10px !important;
+}
+.basic-grey.skill{
+  width: 27%;
+}
+.basic-grey.placement{
+  width: 34%;
+}
+.basic-grey.skill, .basic-grey.placement{
+  margin-left:0;
+  margin-right:10px;
+  float: left;
+  padding: 15px !important;
+}
+
+.basic-grey.placement label, .basic-grey.placement input{
+  display: block; /* width: 95%;*/
+}
+.basic-grey.placement *{
+  margin: 0;
+}
+.basic-grey.placement label span{
+  float: none; 
+}
+.basic-grey.placement .dates{
+  float: left; width: 49%;
+}
+.basic-grey.placement div{
+  margin: 0; padding: 0;
+  margin-top: -10px
+}
+.basic-grey.placement button{
+  clear: both;
+}
+div.viewuser p{
+  font-size: 1.2em !important;
+}
+div.viewuser p span{
+  margin: 5px 15px 5px 5px;
+}
+div.viewuser p strong{
+  display: block; margin: 10px 0;
+  padding-left: 50px; font-size: 0.9em
+} 
+
+.fellow-edit ul{
+  list-style-type: none !important;
+  margin: 5px;
+}
+.fellow-edit ul li, .fellow-edit ul li ul{
+  list-style-type: none !important;
+  margin-left: 15px !important;
+}
+
+ul.skillset {
+    margin: 0.75em 0;
+    padding: 0 1em;
+    list-style: none;
+}
+ul.skillset li:before { 
+    content: "";
+    border-color: transparent #111;
+    border-style: solid;
+    border-width: 0.35em 0 0.35em 0.45em;
+    display: block;
+    height: 0;
+    width: 0;
+    left: -1em;
+    top: 0.9em;
+    position: relative;
+}
+table.list-link tr td a.fixbtn{
+  height: auto !important;
+  width: 90% !important;
+  margin-left: 4% !important;
+  line-height: .5; color: white !important;
+}
+
+b.reqLogin {
+  padding: 80px 90px;
+  display: block;
+  font-weight: bold;
+}

@@ -1,29 +1,37 @@
-<section data-ng-controller="AdminController">
-  
 
-  <div class="container">
+<section data-ng-controller="AdminController" class="pad">
+  <div class="container" data-ng-show="user.role === 'admin'">
   <div class="admin-test">
-    <br><br><br><br>
-    <div class="pull-right" data-ng-show="user">
-        <a href="/auth/signout">Signout</a>
+    <div class="link-controls">
+      <ul>
+      <li><a href="/#!/admin/fellows">View All Fellows</a></li>
+      <li><a href="/#!/admin/trainees">View Trainees</a></li>
+      <li><a href="/#!/admin/camps">View Bootcamps</a></li>
+      <li><a href="/#!/admin/create/camp">Create Bootcamp</a></li>
+      <li><a href="/#!/admins">View Admininistrators</a></li>
+      <li><a href="/#!/admin/instrs">View Instructors</a></li>
+      <li><a href="/#!/admin/test/create">Create Registration Test</a></li>
+      <li><a href="/#!/admin/test">View All Tests</a></li>
+      </ul>
     </div>
 
-    <p><a href="/#!/admin/appts">View Applicants</a></p>
-    <p><a href="/#!/admin/trainees">View Trainees</a></p>
-    <p><a href="/#!/admin/fellows">View Fellows</a></p>
-
-
-    <p><a href="#" ng-click='listInstructors()'>View Instructors</a></p>
-    <p><a href="#" ng-click='listAdmins()'>View Admins</a></p>
-
-    <div><a href="#" ng-click='viewApplicant("53f635bf7a52aff418fb2e5a")'>View Applicant</a></div>
-   
-    <div><a href="" ng-click='viewInstructor("53f971953916ce6c1e8a038c")'>View instr</a></div>
-
-
-    <p>Scope user</p>: {{user}}
-    
+    <div class="admin-view">
+      <p>You're signed in as Admin with the following details:</p>
+      <ul class="list-group">
+        <li class="list-group-item">Name: <b data-ng-bind="user.firstName"></b> <b data-ng-bind="user.lastName"></b></li>
+        <li class="list-group-item">Username: <b data-ng-bind="user.username"></b></li>
+        <li class="list-group-item">Email: <b data-ng-bind="user.email"></b> </li>
+      </ul>
+    </div>
+        
   </div>
 
+  </div>
+
+  <div class="container" data-ng-show="user.role !== 'admin'">
+    <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
 </section>
+
+
+

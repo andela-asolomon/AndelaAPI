@@ -12,15 +12,17 @@ module.exports = function(app) {
 	app.route('/users/me').get(users.me);
 	app.route('/users').get(users.list).put(users.update);
 	app.route('/users/:userId').get(users.read);
-	app.route('/users/password').post(users.changePassword);
+	app.route('/users/:userId/password').post(users.changePassword);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
 	app.route('/users/view').get(users.requiresLogin, users.appView);
+	app.route('/users/check/uniqueUsername').post(users.uniqueUsername);
 	
 	// Setting up the users api
 	app.route('/auth/:campId/signup').post(users.signup);
 	app.route('/auth/signin').post(users.signin);
 	app.route('/auth/signout').get(users.signout);
-
+	app.route('/camps').get(users.getCamps);
+	app.route('/camps/:campId').get(users.getCamp);
 	// Setting the facebook oauth routes
 	app.route('/auth/facebook').get(passport.authenticate('facebook', {
 		scope: ['email']

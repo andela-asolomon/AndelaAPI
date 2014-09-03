@@ -1,0 +1,62 @@
+<section data-ng-controller="InstructorsController" data-ng-init="viewTrainee()">
+    <div class="container" data-ng-show="user.role === 'instructor'">
+        <div class="link-controls">
+            <ul class="nav nav-tabs" role="tablist">
+                <li><a href="/#!/instructors/trainees">View Trainees</a></li>               
+                <li><a href="/#!/instructors/fellows">View Fellows</a></li>
+                <li><a href="/#!/instructors/addSkill">Add To Your Skills</a></li>
+                <li><a href="/#!/instructors/bootcamps">View Bootcamps</a></li>
+                <li><a href="/#!/instructors/editProfile">Edit Your Profile</a></li>
+                <li><a href="/#!/change-password">Change Your Password</a></li>
+                <li><a href="/auth/signout">Signout</a></li>
+            </ul>
+        </div>
+        <div class="admin-view">
+           
+            <div class="col-sm-6 col-lg-4 capitalize">
+                <p>Trainee's details:</p>
+                <ul class="list-group capitalize">
+                    <li class="list-group-item">Name: <b data-ng-bind="trainee.firstName"></b>&nbsp;<b data-ng-bind="trainee.lastName"></b></li>
+                    <li class="list-group-item">Email: <b data-ng-bind="trainee.email"></b> </li>
+                    <li class="list-group-item"><a class="btn btn-primary btn-xs" data-ng-href="/#!/instructors/trainees/{{trainee._id}}/create_Assessment">New Assessment</a></li>
+                </ul>
+                <div class="">  
+                    <div >
+                       <p>Assessment</p> 
+                    </div> 
+                        <table class="list">
+                            <thead>
+                              <tr>
+                                <th>Assessment Name</th>
+                                <th>Assessment Date</th>
+                                <th>Score</th>
+                                <th></th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody class="capitalize">
+                                <tr data-ng-repeat= "assessment in assessments">
+                                    <td data-ng-bind="assessment.assessment_name"></td>
+                                    <td data-ng-bind="assessment.assessment_date | date"></td>
+                                    <td data-ng-bind="assessment.score"></td>
+                                    <td><a class="btn btn-success" href="/#!/instructors/trainees/{{trainee._id}}/{{assessment._id}}/edit" data-ng-show= "assessment.instructorId === user._id" data-ng-click="editAssessment($index, assessment)">
+                                        <i class="glyphicon glyphicon-edit"></i></a></td>
+                                    <td><a class="btn btn-success" data-ng-show= "assessment.instructorId === user._id" data-ng-click="deleteAssessment($index, assessment)">
+                                        <i class="glyphicon glyphicon-trash"></i></a></td>
+                                </tr>            
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-ng-show="user.role !== 'instructor'">
+        <div class="row">
+            <div class="alert alert-danger col-md-offset-2 col-md-6">
+                <a class="close" data-dismiss="alert" data-ng-click="removeAlert('error')" href="#">×</a>
+                <span><h4>You are not permitted to view this page</h4></span>
+            </div>
+        </div>
+    </div>
+</section>
