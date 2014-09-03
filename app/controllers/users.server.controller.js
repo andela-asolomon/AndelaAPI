@@ -49,9 +49,8 @@ var getErrorMessage = function(err) {
 */
 
 var uploadCV = function(req, res, contentType, tmpPath, destPath) {
-    
         // Server side file type checker.
-        if (contentType !== 'application/doc' &&contentType !== 'application/docx' && contentType !== 'application/pdf') {
+        if (contentType !== 'application/msword' && contentType !== 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' && contentType !== 'application/pdf') {
             fs.unlink(tmpPath);
             console.log('contenttypefail');
             return res.status(400).send('Unsupported file type.');

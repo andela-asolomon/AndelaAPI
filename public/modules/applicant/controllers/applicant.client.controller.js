@@ -2,11 +2,21 @@
 
 angular.module('applicant').controller('ApplicantController', ['$scope', '$upload', '$http', 'Authentication', '$stateParams', '$location', 'Applicants', 'Users', 'Bootcamps', 
         function($scope, $upload, $http, Authentication, $stateParams, $location, Applicants, Users, Bootcamps){
+            $scope.authentication = Authentication;
             $scope.user = Authentication.user;
+            $scope.isClicked = false;
+            //$scope.showLoader = false;
 
             $scope.find = function() {
                 $scope.applicants = Users.query();
                 console.log($scope.applicants);
+            };
+
+            $scope.clicked = function() {
+              $scope.isClicked = true;
+              $scope.showLoader = true;
+              $scope.signup();
+              //console.log(showLoader);
             };
 
              $scope.findCamp = function(){
@@ -150,7 +160,8 @@ angular.module('applicant').controller('ApplicantController', ['$scope', '$uploa
                   console.log(response);
                   $scope.logId = response;
                   console.log('logId: ' + $scope.logId);
-                    $location.path('/successpage'); 
+                  $scope.authentication.user = response;
+                  $location.path('/successpage'); 
                 })
                 .error(function(err) {
                     console.log(err);
