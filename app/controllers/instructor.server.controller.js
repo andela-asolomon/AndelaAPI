@@ -47,7 +47,7 @@ exports.createAssmt = function(req, res){
              return res.send(400, {message: err });
           } else {
              //res.jsonp(trainee);
-             returnJson(res, req.trainee._id);
+             exports.returnJson(res, req.trainee._id);
           }
       }
     );
@@ -74,7 +74,7 @@ exports.updateAssmt = function(req, res) {
                  return res.send(400, { message: err });
               } else {
                  //res.jsonp(trainee);
-                 returnJson(res, trainee._id);
+                 exports.returnJson(res, trainee._id);
               }
           }
     );
@@ -97,7 +97,7 @@ exports.deleteAssmt = function(req, res) {
 				});
 			} else {
 				//res.jsonp(trainee);
-				returnJson(res, trainee._id);
+				exports.returnJson(res, trainee._id);
 			}
 	    }
     );
@@ -126,7 +126,7 @@ exports.selectFellow = function(req, res){
 	                 return res.send(400, {message: 'could not change applicant role' });
 	              } else {
 	                 //res.jsonp(trainee);
-	                 returnJson(res, trainee._id);
+	                 exports.returnJson(res, trainee._id);
 	              }
 	          }
             ); 
@@ -160,7 +160,7 @@ exports.rateFellow = function(req, res) {
 					});
 				} else {
 					//res.jsonp(fellow);
-					returnJson(res, fellow._id);
+					exports.returnJson(res, fellow._id);
 				}
 	        }
         );
@@ -185,7 +185,7 @@ exports.addSkills = function(req, res) {
 						});
 					} else {
 						//res.jsonp(user);
-						returnJson(res, req.user._id);
+						exports.returnJson(res, req.user._id);
 					}
 		        }
 	         );
@@ -218,7 +218,7 @@ exports.editRating = function(req, res) {
                  return res.send(400, {message: 'could not edit rating' });
               } else {
                  //res.jsonp(user);
-                 returnJson(res, req.profile._id);
+                 exports.returnJson(res, req.profile._id);
               }
           }
         ); 
@@ -235,7 +235,7 @@ exports.editRating = function(req, res) {
                  return res.send(400, { message: 'could not edit rating' });
               } else {
                  //res.jsonp(fellow);
-                 returnJson(res, fellow._id);
+                 exports.returnJson(res, fellow._id);
               }
           }
         ); 
@@ -260,7 +260,7 @@ exports.deleteRating = function(req, res){
 					});
 				} else {
 					//res.jsonp(user);
-					returnJson(res, req.profile._id);
+					exports.returnJson(res, req.profile._id);
 				}
 		    }
 	    );
@@ -275,7 +275,7 @@ exports.deleteRating = function(req, res){
 					});
 				} else {
 					//res.jsonp(fellow);
-					returnJson(res, fellow._id);
+					exports.returnJson(res, fellow._id);
 				}
 		    }
 	    );
@@ -378,7 +378,8 @@ var uploadImage = function(req, res, contentType, tmpPath, destPath, person, exp
 				                 if (error) {
 				                    return res.send(400, { message: 'Error: save operation failed' });
 				                 } else {
-				                     res.jsonp(user);
+				                     //res.jsonp(user);
+				                     exports.returnJson(res, person._id);
 				                 }
 				              }
 				        );
@@ -429,7 +430,8 @@ exports.updateInfo = function(req, res) {
 			                 if (error) {
 			                    return res.send(400, { message: 'Error: save operation failed' });
 			                 } else {
-			                     res.jsonp(user);
+			                     //res.jsonp(user);
+			                     exports.returnJson(res, person._id);
 			                 }
 			              }
 				    );
@@ -457,7 +459,7 @@ exports.deletePhoto = function(req, res) {
 	            return res.send(400, { message: 'Error: save operation failed' });
 	         } else {
 	             //res.jsonp(user);
-	             returnJson(res, profile._id);
+	             exports.returnJson(res, profile._id);
 	         }
 	      }
 	);
