@@ -249,18 +249,21 @@ exports.update = function(req, res) {
 	res.jsonp(req.camp);
  };
 
-exports.getCamps = function(req, res) {  Bootcamp.find().exec(function(err, bootcamps) {
+exports.getCamps = function(req, res) {  
+	Bootcamp.find().sort('-start_date').exec(function(err, bootcamps) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)
 			});
 		} else {
+			console.log(bootcamps);
 			res.jsonp(bootcamps);
 		}
 	});
 };
 
-exports.list = function(req, res) { Applicant.find().where({role: 'fellow'}).populate('user', 'displayName').exec(function(err, fellows) {
+exports.list = function(req, res) { 
+	Applicant.find().where({role: 'fellow'}).populate('user', 'displayName').exec(function(err, fellows) {
 		if (err) {
 			return res.send(400, {
 				message: getErrorMessage(err)

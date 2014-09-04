@@ -84,7 +84,7 @@ exports.changeStatus = function(req, res) {
           applicant.status.reason = '';
       }
 
-      console.log(req.body);
+      
       applicant.status.name = req.body.status.name;
 
       Applicant.update(
@@ -216,12 +216,13 @@ exports.createBootCamp = function(req, res) {
 * List all Bootcamps
 */
 exports.bootCamps = function(req, res) {
-     Bootcamp.find().exec(function(err, camps){
+     Bootcamp.find().sort('-start_date').exec(function(err, camps){
          if (err) {
             return res.send(400, {
                 message: 'Could not find bootcamps'
             });
          } else {
+            console.log(camps);
             res.jsonp(camps);
          }
      });  
