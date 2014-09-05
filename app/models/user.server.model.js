@@ -6,6 +6,7 @@
 var mongoose = require('mongoose'),
 	extend = require('mongoose-schema-extend'),
 	Schema = mongoose.Schema,
+	moment = require('moment'),
 	crypto = require('crypto');
 
 
@@ -206,7 +207,12 @@ var PlacementSchema = new Schema({
 var BootcampSchema = new Schema({
 	camp_name: {
 		type: String,
-		required: 'Please fill in the Bootcamp name',
+		trim: true
+	},
+	location: {
+		type: String,
+		required: 'Please fill in the Bootcamp location',
+		default: 'Lagos',
 		trim: true
 	},
 	start_date: {
@@ -256,6 +262,14 @@ InstructorSchema.pre('save', function(next) {
 	}
 
 	next();
+});
+
+BootcampSchema.pre('save', function(next) {
+	if(this.start_date && this.location){
+		this.camp_name = moment(this.start_date).format('MMMM D, YYYY') + ', ' + this.location;
+	}
+	next();
+	
 });
 
 /**

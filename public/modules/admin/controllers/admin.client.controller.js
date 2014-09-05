@@ -145,7 +145,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
     
     $scope.viewcamp = function() {
-      console.log($stateParams);
         $http.get('/admin/camp/' + $stateParams.campId).success(function(response) {
         // If successful show success message and clear form
           $scope.camp = response;

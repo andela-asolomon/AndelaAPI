@@ -238,7 +238,8 @@ exports.editCamp = function(req, res) {
     
     Bootcamp.update({_id: camp._id}, 
         {$set: 
-            { 'camp_name' : camp.camp_name,
+            { 
+              'camp_name' : camp.camp_name,
               'start_date': camp.start_date,
               'end_date': camp.end_date
             }
@@ -304,7 +305,7 @@ exports.instrRead = function(req, res) {
 
 var doListing = function(req, res, schema, whichRole) {
   if (schema === 'Applicant') {
-     Applicant.find().where({role: whichRole}).populate('campId','camp_name').populate('placements').exec(function (err, users) {
+     Applicant.find().where({role: whichRole}).populate('campId').populate('placements').exec(function (err, users) {
          if (err) {
             return res.send(400, {
                 message: 'No ' + whichRole + ' found'
@@ -312,7 +313,6 @@ var doListing = function(req, res, schema, whichRole) {
          } else {
             Placement.populate(users.placements, { path:'placement'},
               function(err, data) {
-                console.log('joehoen');
                 res.jsonp(users);
               }
             );

@@ -294,7 +294,7 @@ exports.readTrainee = function(req, res) {
 * Particular trainee middleware
 */
 exports.traineeByID = function(req, res, next, id){   
-    Applicant.findById(id).where({_type: 'Applicant'}).populate('campId','camp_name').exec(function(err, trainee) {
+    Applicant.findById(id).where({_type: 'Applicant'}).populate('campId').exec(function(err, trainee) {
 		if (err) return next(err);
 		if (!trainee) return next(new Error('Failed to load trainee ' + id));
 		req.trainee = trainee;
