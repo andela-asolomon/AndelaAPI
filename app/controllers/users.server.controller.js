@@ -8,6 +8,7 @@ var mongoose 		= require('mongoose'),
 	User 			= mongoose.model('User'),
 	Applicant 		= mongoose.model('Applicant'),
 	Bootcamp 		= mongoose.model('Bootcamp'),
+	Placement 		= mongoose.model('Placement'),
 	Test 	 		= mongoose.model('Test'),
 	_ 				= require('lodash');
 
@@ -397,13 +398,16 @@ exports.oauthCallback = function(strategy) {
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
-	User.findOne({
-		_id: id
-	}).exec(function(err, user) {
+	Applicant.findById(id).populate('placements').exec(function(err, user) {
 		if (err) return next(err);
 		if (!user) return next(new Error('Failed to load User ' + id));
-		req.profile = user;
-		next();
+		Placement.populate(user.placements, { path:'placement'},
+			function(err, data) {
+				req.profile = user;
+				next();
+			}
+        );
+		
 	});
 };
 
@@ -412,22 +416,6 @@ exports.read = function(req, res) {
 };
 
 
-/**
- * Bootcamp middleware
- */
-// exports.campByID = function(req, res, next, id) {
-// 	Bootcamp.findOne({
-// 		_id: id
-// 	}).exec(function(err, camp) {
-// 		if (err) return next(err);
-// 		if (!camp) return next(new Error('Failed to load Camp ' + id));
-// 		req.camp = camp;
-// 		next();
-// 	});
-// };
-/**
- * Require login routing middleware
- */
 exports.requiresLogin = function(req, res, next) {
 	if (!req.isAuthenticated()) {
 		return res.send(401, {

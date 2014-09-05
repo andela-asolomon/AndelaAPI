@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
     Question = mongoose.model('Question'),
     Bootcamp = mongoose.model('Bootcamp'),
     Options = mongoose.model('Options'),
-    WorkHistory = mongoose.model('WorkHistory'),
+    Placement = mongoose.model('Placement'),
     path = require('path'),
     _ = require('lodash');
 
@@ -304,13 +304,19 @@ exports.instrRead = function(req, res) {
 
 var doListing = function(req, res, schema, whichRole) {
   if (schema === 'Applicant') {
-     Applicant.find().where({role: whichRole}).populate('campId','camp_name').exec(function (err, users) {
+     Applicant.find().where({role: whichRole}).populate('campId','camp_name').populate('placements').exec(function (err, users) {
          if (err) {
             return res.send(400, {
                 message: 'No ' + whichRole + ' found'
             });
          } else {
-            res.jsonp(users);
+            Placement.populate(users.placements, { path:'placement'},
+              function(err, data) {
+                console.log('joehoen');
+                res.jsonp(users);
+              }
+            );
+            
          }
      });
   } else {
@@ -592,25 +598,35 @@ exports.placementStatus = function(req, res) {
 /**
  * Admin adds fellow's work history
  */
-exports.addWorkHistory = function(req, res) {
+exports.addPlacement = function(req, res) {
     var profile = req.profile;
     var company = req.body.company; 
     
     if (profile.role === 'fellow') {
-       var history = new WorkHistory(req.body);
+       var placement = new Placement(req.body);
 
-       Applicant.update(
-         {_id: profile._id },
-         {$push: { 'workHistory':  history } },
-         function (error) {
-             if (error) {
-                return res.send(400, {message: 'Couldn\'t save work history' });
-             } else {
-                // res.jsonp(user);
-                instr.returnJson(res, profile._id);
-             }
+       placement.save(function(err, result) {
+         if (err) {
+              return res.send(400, {
+                  message: 'Couldn\'t add placement'
+              });
+         } else {
+            Applicant.update(
+               {_id: profile._id },
+               {$push: { 'placements':  result } },
+               function (error) {
+                  if (error) {
+                      return res.send(400, {message: 'Couldn\'t save work history' });
+                  } else {
+                      // res.jsonp(user);
+                      instr.returnJson(res, profile._id);
+                  }
+              }
+            );
+              
          }
-       );
+       });
+
     } else {
         return res.send(400, { message: 'Only a fellow\'s work history can be added' });
     }
@@ -619,25 +635,25 @@ exports.addWorkHistory = function(req, res) {
 /**
  * Admin edits fellow's work history
  */
-exports.editWorkHistory = function(req, res) {
-   var history = req.history,
+exports.editPlacement = function(req, res) {
+   var placement = req.placement,
         profile = req.profile;
 
-    history = _.extend(history, req.body);
+    placement = _.extend(placement, req.body);
 
     Applicant.update(
-         {_id: profile._id, 'workHistory._id': history._id },
+         {_id: profile._id, 'placements._id': placement._id },
          {$set: { 
-                  'workHistory.$.company': history.company,
-                  'workHistory.$.jobDescription': history.jobDescription,
-                  'workHistory.$.location': history.location,
-                  'workHistory.$.from': history.from,
-                  'workHistory.$.to': history.to
+                  'placements.$.company': placement.company,
+                  'placements.$.jobDescription': placement.jobDescription,
+                  'placements.$.location': placement.location,
+                  'placements.$.start_date': placement.start_date,
+                  'placements.$.end_date': placement.end_date
                 } 
          },
          function (err) {
              if (err) {
-                return res.send(400, { message: 'error occurred trying to update work history' });
+                return res.send(400, { message: 'error occurred trying to update placement' });
              } else {
                  //res.jsonp(instructor);
                  instr.returnJson(res, profile._id);
@@ -649,25 +665,30 @@ exports.editWorkHistory = function(req, res) {
 /**
  * A particular work history extracted from the whole set 
  */
-exports.oneWorkHistory = function(req, res)  {
-   res.jsonp(req.history);
+exports.getPlacement = function(req, res)  {
+   res.jsonp(req.placement);
+}
+
+exports.getPlacements = function(req, res)  {
+  console.log(req.profile);
+  res.jsonp(req.profile.placements);
 }
 
 /**
  * Admin deletes fellow's work history
  */
-exports.deleteWorkHistory = function(req, res) {
+exports.deletePlacement = function(req, res) {
    var profile = req.profile,
-        history = req.history;
+        placement = req.placement;
 
     
    Applicant.update(
         { _id: profile._id }, 
-        { $pull: { 'workHistory': { '_id': history._id } }  
+        { $pull: { 'placements': { '_id': placement._id } }  
         }, function (err) {
           if (err) {
             return res.send(400, {
-              message: 'Couldn\'t delete work history'
+              message: 'Couldn\'t delete placement'
             });
           } else {
               //res.jsonp(user);
@@ -714,11 +735,16 @@ exports.testRead = function(req, res) {
  * Applicant middleware
  */
 exports.apptByID = function(req, res, next, id)  {
-    Applicant.findById(id).where({_type: 'Applicant'}).exec(function(err, user) {
+    Applicant.findById(id).where({_type: 'Applicant'}).populate('placements').exec(function(err, user) {
         if (err) return next(err);
         if (!user) return next(new Error('User is not an applicant'));
-        req.applicant = user;
-        next();
+        Placement.populate(user.placements, { path:'placement'},
+          function(err, data) {
+            req.applicant = user;
+            next();
+          }
+        );
+        
     });
 };
 
@@ -765,8 +791,8 @@ exports.testByID = function(req, res, next, id) {
 /**
  * Work History middleware
  */
-exports.historyByID = function(req, res, next, id) {
-    req.history = req.profile.workHistory.id(id);
+exports.placementByID = function(req, res, next, id) {
+    req.placement = req.profile.placement.id(id);
     next();
 };
 

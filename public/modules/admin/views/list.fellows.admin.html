@@ -21,8 +21,12 @@
       <h1>Fellows</h1>
     </div>
     <div data-ng-init="listcamps()">
-      <label for="category">View Fellows by Bootcamp </label>
-      <select ng-model="search_filter" ng-options="camp for camp in camp_options"></select><br>
+      <label for="category">Filter Fellows by: </label>
+      <select ng-model="search_filter">
+          <option value="">All BootCamps</option>
+          <option ng-repeat="camp in camp_options" value="{{camp}}">{{camp}}</option>
+      </select>
+      <br>
     </div>
     <div>
       <table class="list list-link">

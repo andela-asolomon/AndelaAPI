@@ -40,13 +40,12 @@
               </strong>
 
             <p data-ng-show="appt.role == 'fellow'">
-              <span data-ng-hide="appt.workHistory.length === 0"><i class="glyphicon glyphicon-gift"></i>   Work History</span>
-              <strong data-ng-repeat="workHist in appt.workHistory">
-                <b>Company: {{workHist.company}}</b><br>
-                <b>Job Description: {{workHist.jobDescription}}</b><br>
-                <b>Location: {{workHist.location}}</b><br>
-                <b>From: {{workHist.from | date : longDate}}</b><br>
-                <b>From: {{workHist.to | date : longDate}}</b>  
+              <span data-ng-hide="appt.placements.length === 0"><i class="glyphicon glyphicon-gift"></i>   Work History</span>
+              <strong data-ng-repeat="placement in appt.placements">
+                <b>Company: {{placement.company}}</b><br>
+                <b>Job Description: {{placement.jobDescription}}</b><br>
+                <b>From: {{placement.start_date | date : longDate}}</b><br>
+                <b>To: {{placement.end_date | date : longDate}}</b>  
               </strong>
             </p>
               <br><br>

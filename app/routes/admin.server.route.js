@@ -52,17 +52,18 @@ module.exports = function(app) {
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteUser);
 
     //current work placement status of a fellow
-    app.route('/admin/fellow/:userId/placement')
-        .put(users.requiresLogin, admin.checkPermission, admin.placementStatus);
+    // app.route('/admin/fellow/:userId/placement')
+    //     .put(users.requiresLogin, admin.checkPermission, admin.placementStatus);
     
-    //for adding work history of fellow
-    app.route('/admin/fellow/:userId/workhist')
-        .post(users.requiresLogin, admin.checkPermission, admin.addWorkHistory);
+    //for adding placements of fellow
+    app.route('/admin/fellow/:userId/placements')
+        .get(users.requiresLogin, admin.checkPermission, admin.getPlacements)
+        .post(users.requiresLogin, admin.checkPermission, admin.addPlacement);
 
-    app.route('/admin/fellow/:userId/workhist/:histId')
-        .get(users.requiresLogin, admin.checkPermission, admin.oneWorkHistory) //one particular past work
-        .put(users.requiresLogin, admin.checkPermission, admin.editWorkHistory)
-        .delete(users.requiresLogin, admin.checkPermission, admin.deleteWorkHistory);
+    app.route('/admin/fellow/:userId/placements/:placementId')
+        .get(users.requiresLogin, admin.checkPermission, admin.getPlacement) //one particular placement
+        .put(users.requiresLogin, admin.checkPermission, admin.editPlacement)
+        .delete(users.requiresLogin, admin.checkPermission, admin.deletePlacement);
     
     //create and list bootcamps
     app.route('/admin/camp')
@@ -121,6 +122,6 @@ module.exports = function(app) {
     // Finish by binding the question middleware
     app.param('questId', admin.questByID);
 
-    // Finish by binding the history middleware
-    app.param('histId', admin.historyByID);
+    // Finish by binding the placement middleware
+    app.param('placementId', admin.placementByID);
  };

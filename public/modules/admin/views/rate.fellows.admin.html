@@ -141,43 +141,11 @@
       </form>
 
 
+
       <form data-ng-submit='addPlacement()' class="basic-grey placement" autocomplete="off">
         <fieldset>
           <p>
-            <span>Add Current Placement</span>
-          </p>
-          <label class="placement">
-              <span>Current Placement:</span>
-              <input type="text" data-ng-model="data.status" id="placement" required>
-          </label>
-          <div class="dates">
-          <label class="startDate">
-              <span>Start Date:</span>
-              <input type="text" data-ng-model="data.startDate" id="startDate" placeholder="M/DD/YY" required>
-          </label>
-          </div>
-
-          <div class="dates">
-          <label class="endDate">
-              <span>End Date:</span>
-              <input type="text" data-ng-model="data.endDate" id="endDate" placeholder="M/DD/YY" required>
-          </label>
-          </div>
-
-          <button type="submit" class="btn btn-xs btn-primary">Add Placement</button>
-
-          <div data-ng-show="error" class="text-center text-danger">
-              <strong data-ng-bind="error"></strong>
-          </div>
-
-        </fieldset>
-      </form>
-
-
-      <form data-ng-submit='addWorkHistory()' class="basic-grey placement" autocomplete="off">
-        <fieldset>
-          <p>
-            <span>Add Work History</span>
+            <span>Add Work Placement</span>
           </p>
           <label class="company">
               <span>Company:</span>
@@ -189,22 +157,17 @@
               <input type="text" data-ng-model="data.jobDescription" id="jobDescription" required>
           </label>
 
-          <label class="location">
-              <span>Location:</span>
-              <input type="text" data-ng-model="data.location" id="location" required>
-          </label>
-
           <div class="from">
           <label class="startDate">
               <span>From:</span>
-              <input type="text" data-ng-model="data.from" id="from" placeholder="M/DD/YY" required>
+              <input type="text" data-ng-model="data.start_date" id="from" placeholder="M/DD/YY" required>
           </label>
           </div>
 
           <div class="to">
           <label class="endDate">
               <span>To:</span>
-              <input type="text" data-ng-model="data.to" id="to" placeholder="M/DD/YY" required>
+              <input type="text" data-ng-model="data.end_date" id="to" placeholder="M/DD/YY" required>
           </label>
           </div>
 

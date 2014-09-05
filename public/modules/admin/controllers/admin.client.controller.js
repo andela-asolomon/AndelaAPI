@@ -14,7 +14,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.questions=[];
     $scope.selected = '', $scope.testName = '',$scope.answered = false;
     $scope.answeredTwo = false;
-    $scope.camp_options = [''];
+    $scope.camp_options = [];
 
     $scope.setShow = function(val) {
       $scope.selected = val;
@@ -576,21 +576,21 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
-    $scope.addPlacement = function() {
-      $http.put('/admin/fellow/' + $stateParams.apptId + '/placement', $scope.data).success(function(response) {
-        // If successful show success message and clear form
-        $scope.success = true;
-        $scope.appt = response;
-        console.log('Success - Done', response);
+    // $scope.addPlacement = function() {
+    //   $http.put('/admin/fellow/' + $stateParams.apptId + '/placement', $scope.data).success(function(response) {
+    //     // If successful show success message and clear form
+    //     $scope.success = true;
+    //     $scope.appt = response;
+    //     console.log('Success - Done', response);
         
-      }).error(function(response) {
-        $scope.error = response.message;
-        if ($scope.error.type === 'date'){
-          $scope.error = "Please follow the date pattern specified M/D/YY e.g (use 2/5/2014 for 5th Feb 2014)"
-        }
-        console.log('Error - can not');
-      });
-    };
+    //   }).error(function(response) {
+    //     $scope.error = response.message;
+    //     if ($scope.error.type === 'date'){
+    //       $scope.error = "Please follow the date pattern specified M/D/YY e.g (use 2/5/2014 for 5th Feb 2014)"
+    //     }
+    //     console.log('Error - can not');
+    //   });
+    // };
     
 
     $scope.rateFellow = function() {
@@ -608,16 +608,15 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       });
     };
 
-    $scope.addWorkHistory = function() {
+    $scope.addPlacement = function() {
       console.log($stateParams.apptId);
-      $http.post('/admin/fellow/' + $stateParams.apptId + '/workhist', $scope.data).success(function(response) {
+      $http.post('/admin/fellow/' + $stateParams.apptId + '/placements', $scope.data).success(function(response) {
         
         // If successful show success message and clear form
         $scope.data.company = '';
         $scope.data.jobDescription ='' ;
-        $scope.data.location = '';
-        $scope.data.from = '';
-        $scope.data.to = '';
+        $scope.data.start_date = '';
+        $scope.data.end_date = '';
 
         $scope.appt = response;
         console.log('Success - Done', response);

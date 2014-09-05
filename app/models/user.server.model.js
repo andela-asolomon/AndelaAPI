@@ -117,7 +117,7 @@ var AssessmentSchema = new Schema({
 /**
  * Work History Schema
  */
-var WorkHistorySchema = new Schema({
+var PlacementSchema = new Schema({
  	company: {
  		type: String,
  		trim: true,
@@ -127,15 +127,11 @@ var WorkHistorySchema = new Schema({
  		type: String,
         required: 'Job description is important'
  	},
- 	location: {
- 		type: String,
- 		required: 'Job location is important'
- 	},
- 	from: {
+ 	start_date: {
  		type: Date,
  		required: 'Start date is important'
  	},
- 	to: {
+ 	end_date: {
  		type: Date,
  		required: 'End date is important'
  	}
@@ -182,19 +178,8 @@ var WorkHistorySchema = new Schema({
  		type: Schema.ObjectId,
  		ref: 'Bootcamp'
  	},
- 	currPlacement: {
- 		status: {
- 			type: String
- 		},
- 		startDate: {
-            type: Date
- 		},
- 		endDate: {
-            type: Date
- 		}
- 	},
  	assessments: [AssessmentSchema],
- 	workHistory: [WorkHistorySchema]
+ 	placements: [{ type: Schema.Types.ObjectId, ref: 'Placement' }]
 });
 
 /**
@@ -375,10 +360,10 @@ InstructorSchema.statics.findUniqueUsername = function(username, suffix, callbac
 	});
 };
 
+mongoose.model('Placement', PlacementSchema);
 mongoose.model('User', UserSchema);
 mongoose.model('Applicant', ApplicantSchema);
 mongoose.model('Instructor', InstructorSchema);
 mongoose.model('Bootcamp', BootcampSchema);
 mongoose.model('Skillset', SkillsetSchema);
 mongoose.model('Assessment', AssessmentSchema);
-mongoose.model('WorkHistory', WorkHistorySchema);
