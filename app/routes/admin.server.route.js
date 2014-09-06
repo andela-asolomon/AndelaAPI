@@ -74,6 +74,35 @@ module.exports = function(app) {
         .get(users.requiresLogin, admin.checkPermission, admin.read) //one particular bootcamp
         .put(users.requiresLogin, admin.checkPermission, admin.editCamp)
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteCamp);
+
+    //create and get skill categories
+    app.route('/admin/skillCategories')
+        .get(users.requiresLogin, admin.checkPermission, admin.listSkillCategories)
+        .post(users.requiresLogin, admin.checkPermission, admin.createSkillCategory);
+
+    //edit and delete skill categories
+    app.route('/admin/skillCategories/:skillCategoryId')
+        .get(users.requiresLogin, admin.checkPermission, admin.getSkillCategory)
+        .put(users.requiresLogin, admin.checkPermission, admin.updateSkillCategory);
+        //.delete(users.requiresLogin, admin.checkPermission, admin.deleteSkillCategory);
+
+    //Skills API
+    app.route('/admin/skills')
+        .get(users.requiresLogin, admin.checkPermission, admin.listSkills);
+
+    app.route('/admin/skillCategories/:skillCategoryId/skills')
+        .get(users.requiresLogin, admin.checkPermission, admin.listSkillsByCategory)
+        .post(users.requiresLogin, admin.checkPermission, admin.createSkill);
+
+    //add a skill rating to fellows
+    app.route('/admin/trainee/:traineeId/skills/:skillId')
+        .post(users.requiresLogin, admin.checkPermission, instr.rateFellow)
+        .put(users.requiresLogin, admin.checkPermission, instr.editFellowRating);
+
+    // app.route('/admin/trainee/:traineeId/rate/:skillId')
+    //     .put(users.requiresLogin, admin.checkPermission, instr.editRating)
+    //     .delete(users.requiresLogin, admin.checkPermission, instr.deleteRating);
+
     
     //list and create tests
     app.route('/admin/test')
@@ -97,13 +126,6 @@ module.exports = function(app) {
     app.route('/admin/test/:testId/:questId/:optionId')
         .delete(users.requiresLogin, admin.checkPermission, admin.deleteOption);
 
-    app.route('/admin/trainee/:traineeId/rate')
-        .post(users.requiresLogin, admin.checkPermission, instr.rateFellow);
-
-    app.route('/admin/trainee/:traineeId/rate/:skillId')
-        .put(users.requiresLogin, admin.checkPermission, instr.editRating)
-        .delete(users.requiresLogin, admin.checkPermission, instr.deleteRating);
-
     // Finish by binding the applicant middleware
     app.param('apptId', admin.apptByID);
 
@@ -124,4 +146,8 @@ module.exports = function(app) {
 
     // Finish by binding the placement middleware
     app.param('placementId', admin.placementByID);
- };
+
+    // Finish by binding the skill category middleware
+    app.param('skillCategoryId', admin.skillCategoryByID);
+    app.param('skillId', admin.skillById);
+};

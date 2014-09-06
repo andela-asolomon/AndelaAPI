@@ -11,6 +11,8 @@ var mongoose = require('mongoose'),
     Bootcamp = mongoose.model('Bootcamp'),
     Options = mongoose.model('Options'),
     Placement = mongoose.model('Placement'),
+    SkillCategory = mongoose.model('SkillCategory'),
+    Skill = mongoose.model('Skill'),
     path = require('path'),
     _ = require('lodash');
 
@@ -732,6 +734,96 @@ exports.testRead = function(req, res) {
 };
 
 /**
+* Skills
+*/
+exports.listSkillCategories = function(req, res){
+  SkillCategory.find().sort('-created').exec(function(err, skillCategories) {
+        if (err) {
+            return res.send(400, {
+                message: 'could not list skillCategories'
+            });
+        } else {
+            res.jsonp(skillCategories);
+        }
+    });
+
+};
+
+exports.createSkillCategory = function(req, res){
+  var skillCategory = new SkillCategory(req.body);
+  skillCategory.save(function(err, result) {
+         if (err) {
+              return res.send(400, {
+                  message: 'Couldn\'t create skillCategory'
+              });
+         } else {
+            res.jsonp(result); 
+         }
+       });
+};
+
+exports.getSkillCategory = function(req, res){
+  res.jsonp(req.skillCategory);
+};
+
+exports.updateSkillCategory = function(req, res){
+  SkillCategory.update(
+         {_id: req.skillCategory._id},
+         {$set: {name: req.body.name}},
+         function (err) {
+             if (err) {
+                return res.send(400, { message: 'error occurred trying to update skill category' });
+             } else {
+                req.skillCategory.name = req.body.name;
+                res.jsonp(req.skillCategory);
+             }
+         }
+    );
+
+};
+
+exports.listSkills = function(req, res){
+  Skill.find().populate('category').exec(function(err, skills) {
+        if (err) {
+            return res.send(400, {
+                message: 'could not list skillCategories'
+            });
+        } else {
+            res.jsonp(skills);
+        }
+    });
+};
+
+exports.listSkillsByCategory = function(req, res){
+  Skill.find().where('category').equals(req.skillCategory._id).exec(function(err, skills){
+        if (err) {
+            return res.send(400, {
+                message: 'could not list skills'
+            });
+        } else {
+            res.jsonp(skills);
+        }
+  });
+};
+
+exports.createSkill = function(req, res){
+  var skill = new Skill({name: req.body.name, category: req.skillCategory._id});
+  skill.save(function(err, result) {
+     if (err) {
+          return res.send(400, {
+              message: 'Couldn\'t create skill'
+          });
+     } else {
+        res.jsonp(result); 
+     }
+  });
+};
+
+
+
+/****************************** MIDDLEWARE ******************************************/
+
+/**
  * Applicant middleware
  */
 exports.apptByID = function(req, res, next, id)  {
@@ -802,4 +894,25 @@ exports.placementByID = function(req, res, next, id) {
 exports.questByID = function(req, res, next, id) {
     req.question = req.test.questions.id(id);
     next();
+};
+
+/**
+ * SKill Category middleware
+ */
+exports.skillCategoryByID = function(req, res, next, id) {
+    SkillCategory.findById(id).exec(function(err, skillCategory) {
+        if (err) return next(err);
+        if (!skillCategory) return next(new Error('Failed to load category ' + id));
+        req.skillCategory = skillCategory;
+        next();
+    });
+};
+
+exports.skillById = function(req, res, next, id) {
+    Skill.findById(id).populate('category').exec(function(err, skill) {
+        if (err) return next(err);
+        if (!skill) return next(new Error('Failed to load skill ' + id));
+        req.skill = skill;
+        next();
+    });
 };

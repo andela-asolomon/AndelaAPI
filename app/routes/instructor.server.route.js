@@ -71,5 +71,5 @@ module.exports = function(app) {
     app.param('assmtId', instr.assessmentByID);
 
     // Finish by binding the skillset middleware
-    app.param('skillId', instr.skillByID);
- };
+    app.param('skillId', admin.skillById);
+};

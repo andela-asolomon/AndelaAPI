@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
     Applicant = mongoose.model('Applicant'),
     User = mongoose.model('User'),
     Bootcamp = mongoose.model('Bootcamp'),
-    Skillset = mongoose.model('Skillset'),
+    SkillCategory = mongoose.model('SkillCategory'),
+    Skill = mongoose.model('Skill'),
     _ = require('lodash');
 var users = require('../../app/controllers/users');
 var uuid = require('node-uuid'),
@@ -136,35 +137,161 @@ exports.selectFellow = function(req, res){
 /*
 *Rate a fellow's skill
 */
-exports.rateFellow = function(req, res) {
-	var skillset = req.body,
-        fellow = req.trainee;
 
-    if (fellow.role !== 'fellow') {
+var summarizeFellowSkills = function(fellow){
+	var categories;
+	SkillCategory.find().exec(function(err, data){
+		categories = data;
+		var categoriesLength = categories.length;
+		var skillSummary = {};
+
+		for(var i = 0; i < categoriesLength; i++){
+			//find all skills with category and calculate average
+			var averageRating = 0,
+				sumRating     = 0,
+				numRating     = 0;
+
+			for(var j = 0; j < fellow.skillSet.length; j++){
+				if(categories[i]._id === fellow.skillSet[j].skill.category){
+					numRating ++;
+					sumRating = sumRating + fellow.skillSet[j].rating;
+				}
+			}
+
+			averageRating = sumRating / numRating;
+			skillSummary[categories[i].name] = averageRating;
+		}
+
+		return skillSummary;
+	});
+	
+
+};
+
+exports.rateFellow = function(req, res) {
+	var skill = {skill: req.skill, rating: req.body.rating},
+        fellow = req.trainee;
+    fellow.skillSet.push(skill);
+    var skillSummary = summarizeFellowSkills(fellow);
+    
+
+    SkillCategory.find().exec(function(err, data){
+		var categories = data;
+		var categoriesLength = categories.length;
+		var skillSummary = {};
+
+		for(var i = 0; i < categoriesLength; i++){
+			//find all skills with category and calculate average
+			var averageRating = 0,
+				sumRating     = 0,
+				numRating     = 0;
+
+			for(var j = 0; j < fellow.skillSet.length; j++){
+				if(categories[i]._id === fellow.skillSet[j].skill.category){
+					numRating ++;
+					sumRating = sumRating + fellow.skillSet[j].rating;
+				}
+			}
+
+			averageRating = sumRating / numRating;
+			skillSummary[categories[i].name] = averageRating;
+		}
+
+		if (fellow.role !== 'fellow') {
     	return res.send(400, {
 			   message: 'Error: You can only rate a fellow\'s skills'
 	    });
-    } else if (req.body.rating < 1 || req.body.rating > 10) {
-		return res.send(400, {
-			   message: 'Error: rating is a 10 point system'
-	    });
-	} else {
-		Applicant.update(
-		    { _id: fellow._id }, 
-		    { $push: { 'skillSets':  skillset }
-		    }, 
-		    function (err) {
-		    	if (err) {
-					return res.send(400, {
-						message: 'Error: Couldn\'t rate fellow'
-					});
-				} else {
-					//res.jsonp(fellow);
-					exports.returnJson(res, fellow._id);
+	    } else if (req.body.rating < 1 || req.body.rating > 10) {
+			return res.send(400, {
+				   message: 'Error: rating is a 10 point system'
+		    });
+		} else {
+			Applicant.update(
+			    { _id: fellow._id }, 
+			    { $push: { 'skillSet':  skill },
+			      $set: { 'skillSummary':  skillSummary }
+			    }, 
+			    function (err) {
+			    	if (err) {
+						return res.send(400, {
+							message: 'Error: Couldn\'t rate fellow'
+						});
+					} else {
+						//res.jsonp(fellow);
+						exports.returnJson(res, fellow._id);
+					}
+		        }
+	        );
+		}
+
+		
+	});
+};
+
+exports.editFellowRating = function(req, res) {
+	var skill = {skill: req.skill, rating: req.body.rating},
+        fellow = req.trainee;
+    var skillSummary;
+
+    SkillCategory.find().exec(function(err, data){
+		var categories = data;
+		var categoriesLength = categories.length;
+		var skillSummary = {};
+
+		for(var i = 0; i < categoriesLength; i++){
+			//find all skills with category and calculate average
+			var averageRating = 0,
+				sumRating     = 0,
+				numRating     = 0;
+
+			for(var j = 0; j < fellow.skillSet.length; j++){
+				if(categories[i]._id.toString() === fellow.skillSet[j].skill.category.toString()){
+					if(req.skill._id.toString() === fellow.skillSet[j].skill._id.toString()){
+						numRating ++;
+						sumRating = sumRating + req.body.rating;
+					}
+					else{
+						numRating ++;
+						sumRating = sumRating + fellow.skillSet[j].rating;
+					}
 				}
-	        }
-        );
-	}
+			}
+
+			averageRating = sumRating / numRating;
+			skillSummary[categories[i].name] = averageRating;
+		}
+
+		if (fellow.role !== 'fellow') {
+    	return res.send(400, {
+			   message: 'Error: You can only rate a fellow\'s skills'
+	    });
+	    } else if (req.body.rating < 1 || req.body.rating > 10) {
+			return res.send(400, {
+				   message: 'Error: rating is a 10 point system'
+		    });
+		} else {
+			Applicant.update(
+		         {_id: fellow._id, 'skillSet.skill': req.skill._id},
+		         {$set: { 
+		                  'skillSet.$.rating': req.body.rating,
+		                  'skillSummary':  skillSummary
+		                } 
+		         },
+		         function (err, changes) {
+		             if (err) {
+		                return res.send(400, { message: 'error occurred trying to update skill rating' });
+		             } else {
+		                 exports.returnJson(res, fellow._id);
+		             }
+		         }
+		    );
+		}
+
+		
+	});
+
+
+    
 };
 
 /*
@@ -294,24 +421,12 @@ exports.readTrainee = function(req, res) {
 * Particular trainee middleware
 */
 exports.traineeByID = function(req, res, next, id){   
-    Applicant.findById(id).where({_type: 'Applicant'}).populate('campId').exec(function(err, trainee) {
+    Applicant.findById(id).where({_type: 'Applicant'}).populate('campId').populate('skillSet.skill').exec(function(err, trainee) {
 		if (err) return next(err);
 		if (!trainee) return next(new Error('Failed to load trainee ' + id));
 		req.trainee = trainee;
 		next();
 	});
-};
-
-/**
-* Particular skillset middleware
-*/
-exports.skillByID = function(req, res, next, id){   
-	if (req.profile && req.profile._type === 'Instructor') {
-		req.skill = req.profile.skillSets.id(id);
-	} else {
-        req.skill = req.trainee.skillSets.id(id);
-	}
-    next();
 };
 
 
