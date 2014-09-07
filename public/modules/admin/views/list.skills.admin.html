@@ -1,0 +1,37 @@
+<section data-ng-controller="AdminController" data-ng-init="listSkills()" class="pad">
+    <div class="container" data-ng-show="user.role === 'admin'">
+
+    <ng-include src='"/modules/admin/views/admin.sidebar.html"'></ng-include>
+
+    <div class="admin-view">
+        <div class="page-header text-center">
+          <h1>Skills</h1>
+        </div>
+        <div class="pull-right" data-ng-init="getSkillCategories()">
+            <button class="btn btn-xs btn-primary" ng-click="openSkillModal()">Add New Skill</button>
+        </div>
+      
+        <div>
+            <table class="list list-link">
+                <thead>
+                  <tr>
+                    <th>Skill</th>
+                    <th>Category</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr data-ng-repeat="skill in skills">
+                        <td data-ng-bind="skill.name"></td>                      
+                        <td data-ng-bind="skill.category.name"></td>
+                    </tr>               
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+
+    <div class="container" data-ng-show="user.role !== 'admin'">
+      <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
+    </div>
+
+</section>

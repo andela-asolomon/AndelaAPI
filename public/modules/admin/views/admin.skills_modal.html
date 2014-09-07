@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h3 class="modal-title">Create New Skill</h3>
+</div>
+<div class="modal-body">
+      <form ng-hide="createCategory" data-ng-submit='createSkill()' autocomplete="off">
+        <fieldset>
+          <label class="skill">
+              <span>Name:</span>
+              <input type="text" data-ng-model="data.name" id="name" required>
+          </label>
+          <label for="category">Category: </label>
+          <select ng-model="data.category" ng-options="category.name for category in categories" ng-required></select>
+
+          <button type="submit" class="btn btn-xs btn-primary">Submit</button>
+
+        </fieldset>
+      </form>
+
+      <div ng-hide="createCategory">
+        </br>
+      	<button  class="btn btn-xs btn-primary" ng-click="showCreateCategory()">Add New Skill</button>
+  	  </div>
+
+      <form ng-show="createCategory" data-ng-submit='createSkillCategory()' autocomplete="off">
+        <fieldset>
+          <label class="skill">
+              <span>Name:</span>
+              <input type="text" data-ng-model="data.name" id="name" required>
+          </label>
+
+          <button type="submit" class="btn btn-xs btn-primary">Submit</button>
+
+        </fieldset>
+      </form>
+    
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+</div>

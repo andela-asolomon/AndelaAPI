@@ -80,6 +80,10 @@ angular.module('admin').config(['$stateProvider',
     state('addQueTest', {
       url: '/admin/test/add/:testId',
       templateUrl: 'modules/admin/views/admin.add-question.test.html'
+    }).
+    state('listSkills', {
+      url: '/admin/skills',
+      templateUrl: 'modules/admin/views/list.skills.admin.html'
     });
   }
 ]);
