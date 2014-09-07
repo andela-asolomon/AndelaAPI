@@ -826,7 +826,7 @@ exports.createSkill = function(req, res){
  * Applicant middleware
  */
 exports.apptByID = function(req, res, next, id)  {
-    Applicant.findById(id).where({_type: 'Applicant'}).populate('placements').exec(function(err, user) {
+    Applicant.findById(id).where({_type: 'Applicant'}).populate('placements').populate('skillSet.skill').exec(function(err, user) {
         if (err) return next(err);
         if (!user) return next(new Error('User is not an applicant'));
         Placement.populate(user.placements, { path:'placement'},

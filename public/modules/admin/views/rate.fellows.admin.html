@@ -9,45 +9,38 @@
         <li>Name: <b data-ng-bind="appt.firstName"></b>
         <b data-ng-bind="appt.lastName"></b></li>
         <li>Email: <b data-ng-bind="appt.email"></b></li>
-        <li>Usename: <b data-ng-bind="appt.username"></b></li>
-        <li data-ng-show="appt.skillSets">Skillset(s): 
-          <ul class="skillset" data-ng-repeat="skill in appt.skillSets">
-            <li>
-              <div ng-hide="skillNameEditorEnabled[$index]">
-                <b>{{skill.skill}} <a href="" ng-click="enableskillEditor('skillName', $index)">Edit</a></b>
-              </div>
-
-              <div ng-show="skillNameEditorEnabled[$index]">
-                <input type="text" ng-model="editableSkillName[$index]" ng-show="skillNameEditorEnabled[$index]">
-                <a href="" ng-click="saveskill('skillName', $index)">Save</a>
-                or
-                <a href="" ng-click="disableskillEditor('skillName', $index)">Cancel</a>.
-              </div>
-
-              <div ng-hide="skillScoreEditorEnabled[$index]">
-                <b>{{skill.rating}} <a href="" ng-click="enableskillEditor('skillScore', $index)">Edit</a></b>
-              </div>
-
-              <div ng-show="skillScoreEditorEnabled[$index]">
-                <select data-ng-model="editableSkillScore[$index]" ng-show="skillScoreEditorEnabled[$index]">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                </select>
-                
-                <a href="" ng-click="saveskill('skillScore', $index)">Save</a>
-                or
-                <a href="" ng-click="disableskillEditor('skillScore', $index)">Cancel</a>.
-              </div>
-            </li>
-          </ul>
+        <li>Username: <b data-ng-bind="appt.username"></b></li>
+        <li data-ng-show="appt.skillSet">Skillset(s): 
+          <div>
+            <table class="list list-link">
+              <thead>
+                <tr>
+                  <th>Skill</th>
+                  <th>Rating</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr data-ng-repeat="skillObject in appt.skillSet">
+                  <td>{{skillObject.skill.name}}</td>
+                  <td>{{skillObject.rating}}</td>
+                  <td>
+                    <form data-ng-submit='rateFellow(appt._id, skillObject.skill._id, skillObject.updatedRating)' class="form_trainee signin form-horizontal" autocomplete="off">
+                      <fieldset>
+                        <div class="form-group">
+                          <select data-ng-model="skillObject.updatedRating" id="rating">
+                            <option ng-repeat="n in [] | range:11" value="{{$index}}">{{$index}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                        <button type="submit" class="btn btn-xs btn-primary">Update Rating</button>
+                        </div>
+                      </fieldset>
+                    </form>
+                  </td>
+              </tr>
+            </table>
+          </div>
         </li>
 
         <li data-ng-show="appt.currPlacement">Current Placement:
@@ -99,36 +92,6 @@
           </ol>
         </li>
       </ul>
-
-
-      <form data-ng-submit='rateFellow()' class="basic-grey skill" autocomplete="off">
-        <fieldset>
-        <p><span>Add new skill</span></p>
-          <label class="skill">
-              <span>Skill:</span>
-              <input type="text" data-ng-model="data.skill" id="skill" required>
-          </label>
-
-          <label class="inline" for="category"><span>Rate:</span>
-              <select data-ng-model="data.rating" id="category" ng-init="data.rating = 1">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
-          </label>
-
-          <button type="submit" class="btn btn-xs btn-primary">Submit Rating</button>
-
-        </fieldset>
-      </form>
-
 
 
       <form data-ng-submit='addPlacement()' class="basic-grey placement" autocomplete="off">

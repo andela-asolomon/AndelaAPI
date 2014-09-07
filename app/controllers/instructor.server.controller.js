@@ -18,7 +18,7 @@ var path = require('path'),
     fs = require('fs');
 
 exports.returnJson = function(res, id) {
-    Applicant.findById(id).where({_type: 'Applicant'}).exec(function(err, user) {
+    Applicant.findById(id).where({_type: 'Applicant'}).populate('skillSet.skill').exec(function(err, user) {
        res.jsonp(user);
     });
 };

@@ -556,11 +556,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     // };
     
 
-    $scope.rateFellow = function() {
-      $http.post('/admin/trainee/' + $stateParams.apptId + '/rate', $scope.data).success(function(response) {
-        // If successful show success message and clear form
-        $scope.data.skill = "";
-        // $scope.data.rating = 1;
+    $scope.rateFellow = function(traineeId, skillId, newRating) {
+      var url = '/admin/trainee/' + traineeId + '/skills/' + skillId;
+      $http.put(url, {rating: newRating}).success(function(response) {
         $scope.success = true;
         $scope.appt = response;
         console.log('Success - Done', response);
