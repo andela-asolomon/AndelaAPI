@@ -40,10 +40,10 @@ module.exports = function(app) {
     //     .put(users.requiresLogin, instr.checkRights, instr.updateExp);
 
     //instructor can edit and delete his own rating
-    app.route('/instr/skill/:userId/:skillId')
-        .put(users.requiresLogin, instr.checkRights, instr.editRating)
-        .delete(users.requiresLogin, instr.checkRights, instr.deleteRating);
-        // not done
+    // app.route('/instr/skill/:userId/:skillId')
+    //     .put(users.requiresLogin, instr.checkRights, instr.editRating)
+    //     .delete(users.requiresLogin, instr.checkRights, instr.deleteRating);
+    //     // not done
 
     app.route('/instr/camp/:campId')
         .get(users.requiresLogin, instr.checkRights, admin.read);
@@ -57,12 +57,12 @@ module.exports = function(app) {
         .put(users.requiresLogin, instr.checkRights, instr.isCreator, instr.updateAssmt)
         .delete(users.requiresLogin, instr.checkRights, instr.isCreator, instr.deleteAssmt);
 
-    app.route('/instr/trainee/:traineeId/rate')
-         .post( users.requiresLogin, instr.checkRights, instr.rateFellow);
+    // app.route('/instr/trainee/:traineeId/rate')
+    //      .post( users.requiresLogin, instr.checkRights, instr.rateFellow);
     
-    app.route('/instr/trainee/:traineeId/rate/:skillId')
-        .put(users.requiresLogin, instr.checkRights, instr.editRating)
-        .delete(users.requiresLogin, instr.checkRights, instr.deleteRating);
+    // app.route('/instr/trainee/:traineeId/rate/:skillId')
+    //     .put(users.requiresLogin, instr.checkRights, instr.editRating)
+    //     .delete(users.requiresLogin, instr.checkRights, instr.deleteRating);
 
     // Finish by binding the trainee middleware
     app.param('traineeId', instr.traineeByID);

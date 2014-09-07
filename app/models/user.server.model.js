@@ -289,6 +289,56 @@ BootcampSchema.pre('save', function(next) {
     
 });
 
+SkillSchema.post('save', function(next){
+    var skill = this;
+    var Applicant = mongoose.model('Applicant');
+    Applicant.find().exec(function(err, applicants){
+        applicants.forEach(function(applicant) {
+            Applicant.update(
+                { _id: applicant._id },
+                { $push: { 'skillSet': {skill: skill._id, rating: 0} }
+                }, function (err) {
+                    if (err) {
+                        return {
+                            message: 'Couldn\'t add skill to applicant'
+                        };
+                    }
+                }
+           );
+        });
+    });
+});
+
+ApplicantSchema.post('save', function(next){
+    var applicant = this;
+    var Skill = mongoose.model('Skill');
+    var Applicant = mongoose.model('Applicant');
+    //Initialize skill summary
+    var SkillCategory = mongoose.model('SkillCategory');
+    var skillSummary = {};
+    SkillCategory.find().exec(function(err, skillCategories){
+        skillCategories.forEach(function(category) {
+            skillSummary[category.name] = 0;
+        });
+        Skill.find().exec(function(err, skills){
+            skills.forEach(function(skill) {
+                Applicant.update(
+                    { _id: applicant._id },
+                    { $push: { 'skillSet': {skill: skill._id, rating: 0}},
+                      $set: { 'skillSummary': skillSummary }
+                    }, function (err) {
+                        if (err) {
+                            return {
+                                message: 'Couldn\'t add skill to applicant'
+                            };
+                        }
+                    }
+               );
+            });
+        });
+    });
+});
+
 /**
  * Create instance method for hashing a password
  */

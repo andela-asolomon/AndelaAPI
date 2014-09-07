@@ -138,96 +138,6 @@ exports.selectFellow = function(req, res){
 *Rate a fellow's skill
 */
 
-var summarizeFellowSkills = function(fellow){
-	var categories;
-	SkillCategory.find().exec(function(err, data){
-		categories = data;
-		var categoriesLength = categories.length;
-		var skillSummary = {};
-
-		for(var i = 0; i < categoriesLength; i++){
-			//find all skills with category and calculate average
-			var averageRating = 0,
-				sumRating     = 0,
-				numRating     = 0;
-
-			for(var j = 0; j < fellow.skillSet.length; j++){
-				if(categories[i]._id === fellow.skillSet[j].skill.category){
-					numRating ++;
-					sumRating = sumRating + fellow.skillSet[j].rating;
-				}
-			}
-
-			averageRating = sumRating / numRating;
-			skillSummary[categories[i].name] = averageRating;
-		}
-
-		return skillSummary;
-	});
-	
-
-};
-
-exports.rateFellow = function(req, res) {
-	var skill = {skill: req.skill, rating: req.body.rating},
-        fellow = req.trainee;
-    fellow.skillSet.push(skill);
-    var skillSummary = summarizeFellowSkills(fellow);
-    
-
-    SkillCategory.find().exec(function(err, data){
-		var categories = data;
-		var categoriesLength = categories.length;
-		var skillSummary = {};
-
-		for(var i = 0; i < categoriesLength; i++){
-			//find all skills with category and calculate average
-			var averageRating = 0,
-				sumRating     = 0,
-				numRating     = 0;
-
-			for(var j = 0; j < fellow.skillSet.length; j++){
-				if(categories[i]._id === fellow.skillSet[j].skill.category){
-					numRating ++;
-					sumRating = sumRating + fellow.skillSet[j].rating;
-				}
-			}
-
-			averageRating = sumRating / numRating;
-			skillSummary[categories[i].name] = averageRating;
-		}
-
-		if (fellow.role !== 'fellow') {
-    	return res.send(400, {
-			   message: 'Error: You can only rate a fellow\'s skills'
-	    });
-	    } else if (req.body.rating < 1 || req.body.rating > 10) {
-			return res.send(400, {
-				   message: 'Error: rating is a 10 point system'
-		    });
-		} else {
-			Applicant.update(
-			    { _id: fellow._id }, 
-			    { $push: { 'skillSet':  skill },
-			      $set: { 'skillSummary':  skillSummary }
-			    }, 
-			    function (err) {
-			    	if (err) {
-						return res.send(400, {
-							message: 'Error: Couldn\'t rate fellow'
-						});
-					} else {
-						//res.jsonp(fellow);
-						exports.returnJson(res, fellow._id);
-					}
-		        }
-	        );
-		}
-
-		
-	});
-};
-
 exports.editFellowRating = function(req, res) {
 	var skill = {skill: req.skill, rating: req.body.rating},
         fellow = req.trainee;
@@ -248,11 +158,11 @@ exports.editFellowRating = function(req, res) {
 				if(categories[i]._id.toString() === fellow.skillSet[j].skill.category.toString()){
 					if(req.skill._id.toString() === fellow.skillSet[j].skill._id.toString()){
 						numRating ++;
-						sumRating = sumRating + req.body.rating;
+						sumRating = sumRating + parseInt(req.body.rating);
 					}
 					else{
 						numRating ++;
-						sumRating = sumRating + fellow.skillSet[j].rating;
+						sumRating = sumRating + parseInt(fellow.skillSet[j].rating);
 					}
 				}
 			}
@@ -265,7 +175,7 @@ exports.editFellowRating = function(req, res) {
     	return res.send(400, {
 			   message: 'Error: You can only rate a fellow\'s skills'
 	    });
-	    } else if (req.body.rating < 1 || req.body.rating > 10) {
+	    } else if (req.body.rating < 0 || req.body.rating > 10) {
 			return res.send(400, {
 				   message: 'Error: rating is a 10 point system'
 		    });
@@ -289,8 +199,6 @@ exports.editFellowRating = function(req, res) {
 
 		
 	});
-
-
     
 };
 
@@ -324,90 +232,6 @@ exports.addSkills = function(req, res) {
 	});
 };
 
-/*
-*Edit a fellow's rating
-*/
-exports.editRating = function(req, res) {
-	var skillset = req.skill,
-        fellow = req.trainee;
-
-    skillset = _.extend(skillset, req.body);
-    if (req.profile) { //if instructor wants to edit his own skills
-    	Instructor.update({'_id': req.profile._id, 'skillSets._id': skillset._id}, 
-	      {$set: 
-	      	  { 'skillSets.$.skill' : skillset.skill,
-	            'skillSets.$.rating' : skillset.rating
-	      	  }
-
-	      }, 
-          function(err) {
-          	  if (err) {
-                 return res.send(400, {message: 'could not edit rating' });
-              } else {
-                 //res.jsonp(user);
-                 exports.returnJson(res, req.profile._id);
-              }
-          }
-        ); 
-    } else { //for instructor to edit fellow's rating
-	    Applicant.update({'_id': fellow._id, 'skillSets._id': skillset._id}, 
-	      {$set: 
-	      	  { 'skillSets.$.skill' : skillset.skill,
-	            'skillSets.$.rating' : skillset.rating
-	      	  }
-
-	      }, 
-          function(err) {
-          	  if (err) {
-                 return res.send(400, { message: 'could not edit rating' });
-              } else {
-                 //res.jsonp(fellow);
-                 exports.returnJson(res, fellow._id);
-              }
-          }
-        ); 
-	}
-};
-
-/*
-*Delete a rating
-*/
-exports.deleteRating = function(req, res){
-	var skillset = req.skill,
-        fellow = req.trainee;
-
-    if (req.profile) {	
-		Instructor.update(
-		    { _id: req.profile._id }, 
-		    { $pull: { 'skillSets': { '_id': skillset._id } }  
-		    }, function (err) {
-		    	if (err) {
-					return res.send(400, {
-						message: 'could not delete rating'
-					});
-				} else {
-					//res.jsonp(user);
-					exports.returnJson(res, req.profile._id);
-				}
-		    }
-	    );
-    } else {
-        Applicant.update(
-		    { '_id': fellow._id }, 
-		    { $pull: { 'skillSets': { '_id': skillset._id } }  
-		    }, function (err, fellow) {
-		    	if (err) {
-					return res.send(400, {
-						message: 'could not delete rating'
-					});
-				} else {
-					//res.jsonp(fellow);
-					exports.returnJson(res, fellow._id);
-				}
-		    }
-	    );
-	}
-};
 
 /**
  * Show the current trainee/fellow

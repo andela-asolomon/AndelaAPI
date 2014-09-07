@@ -96,12 +96,7 @@ module.exports = function(app) {
 
     //add a skill rating to fellows
     app.route('/admin/trainee/:traineeId/skills/:skillId')
-        .post(users.requiresLogin, admin.checkPermission, instr.rateFellow)
         .put(users.requiresLogin, admin.checkPermission, instr.editFellowRating);
-
-    // app.route('/admin/trainee/:traineeId/rate/:skillId')
-    //     .put(users.requiresLogin, admin.checkPermission, instr.editRating)
-    //     .delete(users.requiresLogin, admin.checkPermission, instr.deleteRating);
 
     
     //list and create tests
