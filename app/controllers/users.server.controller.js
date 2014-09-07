@@ -398,7 +398,7 @@ exports.oauthCallback = function(strategy) {
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
-	Applicant.findById(id).populate('placements').exec(function(err, user) {
+	Applicant.findById(id).populate('placements').sort('-placements.end_date');exec(function(err, user) {
 		if (err) return next(err);
 		if (!user) return next(new Error('Failed to load User ' + id));
 		Placement.populate(user.placements, { path:'placement'},

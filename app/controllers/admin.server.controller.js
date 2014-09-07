@@ -672,7 +672,6 @@ exports.getPlacement = function(req, res)  {
 }
 
 exports.getPlacements = function(req, res)  {
-  console.log(req.profile);
   res.jsonp(req.profile.placements);
 }
 
