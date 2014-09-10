@@ -464,7 +464,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
          return $scope.fellows;
       }
       else{
-      return $scope.get_fellow_current_placement_remaining_days(fellow)/7 === parseInt($scope.weeks);
+      return $scope.get_fellow_current_placement_remaining_days(fellow) === parseInt($scope.weeks);
       }
     };
    
