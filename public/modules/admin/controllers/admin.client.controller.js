@@ -461,7 +461,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
     $scope.IsFellowAvailable = function(fellow) {
       if ($scope.weeks === '') {
-         return $scope.get_fellow_current_placement_remaining_days(fellow)/7;
+         return $scope.fellows;
       }
       else{
       return $scope.get_fellow_current_placement_remaining_days(fellow)/7 === parseInt($scope.weeks);
@@ -473,9 +473,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       var curr_placement_date = fellow.placements;
       if (curr_placement_date[0] !== undefined) {
         var curr_date = new Date();
-        var a = Math.ceil(new Date(curr_placement_date[0].end_date).getTime() - curr_date.getTime())/(oneday);
-        console.log(a);
-        if (a <= 0) {
+        var fellowcurrently_remainging_days = Math.ceil(new Date(curr_placement_date[0].end_date).getTime() - curr_date.getTime())/(oneday * 7);
+        if (fellowcurrently_remainging_days <= 0) {
           return 0;
         } else {
           return Math.ceil(a);
@@ -486,7 +485,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       }
     }
      $scope.check_placement = function(placement, index){
-      var oneweek = 7;
         if ($scope.get_fellow_current_placement_remaining_days(placement) <= 0) {
           $scope.fellows[index].available = 'available';
           $scope.fellows[index].week = 0;
@@ -494,7 +492,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         else{
         $scope.fellows[index].available = 'not available';
         console.log(' placed');
-        $scope.fellows[index].week = Math.ceil($scope.get_fellow_current_placement_remaining_days(placement)/oneweek);
+        $scope.fellows[index].week =$scope.get_fellow_current_placement_remaining_days(placement);
        }
 
     };
