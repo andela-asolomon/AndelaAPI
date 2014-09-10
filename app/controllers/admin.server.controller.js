@@ -61,7 +61,10 @@ exports.createUsers = function(req, res, next) {
 * Change applicant's status
 */
 exports.changeStatus = function(req, res) {
-      var applicant = req.applicant; 
+      var applicant = req.applicant;
+      // console.log('Status Change Init');
+      //  console.log('Applicant req init');
+      //  console.log('appt req: ' + req.applicant);
       
       if (req.body.status.name === 'rejected') { 
         if (!req.body.status.reason || req.body.status.reason.length === 0) {
@@ -88,6 +91,7 @@ exports.changeStatus = function(req, res) {
 
       
       applicant.status.name = req.body.status.name;
+       console.log('status: ' + req.body.status.name);
 
       Applicant.update(
          {_id: req.params.apptId },
@@ -97,11 +101,34 @@ exports.changeStatus = function(req, res) {
                 return res.send(400, {message: err });
              } else {
                  instr.returnJson(res, applicant._id);
+                 console.log('response');
+                 console.log('res: ' + res.status);
                  //res.jsonp(appt);
              }
           }
 
       );  
+};
+
+/**
+* Edit Applicants name or email
+*/
+exports.updateApplicantDetails = function(req, res) {
+    var applicant = req.applicant;
+    applicant = _.extend(applicant, req.body);
+
+     Applicant.update(
+         {_id: req.params.apptId },
+         {$set: {'firstName': applicant.firstName, 'lastName': applicant.lastName, 'email': applicant.email}},
+          function (err, appt) {
+             if (err) {
+                return res.send(400, {message: err });
+             } else {
+                 instr.returnJson(res, applicant._id);
+             }
+          }
+
+      ); 
 };
 
 /**
@@ -856,6 +883,7 @@ exports.instrByID = function(req, res, next, id)  {
  */
 exports.campByID = function(req, res, next, id) {
     Bootcamp.findById(id).populate('applicants').exec(function(err, camp) {
+      console.log('camp: ' + camp);
         if (err) return next(err);
         if (!camp) return next(new Error('Failed to load bootcamp ' + id));
         Applicant.populate(camp.applicants, { path:'status'},

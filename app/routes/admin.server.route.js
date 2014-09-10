@@ -38,7 +38,8 @@ module.exports = function(app) {
 
     app.route('/admin/appt/:apptId')
         .get(users.requiresLogin, admin.checkPermission, admin.apptRead) //get one particular applicant
-        .put(users.requiresLogin, admin.checkPermission, admin.changeStatus); // change applicant's status
+        .put(users.requiresLogin, admin.checkPermission, admin.changeStatus) // change applicant's status
+        .put(users.requiresLogin, admin.checkPermission, admin.updateApplicantDetails);
 
     //change applicant/fellow/trainee role
     app.route('/admin/appt/:apptId/role')

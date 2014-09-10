@@ -2,7 +2,7 @@
   <div class="container" data-ng-show="user.role === 'admin'">
     <ng-include src='"/modules/admin/views/admin.sidebar.html"'></ng-include>
 
-    <div class="admin-view">
+    <!-- <div class="admin-view">
     <div class="page-header text-center">
       <h2 style="text-transform: capitalize">{{appt.role}} Details</h2>
     </div>
@@ -19,7 +19,7 @@
               
             <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-gift"></i></span>Test score: {{appt.testScore}}</p>
 
-            <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-calendar"></i></span>Status: {{user_profile.status || 'Pending'}}</p>
+            <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-calendar"></i></span>Status: {{user_profile.status.name || 'Pending'}}</p>
 
             <p data-ng-show="appt.role == 'trainee'"><span><i class="glyphicon glyphicon-gift"></i></span>{{appt.assessment}}</p>
 
@@ -27,6 +27,7 @@
               <strong data-ng-repeat="skill in appt.skillSets">
                 <i><b data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b></i> 
               </strong>
+            </p>
 
             <p data-ng-show="appt.role == 'fellow'">
               <span data-ng-hide="appt.placements.length === 0"><i class="glyphicon glyphicon-gift"></i>   Work History</span>
@@ -42,10 +43,58 @@
     </table>
     </div>
   </div>
-  </div>
+  </div> -->
 
   <div class="container" data-ng-show="user.role !== 'admin'">
     <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+         <div class="well profile">
+            <div class="col-sm-12">
+                <div class="col-xs-12 col-sm-8">
+                    <h2 style="text-transform: capitalize">{{appt.role}} Details</h2>
+                    <p><strong>Name: </strong> {{appt.firstName}} {{appt.lastName}} </p>
+                    <p><strong>Email: </strong> {{appt.email}} </p>
+                    <p data-ng-show="appt.role == 'applicant'"><strong>Test Score: </strong> {{appt.testScore}} </p>
+                    <p data-ng-show="appt.role == 'applicant'"><strong>Status: </strong> {{user_profile.status || 'Pending'}} </p>
+                     <p data-ng-show="appt.role == 'trainee'"><strong>Assessment: </strong> {{appt.assessment}} </p>
+                    <p data-ng-show="appt.role == 'fellow'"><strong data-ng-hide="appt.skillSets.length === 0">Skills: </strong>
+                         <strong data-ng-repeat="skill in appt.skillSets">
+                        <i><b class="tags" data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b></i>
+                      </strong>
+                    </p>
+                   <!--  <p data-ng-show="appt.role == 'fellow'"><span data-ng-hide="appt.skillSets.length === 0">Skillsets: </span>
+                      <strong data-ng-repeat="skill in appt.skillSets">
+                        <i><b data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b></i>
+                      </strong>
+                    </p> -->
+                </div>             
+                <div class="col-xs-12 col-sm-4 text-center">
+                    <figure>
+                        <img src="http://www.localcrimenews.com/wp-content/uploads/2013/07/default-user-icon-profile.png" alt="" class="img-circle img-responsive">
+                    </figure>
+                </div>
+            </div>            
+            <div class="col-xs-12 divider text-center">
+                <div class="col-xs-12 col-sm-4 emphasis">
+                  <p data-ng-show="appt.role == 'fellow'">
+                    <span data-ng-hide="appt.placements.length === 0"><i class="glyphicon glyphicon-gift"></i>   Work History</span>
+                    <strong data-ng-repeat="placement in appt.placements">
+                      <b>Company: {{placement.company}}</b><br>
+                      <b>Job Description: {{placement.jobDescription}}</b><br>
+                      <b>From: {{placement.start_date | date : longDate}}</b><br>
+                      <b>To: {{placement.end_date | date : longDate}}</b>  
+                    </strong>
+                  </p>
+                </div>
+                <p data-ng-show="appt.role == 'fellow'"><a class="btn btn-danger btn-xs" ng-href="/#!/fellows/{{appt._id}}/rate">Edit Fellow</a> </p>
+            </div>
+         </div>                 
+        </div>
+    </div>
+</div>
 </section>
 

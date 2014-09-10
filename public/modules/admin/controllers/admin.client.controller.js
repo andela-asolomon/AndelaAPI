@@ -117,8 +117,31 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     
     $scope.viewcamp = function() {
         $http.get('/admin/camp/' + $stateParams.campId).success(function(response) {
+          $scope.camp = response;
+
+          $scope.editorEnabled = false;
+    
+          $scope.enableEditor = function() {
+            $scope.editorEnabled = true;
+            $scope.editableFirstName = $scope.camp.applicants.firstName;
+            console.log('$scope.camp.applicants.firstName:' + $scope.camp.applicants.email);
+            $scope.editableLastName = $scope.camp.applicants.lastName;
+            $scope.editableEmail = $scope.camp.applicants.email;
+          };
+          
+          $scope.disableEditor = function() {
+            $scope.editorEnabled = false;
+          };
+          
+          $scope.save = function() {
+            $scope.camp.applicants.firstName = $scope.editableFirstName;
+            $scope.camp.applicants.lastName = $scope.editableLastName;
+            $scope.camp.applicants.email = $scope.editableEmail;
+            $scope.disableEditor();
+          };
+
         // If successful show success message and clear form
-            $scope.camp = response;
+           
         }).error(function(response) {
             $scope.error = response.message;
 
@@ -156,11 +179,13 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.listApplicants = function() {
-        $scope.statusInit = 'pending';
+        // $scope.statusInit = 'pending';
         $http.get('/admin/applicants').success(function(response) {
           // If successful show success message and clear form
             $scope.success = true;
             $scope.applicants = response;
+            console.log('Applicant Init');
+            console.log('appt: ' + $scope.applicants);
         
         }).error(function(response) {
             $scope.error = response.message;
@@ -180,12 +205,15 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $scope.endDateEditorEnabled = false;
         $scope.editableStartDate = '';
         $scope.editableEndDate = '';
+        $scope.editableName = '';
+        $scope.email = '';
 
 
         $scope.skillNameEditorEnabled = [];
         $scope.skillScoreEditorEnabled = [];
         $scope.editableSkillName = [];
         $scope.editableSkillScore = [];
+        $score.editableDetails = [];
 
         for (var i in $scope.appt.skillSets){
           $scope.skillNameEditorEnabled[i] = false;
@@ -193,6 +221,10 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
           $scope.editableSkillName[i] = '';
           $scope.editableSkillScore[i] = 1;
         }
+
+        $scope.enableNameEditor = function(field) {
+          if (field === 'name') {};
+        };
 
         $scope.enableCurrPlacementEditor = function(field) {
           if (field === 'company'){
@@ -280,6 +312,15 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         console.log('Error - can not');
       });
     };
+
+    // $scope.updateApplicantDetails = function(apptId) {
+    //   $http.put('/admin/appt/' + apptId).success(function(response) {
+    //     console.log('Success - Done', response);
+    //   }).error(function(response) {
+    //     $scope.error = response.message;
+    //     console.log($scope.error);
+    //   });
+    // };
 
 
     $scope.updateSkill = function(appt, index) {
@@ -449,6 +490,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       $http.get('/admin/fellows').success(function(response) {
         // If successful show success message and clear form
         $scope.fellows = response;
+        console.log('Fellows');
+        console.log($scope.fellows);
         $scope.success = true;
         console.log('Success - Done', response);
         
@@ -457,6 +500,12 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         console.log('Error - can not');
       });
     };
+
+    // console.log('Checking Out');
+    // console.log($scope.fellows);
+    // $scope.changeClass = function(value) {
+      
+    // };
 
     $scope.listInstructors = function() {
       $http.get('/admin/instructors').success(function(response) {
@@ -497,10 +546,12 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.changeStatus = function() {
+      console.log('Data Init');
       console.log($scope.data);
       $http.put('/admin/appt/' + $stateParams.apptId, $scope.data).success(function(response) {
         // If successful show success message and clear form
         $scope.success = true;
+        console.log('response: ' + response.status.name);
         // $location.path('admin/appt/' + response._id);
         console.log('Success - Done', response);
         $location.path('/admin/camps/' + $stateParams.bootcampId);
