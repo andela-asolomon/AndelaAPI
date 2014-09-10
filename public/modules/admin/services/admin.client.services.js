@@ -12,9 +12,9 @@ angular.module('admin').factory('Users', ['$resource',
 ]);
 
 angular.module('admin').filter('range', function() {
-    return function(input, total) {
+    return function(input, total, start){
         total = parseInt(total);
-        for (var i=0; i<total; i++)
+        for (var i=start; i<total; i++)
             input.push(i);
         return input;
     };

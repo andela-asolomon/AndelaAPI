@@ -32,6 +32,7 @@ module.exports = {
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
 				'public/lib/angular-file-upload/dist/angular-file-upload.min.js',
 				'public/lib/angular-file-upload/dist/angular-file-upload-shim.min.js',
+				'public/lib/moment/min/moment.min.js'
 			]
 		},
 		css: [

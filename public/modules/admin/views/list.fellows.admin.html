@@ -9,7 +9,6 @@
     <div class="page-header text-center">
       <h1>Fellows</h1>
     </div>
-    <!-- <div> -->
     <div data-ng-init="listcamps()">
       <label for="category">Filter Fellows by: </label>
       <select ng-model="camp_filter">
@@ -17,11 +16,12 @@
           <option ng-repeat="camp in camp_options" value="{{camp}}">{{camp}}</option>
       </select>
        <div class="pull-right">
-        <label for="category">Display Fellow Availability in Weeks: </label>
+        <label for="category">Fellows Availability in </label>
         <select data-ng-model="weeks" id="work_availability">
-        <option value="">All</option>
-        <option ng-repeat="n in [] | range:11" value="{{$index}}">{{$index}}</option>
+        <option value="0">All</option>
+        <option ng-repeat="n in [] | range:11:1" value="{{n}}">{{n}}</option>
       </select>
+      <label for="category">Weeks</label>
       </div>
     </div>
     
@@ -35,36 +35,25 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Strength</th>
-            <th>Availability</th>
-            <th>Time to Availabilitys</th>
+            <th>Placement Status</th>
+            <th>Needs work</th>
             <th></th>
-            <th></th>
-            <!-- <th></th>
-            <th></th> -->
           </tr>
         </thead>
         <tbody>
-          <tr data-ng-repeat="fellow in fellows | filter: camp_filter | filter: IsFellowAvailable" data-ng-init="check_placement(fellow, $index)">
+          <tr data-ng-repeat="fellow in fellows | filter: camp_filter | filter: IsFellowUnavailable" data-ng-init="check_placement(fellow, $index)">
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{$index + 1}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.firstName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.lastName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.email}}</a></td>
-          <td><a ng-href="/#!/admin/appt/{{fellow._id}}" ng-repeat="(key, val) in fellow.skillSummary" ng-class="{'beginner':{{val}} > 0 && {{val}} <= 2, 'junior': {{val}} > 2 && {{val}} <= 4, 'intermediate': {{val}} > 4 && {{val}} <= 6, 'senior': {{val}} > 6 && {{val}} <= 8, 'expert': {{val}} > 8  && {{val}} <= 10 }"
+          <td><a ng-href="/#!/admin/appt/{{fellow._id}}" ng-repeat="(key, val) in fellow.skillSummary" ng-class="{'beginner':{{val > 0 && val <= 2}}, 'junior': {{val > 2 && val <= 4}}, 'intermediate': {{val > 4 && val <= 6}}, 'senior': {{val > 6 && val <= 8}}, 'expert': {{val > 8  && val <= 10}} }"
           ><span class="{{key}}"><i class="hide_text">{{key}} = {{val}}</i></span></a></td>
-          <!-- <td><a href='' ng-click="/fellows/{{fellow._id}}/rate">Rate Fellow</a></td> -->
-          <td><button ng-click="deleteFellow(fellow._id, $index)" class="btn btn-danger btn-xs">Delete User</button></td>
           <td data-ng-bind="fellow.available"><a ng-href="/#!/admin/appt/{{fellow._id}}"></a></td>
-          <td data-ng-bind="fellow.week"><a ng-href="/#!/admin/appt/{{fellow._id}}"></a></td>
+          <td><a ng-href="/#!/admin/appt/{{fellow._id}}"></a>{{get_availability_date(fellow) | date}}</td>
            <td><button ng-click="deleteFellow(fellow._id, $index)" class="btn btn-danger btn-xs">Delete User</button></td>
         </tr>
       </table
-      <!-- <div class="fellow-div" ng-repeat="fellow in fellows | filter: search_filter">
-        <h2 class="fellow"><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.firstName + " " + fellow.lastName}}</a></h2>
-        <span><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.email}}</a></span>
-        <div class="skill_background">
-          <span ng-repeat="(key, val) in fellow.skillSummary"><i class="{{key}}"> {{key}} </i>  = {{val}}<br> </span>
-        </div>
-      </div> -->
+      
     </div>
   </div>
   </div>
