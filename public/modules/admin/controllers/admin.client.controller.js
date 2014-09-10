@@ -508,7 +508,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       }
       else if ($scope.weeks === '11') {
         console.log(typeof $scope.weeks);
-        console.log($scope.weeks);
+        console.log(typeof $scope.weeks);
         return $scope.getfellow_work_days(fellow) >= parseInt($scope.weeks);
       }
       else{
