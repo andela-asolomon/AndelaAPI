@@ -504,11 +504,16 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
     $scope.IsFellowAvailable = function(fellow) {
       if ($scope.weeks !=='') {
-      return $scope.getfellow_work_days(fellow) >= parseInt($scope.weeks);
-    }
-    else{
-      return $scope.fellows;
+      return $scope.getfellow_work_days(fellow) === parseInt($scope.weeks);
       }
+      else if ($scope.weeks === '11') {
+        console.log(typeof $scope.weeks);
+        console.log($scope.weeks);
+        return $scope.getfellow_work_days(fellow) >= parseInt($scope.weeks);
+      }
+      else{
+        return $scope.fellows;
+        }
     };
     $scope.getfellow_work_days = function(fellow) {
       var oneday = 24*3600*1000;
@@ -516,7 +521,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
       if (curr_placement_date[0] !== undefined) {
         var curr_date = new Date();
         var fellowavailabilityweeks = Math.ceil(new Date(curr_placement_date[0].end_date).getTime() - curr_date.getTime())/(oneday *7);
-        console.log(Math.ceil(fellowavailabilityweeks));
+        // console.log(Math.ceil(fellowavailabilityweeks));
         if (fellowavailabilityweeks <= 0) {
           return 0;
         } else {
@@ -529,12 +534,11 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     }
      $scope.check_placement = function(placement, index){
         if ($scope.getfellow_work_days(placement) <= 0) {
-          $scope.fellows[index].available = 'available';
+          $scope.fellows[index].available = 'Available';
           $scope.fellows[index].week = $scope.getfellow_work_days(placement) ;
-          console.log( $scope.fellows[index].week);
         }
         else{
-        $scope.fellows[index].available = 'not available';
+        $scope.fellows[index].available = 'Not Available';
         console.log(' placed');
         $scope.fellows[index].week = $scope.getfellow_work_days(placement);
        }
