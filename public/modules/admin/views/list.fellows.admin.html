@@ -9,34 +9,46 @@
     <div class="page-header text-center">
       <h1>Fellows</h1>
     </div>
+    <!-- <div> -->
     <div data-ng-init="listcamps()">
       <label for="category">Filter Fellows by: </label>
-      <select ng-model="search_filter">
+      <select ng-model="camp_filter">
           <option value="">All BootCamps</option>
           <option ng-repeat="camp in camp_options" value="{{camp}}">{{camp}}</option>
       </select>
-      <br>
+       <div class="pull-right">
+        <label for="category">Display Fellow Availability in Weeks: </label>
+        <select data-ng-model="weeks" id="work_availability">
+        <option ng-repeat="n in [] | range:11" value="{{$index}}">{{$index}}</option>
+      </select>
+      </div>
     </div>
+    
+      <!-- </div> -->
     <div>
       <table class="list list-link">
         <thead>
           <tr>
+            <th>#</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
+            <th>Availability</th>
+            <th>Availability Weeks</th>
             <!-- <th></th> -->
             <!-- <th></th> -->
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr data-ng-repeat="fellow in fellows | filter: search_filter">
+          <tr data-ng-repeat="fellow in fellows | filter: camp_filter | filter: weekFilter" data-ng-init="check_placement(fellow, $index)">
+          <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{$index + 1}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.firstName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.lastName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.email}}</a></td>
-          <!-- <td><a ng-href="/#!/fellows/rate/">View Full Details</a></td> -->
-          <!-- <td><a href='' ng-click="/fellows/{{fellow._id}}/rate">Rate Fellow</a></td> -->
-          <td><button ng-click="deleteFellow(fellow._id, $index)" class="btn btn-danger btn-xs">Delete User</button></td>
+          <td data-ng-bind="fellow.available"><a ng-href="/#!/admin/appt/{{fellow._id}}"></a></td>
+          <td data-ng-bind="fellow.week"><a ng-href="/#!/admin/appt/{{fellow._id}}"></a></td>
+           <td><button ng-click="deleteFellow(fellow._id, $index)" class="btn btn-danger btn-xs">Delete User</button></td>
         </tr>
       </table>
     </div>

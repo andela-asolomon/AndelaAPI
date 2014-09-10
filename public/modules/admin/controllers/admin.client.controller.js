@@ -7,6 +7,8 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
     $scope.user = Authentication.user;
 
+    $scope.weeks = 0;
+
     $scope.choiceOne = [{id: 'choice1'},{id: 'choice2'}]; //answer to question one
     $scope.choiceTwo = [{id: 'choice1'},{id: 'choice2'}]; //answer to question two
     $scope.optionOne=[];  //options for question one
@@ -456,6 +458,40 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $scope.error = response.message;
         console.log('Error - can not');
       });
+    };
+    $scope.weekFilter = function(fellow) {
+      return $scope.getfellow_work_days(fellow)/7 >= parseInt($scope.weeks);
+    }
+   
+    $scope.getfellow_work_days = function(fellow) {
+      var oneday = 24*3600*1000;
+      var curr_placement_date = fellow.placements;
+      if (curr_placement_date[0] !== undefined) {
+        var curr_date = new Date();
+        var a = Math.ceil(new Date(curr_placement_date[0].end_date).getTime() - curr_date.getTime())/(oneday);
+        console.log(a);
+        if (a <= 0) {
+          return 0;
+        } else {
+          return Math.floor(a);
+        }
+      }
+      else{
+        return 0;
+      }
+    }
+     $scope.check_placement = function(placement, index){
+      var oneweek = 7;
+        if ($scope.getfellow_work_days(placement) <= 0) {
+          $scope.fellows[index].available = 'available';
+          $scope.fellows[index].week = 0;
+        }
+        else{
+        $scope.fellows[index].available = 'not available';
+        console.log(' placed');
+        $scope.fellows[index].week = $scope.getfellow_work_days(placement)/oneweek;
+       }
+
     };
 
     $scope.listInstructors = function() {
