@@ -459,11 +459,16 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         console.log('Error - can not');
       });
     };
-    $scope.weekFilter = function(fellow) {
-      return $scope.getfellow_work_days(fellow)/7 >= parseInt($scope.weeks);
-    }
+    $scope.IsFellowAvailable = function(fellow) {
+      if ($scope.weeks === '') {
+         return $scope.get_fellow_current_placement_remaining_days(fellow)/7;
+      }
+      else{
+      return $scope.get_fellow_current_placement_remaining_days(fellow)/7 === parseInt($scope.weeks);
+      }
+    };
    
-    $scope.getfellow_work_days = function(fellow) {
+    $scope.get_fellow_current_placement_remaining_days = function(fellow) {
       var oneday = 24*3600*1000;
       var curr_placement_date = fellow.placements;
       if (curr_placement_date[0] !== undefined) {
@@ -473,7 +478,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         if (a <= 0) {
           return 0;
         } else {
-          return Math.floor(a);
+          return Math.ceil(a);
         }
       }
       else{
@@ -482,14 +487,14 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     }
      $scope.check_placement = function(placement, index){
       var oneweek = 7;
-        if ($scope.getfellow_work_days(placement) <= 0) {
+        if ($scope.get_fellow_current_placement_remaining_days(placement) <= 0) {
           $scope.fellows[index].available = 'available';
           $scope.fellows[index].week = 0;
         }
         else{
         $scope.fellows[index].available = 'not available';
         console.log(' placed');
-        $scope.fellows[index].week = $scope.getfellow_work_days(placement)/oneweek;
+        $scope.fellows[index].week = Math.ceil($scope.get_fellow_current_placement_remaining_days(placement)/oneweek);
        }
 
     };

@@ -19,6 +19,7 @@
        <div class="pull-right">
         <label for="category">Display Fellow Availability in Weeks: </label>
         <select data-ng-model="weeks" id="work_availability">
+        <option value="">All</option>
         <option ng-repeat="n in [] | range:11" value="{{$index}}">{{$index}}</option>
       </select>
       </div>
@@ -34,14 +35,14 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Availability</th>
-            <th>Availability Weeks</th>
+            <th>Time to Availabilitys</th>
             <!-- <th></th> -->
             <!-- <th></th> -->
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr data-ng-repeat="fellow in fellows | filter: camp_filter | filter: weekFilter" data-ng-init="check_placement(fellow, $index)">
+          <tr data-ng-repeat="fellow in fellows | filter: camp_filter | filter: IsFellowAvailable" data-ng-init="check_placement(fellow, $index)">
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{$index + 1}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.firstName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.lastName}}</a></td>
