@@ -45,40 +45,7 @@
           </div>
         </li>
 
-        <li data-ng-show="appt.currPlacement">Current Placement:
-          <div ng-hide="currPlacementEditorEnabled">
-            <p>Company: {{appt.currPlacement.status}} <a ng-href="" ng-click="enableCurrPlacementEditor('company')">Edit</a></p>
-          </div>
-
-          <div ng-show="currPlacementEditorEnabled">
-            <input type="text" ng-model="editableCurrCompany" ng-show="currPlacementEditorEnabled">
-            <a href="" ng-click="saveCurrPlacement('company')">Save</a>
-            or
-            <a href="" ng-click="disableCurrPlacementEditor('company')">Cancel</a>.
-          </div>
-
-          <div ng-hide="startDateEditorEnabled">
-            <p>Start Date: {{appt.currPlacement.startDate | date : longDate}} <a ng-href="" ng-click="enableCurrPlacementEditor('startDate')">Edit</a></p>
-          </div>
-
-          <div ng-show="startDateEditorEnabled">
-            <input type="text" ng-model="editableStartDate" placeholder="MM/DD/YY" ng-show="startDateEditorEnabled">
-            <a href="" ng-click="saveCurrPlacement('startDate')">Save</a>
-            or
-            <a href="" ng-click="disableCurrPlacementEditor('startDate')">Cancel</a>.
-          </div>
-
-          <div ng-hide="endDateEditorEnabled">          
-            <p>End Date: {{appt.currPlacement.endDate | date : longDate}} <a ng-href="" ng-click="enableCurrPlacementEditor('endDate')">Edit</a></p>
-          </div>
-
-          <div ng-show="endDateEditorEnabled">
-            <input type="text" ng-model="editableEndDate" placeholder="MM/DD/YY" ng-show="endDateEditorEnabled">
-            <a href="" ng-click="saveCurrPlacement('endDate')">Save</a>
-            or
-            <a href="" ng-click="disableCurrPlacementEditor('endDate')">Cancel</a>.
-          </div>
-        </li>
+        
 
         <li>
           <p>Work History:</p>
@@ -88,7 +55,7 @@
               <b>Company: {{placement.company}}</b><br>
               <b>Job Description: {{placement.jobDescription}}</b><br>
               <b>From: {{placement.start_date | date : longDate}}</b><br>
-              <b>From: {{placement.end_date | end_date : longDate}}</b>
+              <b>To: {{placement.end_date | date : longDate}}</b>
             </li>
           </ol>
         </li>
