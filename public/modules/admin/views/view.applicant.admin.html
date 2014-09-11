@@ -67,29 +67,34 @@
             <span>Status: </span> {{user_profile.status || 'Pending'}} </p>
           <p class="setting" data-ng-show="appt.role == 'trainee'">
             <span>Assessment: </span> {{appt.assessment}} </p>
-          <p class="setting" data-ng-show="appt.role == 'fellow'">
-            <spn data-ng-hide="appt.skillSets.length === 0">Skills: </span>
-            <span data-ng-repeat="skill in appt.skillSets">
-              <i>
-                <b class="tags" data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b>
-              </i>
-            </span>
-          </p>
+          
         </section>
+
+        <section>
+          <div class="setting">
+            <p data-ng-show="appt.role === 'fellow'">
+              <span data-ng-hide="appt.skillSet.length === 0"><i>Skills:</i></span>
+              <span ng-repeat="skill in appt.skillSet">
+                <b>{{skill.skill.name}}: {{skill.rating}}</b><br>
+              </span>
+            </p>
+          </div>
+        </section>
+
         <section id="bio">
           <div class="setting">
-                  <p data-ng-show="appt.role == 'fellow'">
-          <a class="btn btn-danger btn-xs" ng-href="/#!/fellows/{{appt._id}}/rate">Edit Fellow</a>
-        </p>
-                  <p data-ng-show="appt.role == 'fellow'">
-                    <span data-ng-hide="appt.placements.length === 0"><i class="glyphicon glyphicon-gift"></i> Work History</span>
-                    <span data-ng-repeat="placement in appt.placements">
-                      <b>Company: {{placement.company}}</b><br>
-                      <b>Job Description: {{placement.jobDescription}}</b><br>
-                      <b>From: {{placement.start_date | date : longDate}}</b><br>
-                      <b>To: {{placement.end_date | date : longDate}}</b>  
-                    </span>
-                  </p>
+                <p data-ng-show="appt.role == 'fellow'">
+                  <span data-ng-hide="appt.placements.length === 0"><i class="glyphicon glyphicon-gift"></i> Work History</span>
+                  <span data-ng-repeat="placement in appt.placements">
+                    <b>Company: {{placement.company}}</b><br>
+                    <b>Job Description: {{placement.jobDescription}}</b><br>
+                    <b>From: {{placement.start_date | date : longDate}}</b><br>
+                    <b>To: {{placement.end_date | date : longDate}}</b>  
+                  </span>
+                </p>
+                <p data-ng-show="appt.role == 'fellow'">
+                <a class="btn btn-danger btn-xs" ng-href="/#!/fellows/{{appt._id}}/rate">Edit Fellow</a>
+              </p>
           </div>
         </section>
       </div>

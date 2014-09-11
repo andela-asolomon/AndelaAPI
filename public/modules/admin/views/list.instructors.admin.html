@@ -4,13 +4,16 @@
   <ng-include src='"/modules/admin/views/admin.sidebar.html"'></ng-include>
 
   <div class="admin-view">
-    <div class="col-sm-12 col-lg-12" data-ng-show="user">
-        <a class="btn btn-xs btn-primary pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
-    </div>
-
     <div class="page-header text-center">
       <h1>Instructors</h1>
     </div>
+    <div class="col-sm-12 col-lg-12" data-ng-show="user">
+        <a class="btn btn-primary btn-xs  pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
+    </div>
+
+    <br>
+
+    
     <div class="pull-right"><a class="btn btn-primary btn-xs" href="/#!/admin/createInst">Create Instructor</a></div>
 
     <div>
