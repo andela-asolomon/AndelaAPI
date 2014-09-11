@@ -85,6 +85,9 @@ angular.module('admin').config([
     }).state('viewAppt', {
       url: '/admin/appt/:apptId',
       templateUrl: 'modules/admin/views/view.applicant.admin.html'
+    }).state('editApplicant', {
+      url: '/admin/appt/:apptId',
+      templateUrl: 'modules/admin/views/edit.applicant.admin.html'
     }).state('editAppt', {
       url: '/admin/editappt/:bootcampId/:apptId',
       templateUrl: 'modules/admin/views/edit.appt.form.admin.html'
@@ -118,6 +121,9 @@ angular.module('admin').config([
     }).state('addQueTest', {
       url: '/admin/test/add/:testId',
       templateUrl: 'modules/admin/views/admin.add-question.test.html'
+    }).state('listSkills', {
+      url: '/admin/skills',
+      templateUrl: 'modules/admin/views/list.skills.admin.html'
     });
   }
 ]);'use strict';
@@ -128,8 +134,11 @@ angular.module('admin').controller('AdminController', [
   'Authentication',
   '$stateParams',
   '$location',
-  function ($scope, $http, Authentication, $stateParams, $location) {
+  '$modal',
+  '$log',
+  function ($scope, $http, Authentication, $stateParams, $location, $modal, $log) {
     $scope.user = Authentication.user;
+    $scope.weeks = 0;
     $scope.choiceOne = [
       { id: 'choice1' },
       { id: 'choice2' }
@@ -145,9 +154,11 @@ angular.module('admin').controller('AdminController', [
     $scope.optionTwo = [];
     //oprions for question two
     $scope.questions = [];
-    $scope.selected = '', $scope.testName = '', $scope.answered = false;
+    $scope.selected = '';
+    $scope.testName = '';
+    $scope.answered = false;
     $scope.answeredTwo = false;
-    $scope.camp_options = [''];
+    $scope.camp_options = [];
     $scope.setShow = function (val) {
       $scope.selected = val;
     };
@@ -166,31 +177,15 @@ angular.module('admin').controller('AdminController', [
     };
     $scope.deleteChoice = function (index, num) {
       if (num === 1) {
-        //$scope.choiceOne.splice(index, 1);
         if (parseInt($scope.test.answerOne, 10) === $scope.choiceOne.length - 1) {
           $scope.test.answerOne = $scope.test.answerOne - 1;
-          console.log('yea');
         }
         doDelete($scope.choiceOne, $scope.optionOne, index);
-        console.log($scope.test.answerOne);
-        console.log(index);
-        // if (parseInt($scope.test.answerOne, 10) === index) {
-        //   $scope.answered.bool = false;
-        console.log($scope.answered);  // }
-                                       // $scope.optionOne.splice(index, 1);
-                                       // changeIds($scope.choiceOne);
       } else {
         if (parseInt($scope.test.answerTwo, 10) === $scope.choiceTwo.length - 1) {
           $scope.test.answerTwo = $scope.test.answerTwo - 1;
         }
         doDelete($scope.choiceTwo, $scope.optionTwo, index);
-        console.log($scope.test.answerTwo);
-        // if ($scope.test.answerTwo === index) {
-        //       $scope.answeredTwo.bool = false;
-        console.log($scope.answeredTwo);  // }
-                                          // $scope.choiceTwo.splice(index, 1);
-                                          // $scope.optionTwo.splice(index, 1);
-                                          // changeIds($scope.choiceTwo);
       }
     };
     var doDelete = function (choiceArr, optionArr, index) {
@@ -207,19 +202,10 @@ angular.module('admin').controller('AdminController', [
         return choice.id === $scope.choiceTwo[$scope.choiceTwo.length - 1].id;
     };
     $scope.changeAnsVal = function (index, num) {
-      console.log('y');
       if (num === 1) {
-        // doChange($scope.optionOne,  index); console.log($scope.optionOne.length);
-        // $scope.test.answerOne = index;
-        console.log('answerOne: ' + $scope.test.answerOne);
-        $scope.answered = true;  // console.log($scope.answered.bool);
-                                 //$scope.answered.index = index;
-                                 //console.log('answerIndex: ' + $scope.answered.index);
+        $scope.answered = true;
       } else {
-        //doChange($scope.optionTwo,  index);
-        console.log('answerTwo: ' + $scope.test.answerTwo);
-        $scope.answeredTwo = true;  //$scope.answeredTwo.index = index;
-                                    //console.log('answerIndex: ' + $scope.answeredTwo.index);
+        $scope.answeredTwo = true;
       }
     };
     // Create new user
@@ -234,7 +220,6 @@ angular.module('admin').controller('AdminController', [
       $http.post('/admin/create', $scope.credentials).success(function (response) {
         // If successful show success message and clear form
         $scope.success = true;
-        console.log('Success - Done', response);
         $scope.passwordDetails = null;
         if (response.role === 'instructor') {
           $location.path('/admin/instrs');
@@ -243,14 +228,12 @@ angular.module('admin').controller('AdminController', [
         }
       }).error(function (response) {
         $scope.error = response.message;
-        console.log('Error - can not');
       });
     };
     /**
     * Create camp
     */
     $scope.createCamp = function () {
-      console.log($scope.credentials);
       $http.post('/admin/camp', $scope.credentials).success(function (response) {
         $location.path('/admin/camps');
       }).error(function (response) {
@@ -258,15 +241,28 @@ angular.module('admin').controller('AdminController', [
         if ($scope.error.type === 'date') {
           $scope.error = 'Please follow the date pattern specified M/D/YY e.g (use 2/5/2014 for 5th Feb 2014)';
         }
-        console.log($scope.error);
       });
     };
     $scope.viewcamp = function () {
-      console.log($stateParams);
       $http.get('/admin/camp/' + $stateParams.campId).success(function (response) {
-        // If successful show success message and clear form
         $scope.camp = response;
-        console.log($scope.camp);
+        $scope.editorEnabled = false;
+        $scope.enableEditor = function () {
+          $scope.editorEnabled = true;
+          $scope.editableFirstName = $scope.camp.applicants.firstName;
+          console.log('$scope.camp.applicants.firstName:' + $scope.camp.applicants.email);
+          $scope.editableLastName = $scope.camp.applicants.lastName;
+          $scope.editableEmail = $scope.camp.applicants.email;
+        };
+        $scope.disableEditor = function () {
+          $scope.editorEnabled = false;
+        };
+        $scope.save = function () {
+          $scope.camp.applicants.firstName = $scope.editableFirstName;
+          $scope.camp.applicants.lastName = $scope.editableLastName;
+          $scope.camp.applicants.email = $scope.editableEmail;
+          $scope.disableEditor();
+        };  // If successful show success message and clear form
       }).error(function (response) {
         $scope.error = response.message;
       });
@@ -278,35 +274,31 @@ angular.module('admin').controller('AdminController', [
         for (var i = 0; i < response.length; i++) {
           $scope.camp_options.push(response[i].camp_name);
         }
-        console.log('Success - Done', $scope.camp_options);
       }).error(function (response) {
         $scope.error = response.message;
         $location.path('/admin/welcome');
       });
     };
     $scope.viewTrainees = function () {
-      console.log('viewTrainees called');
       $http.get('/admin/trainees').success(function (response) {
         // If successful show success message and clear form
         $scope.role = [];
         $scope.success = true;
         $scope.trainees = response;
-        console.log('Success - Done', response);
       }).error(function (response) {
         $scope.error = response.message;
-        console.log('Error - can not');
       });
     };
     $scope.listApplicants = function () {
-      $scope.statusInit = 'pending';
+      // $scope.statusInit = 'pending';
       $http.get('/admin/applicants').success(function (response) {
         // If successful show success message and clear form
         $scope.success = true;
         $scope.applicants = response;
-        console.log('Success - Done', $scope.applicants);
+        console.log('Applicant Init');
+        console.log('appt: ' + $scope.applicants);
       }).error(function (response) {
         $scope.error = response.message;
-        console.log('Error - can not');
       });
     };
     $scope.viewApplicant = function () {
@@ -321,16 +313,24 @@ angular.module('admin').controller('AdminController', [
         $scope.endDateEditorEnabled = false;
         $scope.editableStartDate = '';
         $scope.editableEndDate = '';
+        $scope.editableName = '';
+        $scope.email = '';
         $scope.skillNameEditorEnabled = [];
         $scope.skillScoreEditorEnabled = [];
         $scope.editableSkillName = [];
         $scope.editableSkillScore = [];
+        $score.editableDetails = [];
         for (var i in $scope.appt.skillSets) {
           $scope.skillNameEditorEnabled[i] = false;
           $scope.skillScoreEditorEnabled[i] = false;
           $scope.editableSkillName[i] = '';
           $scope.editableSkillScore[i] = 1;
         }
+        $scope.enableNameEditor = function (field) {
+          if (field === 'name') {
+          }
+          ;
+        };
         $scope.enableCurrPlacementEditor = function (field) {
           if (field === 'company') {
             $scope.currPlacementEditorEnabled = true;
@@ -408,6 +408,14 @@ angular.module('admin').controller('AdminController', [
         console.log('Error - can not');
       });
     };
+    // $scope.updateApplicantDetails = function(apptId) {
+    //   $http.put('/admin/appt/' + apptId).success(function(response) {
+    //     console.log('Success - Done', response);
+    //   }).error(function(response) {
+    //     $scope.error = response.message;
+    //     console.log($scope.error);
+    //   });
+    // };
     $scope.updateSkill = function (appt, index) {
       $http.put('/admin/trainee/' + appt._id + '/rate/' + appt.skillSets[index]._id, appt.skillSets[index]).success(function (response) {
         console.log('Success - Done', response);
@@ -533,12 +541,63 @@ angular.module('admin').controller('AdminController', [
       $http.get('/admin/fellows').success(function (response) {
         // If successful show success message and clear form
         $scope.fellows = response;
+        console.log('Fellows');
+        console.log($scope.fellows);
         $scope.success = true;
         console.log('Success - Done', response);
       }).error(function (response) {
         $scope.error = response.message;
         console.log('Error - can not');
       });
+    };
+    $scope.IsFellowUnavailable = function (fellow) {
+      var weeks = parseInt($scope.weeks);
+      var date = moment().add('weeks', weeks);
+      if (fellow.placements.length === 0 || weeks === 0) {
+        return true;
+      } else if (moment(fellow.placements[0].end_date) > date) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+    $scope.get_availability_date = function (fellow) {
+      if (fellow.placements.length === 0) {
+        return 'Now';
+      } else {
+        if (moment(fellow.placements[0].end_date) > moment()) {
+          return moment(fellow.placements[0].end_date).format('LL');
+        } else {
+          return 'Now';
+        }
+      }
+    };
+    $scope.get_fellow_work_days = function (fellow) {
+      var oneday = 24 * 3600 * 1000;
+      var curr_placement_date = fellow.placements;
+      if (curr_placement_date[0] !== undefined) {
+        var curr_date = new Date();
+        var fellowavailabilityweeks = Math.ceil(new Date(curr_placement_date[0].end_date).getTime() - curr_date.getTime()) / (oneday * 7);
+        console.log(Math.ceil(fellowavailabilityweeks));
+        if (fellowavailabilityweeks <= 0) {
+          return 0;
+        } else {
+          return Math.ceil(fellowavailabilityweeks);
+        }
+      } else {
+        return 0;
+      }
+    };
+    $scope.check_placement = function (placement, index) {
+      if ($scope.get_fellow_work_days(placement) <= 0) {
+        $scope.fellows[index].available = 'Needs Work';
+        $scope.fellows[index].week = $scope.get_fellow_work_days(placement);
+        console.log($scope.fellows[index].week);
+      } else {
+        $scope.fellows[index].available = 'Currently Placed';
+        console.log(' placed');
+        $scope.fellows[index].week = $scope.get_fellow_work_days(placement);
+      }
     };
     $scope.listInstructors = function () {
       $http.get('/admin/instructors').success(function (response) {
@@ -573,10 +632,12 @@ angular.module('admin').controller('AdminController', [
       });
     };
     $scope.changeStatus = function () {
+      console.log('Data Init');
       console.log($scope.data);
       $http.put('/admin/appt/' + $stateParams.apptId, $scope.data).success(function (response) {
         // If successful show success message and clear form
         $scope.success = true;
+        console.log('response: ' + response.status.name);
         // $location.path('admin/appt/' + response._id);
         console.log('Success - Done', response);
         $location.path('/admin/camps/' + $stateParams.bootcampId);
@@ -607,42 +668,25 @@ angular.module('admin').controller('AdminController', [
         console.log('Error - can not');
       });
     };
+    $scope.rateFellow = function (traineeId, skillId, newRating) {
+      var url = '/admin/trainee/' + traineeId + '/skills/' + skillId;
+      $http.put(url, { rating: newRating }).success(function (response) {
+        $scope.success = true;
+        $scope.appt = response;
+        console.log('Success - Done', response);
+      }).error(function (response) {
+        $scope.error = response.message;
+        console.log('Error - can not');
+      });
+    };
     $scope.addPlacement = function () {
-      $http.put('/admin/fellow/' + $stateParams.apptId + '/placement', $scope.data).success(function (response) {
-        // If successful show success message and clear form
-        $scope.success = true;
-        $scope.appt = response;
-        console.log('Success - Done', response);
-      }).error(function (response) {
-        $scope.error = response.message;
-        if ($scope.error.type === 'date') {
-          $scope.error = 'Please follow the date pattern specified M/D/YY e.g (use 2/5/2014 for 5th Feb 2014)';
-        }
-        console.log('Error - can not');
-      });
-    };
-    $scope.rateFellow = function () {
-      $http.post('/admin/trainee/' + $stateParams.apptId + '/rate', $scope.data).success(function (response) {
-        // If successful show success message and clear form
-        $scope.data.skill = '';
-        // $scope.data.rating = 1;
-        $scope.success = true;
-        $scope.appt = response;
-        console.log('Success - Done', response);
-      }).error(function (response) {
-        $scope.error = response.message;
-        console.log('Error - can not');
-      });
-    };
-    $scope.addWorkHistory = function () {
       console.log($stateParams.apptId);
-      $http.post('/admin/fellow/' + $stateParams.apptId + '/workhist', $scope.data).success(function (response) {
+      $http.post('/admin/fellow/' + $stateParams.apptId + '/placements', $scope.data).success(function (response) {
         // If successful show success message and clear form
         $scope.data.company = '';
         $scope.data.jobDescription = '';
-        $scope.data.location = '';
-        $scope.data.from = '';
-        $scope.data.to = '';
+        $scope.data.start_date = '';
+        $scope.data.end_date = '';
         $scope.appt = response;
         console.log('Success - Done', response);
       }).error(function (response) {
@@ -807,15 +851,91 @@ angular.module('admin').controller('AdminController', [
         console.log('Error - can not');
       });
     };
+    /*SKILLS*/
+    $scope.listSkills = function () {
+      $http.get('/admin/skills').success(function (response) {
+        $scope.skills = response;
+      }).error(function (response) {
+        $scope.error = response.message;
+        $location.path('/admin/welcome');
+      });
+    };
+    $scope.openSkillModal = function (size) {
+      var modalInstance = $modal.open({
+          templateUrl: '/modules/admin/views/admin.skills_modal.html',
+          controller: 'ModalInstanceCtrl',
+          size: size,
+          resolve: {
+            categories: function () {
+              return $scope.skillCategories;
+            }
+          }
+        });
+      modalInstance.result.then(function (selectedItem) {
+        $scope.selected = selectedItem;
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+    };
+    $scope.getSkillCategories = function () {
+      $http.get('/admin/skillCategories').success(function (response) {
+        $scope.skillCategories = response;
+      }).error(function (response) {
+        $scope.error = response.message;
+        $location.path('/admin/welcome');
+      });
+    };
   }
 ]);'use strict';
+// Please note that $modalInstance represents a modal window (instance) dependency.
+// It is not the same as the $modal service used above.
+var ModalInstanceCtrl = function ($http, $scope, $modalInstance, categories) {
+  $scope.categories = categories;
+  $scope.data = {};
+  $scope.data.category = categories[0];
+  $scope.createCategory = false;
+  $scope.ok = function () {
+    $modalInstance.close('close');
+  };
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+  $scope.createSkillCategory = function () {
+    $http.post('/admin/skillCategories', $scope.data).success(function (response) {
+      $scope.categories.push(response);
+      $scope.createCategory = false;
+      $scope.data.name = '';
+    }).error(function (response) {
+      $scope.error = response.message;
+    });
+  };
+  $scope.createSkill = function () {
+    var url = '/admin/skillCategories/' + $scope.data.category._id + '/skills';
+    $http.post(url, $scope.data).success(function (response) {
+      $modalInstance.close('close');
+    }).error(function (response) {
+      $scope.error = response.message;
+    });
+  };
+  $scope.showCreateCategory = function () {
+    $scope.createCategory = true;
+  };
+};'use strict';
 // Admin service for admin variables
 angular.module('admin').factory('Users', [
   '$resource',
   function ($resource) {
     return $resource('admin', {}, { update: { method: 'PUT' } });
   }
-]);// 'use strict'
+]);
+angular.module('admin').filter('range', function () {
+  return function (input, total, start) {
+    total = parseInt(total);
+    for (var i = start; i < total; i++)
+      input.push(i);
+    return input;
+  };
+});// 'use strict'
 //Setting up route
 angular.module('applicant-test').config([
   '$stateProvider',
