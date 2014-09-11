@@ -319,6 +319,7 @@ angular.module('admin').controller('AdminController', [
         $scope.data = {};
         $scope.success = true;
         $scope.appt = response;
+        $scope.skillSet = response.skillSet;
         $scope.currPlacementEditorEnabled = false;
         $scope.editableCurrCompany = '';
         $scope.startDateEditorEnabled = false;
@@ -332,7 +333,7 @@ angular.module('admin').controller('AdminController', [
         $scope.editableSkillName = [];
         $scope.editableSkillScore = [];
         $score.editableDetails = [];
-        for (var i in $scope.appt.skillSets) {
+        for (var i in $scope.appt.skillSet) {
           $scope.skillNameEditorEnabled[i] = false;
           $scope.skillScoreEditorEnabled[i] = false;
           $scope.editableSkillName[i] = '';
@@ -565,7 +566,7 @@ angular.module('admin').controller('AdminController', [
     $scope.IsFellowUnavailable = function (fellow) {
       var weeks = parseInt($scope.weeks);
       var date = moment().add(weeks, 'weeks');
-      if (fellow.placements.length === 0 || weeks === 0) {
+      if (fellow.placements && fellow.placements.length === 0 || weeks === 0) {
         return true;
       } else if (moment(fellow.placements[0].end_date) > date) {
         return false;
@@ -574,7 +575,7 @@ angular.module('admin').controller('AdminController', [
       }
     };
     $scope.get_availability_date = function (fellow) {
-      if (fellow.placements.length === 0) {
+      if (fellow.placements && fellow.placements.length === 0) {
         return 'Now';
       } else {
         if (moment(fellow.placements[0].end_date) > moment()) {
@@ -937,7 +938,7 @@ angular.module('admin').controller('AdminController', [
 ]);'use strict';
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
-var ModalInstanceCtrl = function ($http, $scope, $modalInstance, categories) {
+var ModalInstanceCtrl = function ($http, $scope, $route, $modalInstance, categories) {
   $scope.categories = categories;
   $scope.data = {};
   $scope.data.category = categories[0];
@@ -960,7 +961,7 @@ var ModalInstanceCtrl = function ($http, $scope, $modalInstance, categories) {
   $scope.createSkill = function () {
     var url = '/admin/skillCategories/' + $scope.data.category._id + '/skills';
     $http.post(url, $scope.data).success(function (response) {
-      $modalInstance.close('close');
+      $route.reload();
     }).error(function (response) {
       $scope.error = response.message;
     });
