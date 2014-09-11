@@ -14,7 +14,7 @@ h1,h2,h3,h4,h5,h6,p{
   margin-bottom: 10px !important;
 }
 
-p, ul, li,dl, dt, dd, fieldset, input, label{
+p, ul, li,dl, dt, dd, input, label{
   font-family: "Proxima", Arial, sans-serif;
   font-size: 1.1em !important;
   line-height: 1.5;

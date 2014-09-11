@@ -2,7 +2,7 @@
 
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
-var ModalInstanceCtrl = function ($http, $scope, $modalInstance, categories) {
+var ModalInstanceCtrl = function ($http, $scope, $route, $modalInstance, categories) {
 
     $scope.categories = categories;
     $scope.data = {};
@@ -31,7 +31,8 @@ var ModalInstanceCtrl = function ($http, $scope, $modalInstance, categories) {
     $scope.createSkill = function(){
         var url = '/admin/skillCategories/' + $scope.data.category._id + '/skills';
         $http.post(url, $scope.data).success(function(response) {
-            $modalInstance.close('close');
+
+            $route.reload();
         }).error(function(response) {
             $scope.error = response.message;
         });

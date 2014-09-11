@@ -215,6 +215,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $scope.data = {};
         $scope.success = true;
         $scope.appt = response;
+        $scope.skillSet = response.skillSet;
 
         $scope.currPlacementEditorEnabled = false;
         $scope.editableCurrCompany = '';
@@ -232,7 +233,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $scope.editableSkillScore = [];
         $score.editableDetails = [];
 
-        for (var i in $scope.appt.skillSets){
+        for (var i in $scope.appt.skillSet){
           $scope.skillNameEditorEnabled[i] = false;
           $scope.skillScoreEditorEnabled[i] = false;
           $scope.editableSkillName[i] = '';
