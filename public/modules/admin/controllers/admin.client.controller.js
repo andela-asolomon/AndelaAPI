@@ -19,6 +19,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.answered = false;
     $scope.answeredTwo = false;
     $scope.camp_options = [];
+    $scope.formData = {};
 
     $scope.setShow = function(val) {
         $scope.selected = val;
@@ -122,25 +123,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
           $scope.camp = response;
 
           $scope.editorEnabled = false;
-    
-          $scope.enableEditor = function() {
-            $scope.editorEnabled = true;
-            $scope.editableFirstName = $scope.camp.applicants.firstName;
-            console.log('$scope.camp.applicants.firstName:' + $scope.camp.applicants.email);
-            $scope.editableLastName = $scope.camp.applicants.lastName;
-            $scope.editableEmail = $scope.camp.applicants.email;
-          };
-          
-          $scope.disableEditor = function() {
-            $scope.editorEnabled = false;
-          };
-          
-          $scope.save = function() {
-            $scope.camp.applicants.firstName = $scope.editableFirstName;
-            $scope.camp.applicants.lastName = $scope.editableLastName;
-            $scope.camp.applicants.email = $scope.editableEmail;
-            $scope.disableEditor();
-          };
 
         // If successful show success message and clear form
            
@@ -149,6 +131,36 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
         });
 
+    };
+
+    $scope.enableApplicantEditor = function(index) {
+        $scope.editorEnabled = true;
+        $scope.formData.editableFirstName = $scope.camp.applicants[index].firstName;
+        $scope.formData.editableLastName = $scope.camp.applicants[index].lastName;
+        $scope.formData.editableEmail = $scope.camp.applicants[index].email;
+    };
+          
+    $scope.disableApplicantEditor = function() {
+        $scope.editorEnabled = false;
+    };
+    
+    $scope.saveApplicant = function(index) {
+        $scope.camp.applicants[index].firstName = $scope.formData.editableFirstName;
+        $scope.camp.applicants[index].lastName = $scope.formData.editableLastName;
+        $scope.camp.applicants[index].email = $scope.formData.editableEmail;
+        
+        var url = 'users/' + $scope.camp.applicants[index]._id;
+        var data = {
+            firstName: $scope.formData.editableFirstName,
+            lastName: $scope.formData.editableLastName,
+            email: $scope.formData.editableEmail
+        };
+        $http.put(url, data).success(function(response){
+            console.log('success');
+        }).error(function(response) {
+            $scope.error = response.message;
+        });
+        $scope.disableApplicantEditor();
     };
 
 

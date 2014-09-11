@@ -11,7 +11,7 @@ module.exports = function(app) {
 	var admin = require('../../app/controllers/admin');
 	app.route('/users/me').get(users.me);
 	app.route('/users').get(users.list).put(users.update);
-	app.route('/users/:userId').get(users.read);
+	app.route('/users/:userId').get(users.read).put(users.adminUpdate);
 	app.route('/users/:userId/password').post(users.changePassword);
 	app.route('/users/accounts').delete(users.removeOAuthProvider);
 	app.route('/users/view').get(users.requiresLogin, users.appView);

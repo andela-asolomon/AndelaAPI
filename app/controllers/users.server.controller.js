@@ -246,6 +246,38 @@ exports.update = function(req, res) {
 };
 
 
+exports.adminUpdate = function(req, res) {
+	// Init Variables
+	var user = req.profile;
+
+	var message = null;
+
+	// For security measurement we remove the roles from the req.body object
+	delete req.body.roles;
+
+	if (user) {
+		// Merge existing user
+		user = _.extend(user, req.body);
+		user.updated = Date.now();
+		user.displayName = user.firstName + ' ' + user.lastName;
+
+		user.save(function(err) {
+			if (err) {
+				return res.send(400, {
+					message: getErrorMessage(err)
+				});
+			} else {
+				res.jsonp(user);
+			}
+		});
+	} else {
+		res.send(400, {
+			message: 'User update failed'
+		});
+	}
+};
+
+
  exports.getCamp = function(req, res) {
 	res.jsonp(req.camp);
  };
@@ -398,7 +430,7 @@ exports.oauthCallback = function(strategy) {
  * User middleware
  */
 exports.userByID = function(req, res, next, id) {
-	Applicant.findById(id).populate('placements').sort('-placements.end_date');exec(function(err, user) {
+	Applicant.findById(id).populate('placements').sort('-placements.end_date').exec(function(err, user) {
 		if (err) return next(err);
 		if (!user) return next(new Error('Failed to load User ' + id));
 		Placement.populate(user.placements, { path:'placement'},

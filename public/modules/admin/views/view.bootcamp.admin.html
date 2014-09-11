@@ -5,7 +5,6 @@
       <div class="admin-view">
         <div class="page-header text-center">
           <h2>Applicants to {{camp.start_date | date}}</h2>
-          {{camp.applicants.firstName}}
         </div>
 
         <div>
@@ -29,19 +28,19 @@
                 <td>
                  <!--  <a ng-href="/#!/admin/appt/{{applicant._id}}"> -->
                     <span ng-hide="editorEnabled">{{applicant.firstName}}</span>
-                    <input type="text" ng-show="editorEnabled" ng-model="editableFirstName" ng:required="" />
+                    <input type="text" ng-show="editorEnabled" ng-model="formData.editableFirstName" ng:required="" />
                   <!-- </a> -->
                 </td>
                 <td>
                   <!-- <a ng-href="/#!/admin/appt/{{applicant._id}}"> -->
                     <span ng-hide="editorEnabled">{{applicant.lastName}}</span>
-                    <input type="text" ng-show="editorEnabled" ng-model="editableLastName" ng:required="" />
+                    <input type="text" ng-show="editorEnabled" ng-model="formData.editableLastName" ng:required="" />
                   <!-- </a> -->
                 </td>
                 <td>
                   <!-- <a ng-href="/#!/admin/appt/{{applicant._id}}"> -->
                     <span ng-hide="editorEnabled">{{applicant.email}}</span>
-                    <input type="email" ng-show="editorEnabled" ng-model="editableEmail" ng:required="" />
+                    <input type="email" ng-show="editorEnabled" ng-model="formData.editableEmail" ng:required="" />
                   <!-- </a> -->
                 </td>
                 <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.testScore}}</a></td>
@@ -50,9 +49,9 @@
                 <td style="text-transform: capitalize"><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.status.name}}<b style="display: block; font-size: 0.9em" data-ng-show="applicant.status.name === 'rejected'">Reason: {{applicant.status.reason}}</b></a></td>
 
                 <!-- Editing a particular aplicants starts here -->
-                <td ng-show="editorEnabled" ng-click="enableEditor()" class="change_status"><a style="padding-top: 0 !important" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></a></td>
-                <td ng-show="editorEnabled" ng-click="disableEditor()" class="change_status"><a style="padding-top: 0 !important" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-remove"></span></a></td>
-                <td class="change_status" ng-hide="editorEnabled" ng-click="enableEditor()" ><a style="padding-top: 0 !important" class="btn btn-primary btn-sm">Edit Applicant</a></td>
+                <td ng-show="editorEnabled" ng-click="saveApplicant($index)" class="change_status"><a style="padding-top: 0 !important" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok"></span></a></td>
+                <td ng-show="editorEnabled" ng-click="disableApplicantEditor()" class="change_status"><a style="padding-top: 0 !important" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-remove"></span></a></td>
+                <td class="change_status" ng-hide="editorEnabled" ng-click="enableApplicantEditor($index)" ><a style="padding-top: 0 !important" class="btn btn-primary btn-sm">Edit Applicant</a></td>
                 <!-- Editing a particular aplicants ends here -->
                 
                 <td ng-hide="editorEnabled" class="change_status"><a class="btn btn-primary btn-sm" style="padding-top: 0 !important" ng-href="/#!/admin/editappt/{{camp._id}}/{{applicant._id}}">Change Status</a></td>
