@@ -547,10 +547,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
     $scope.get_fellow_work_days = function(fellow) {
       var oneday = 24*3600*1000;
-      var curr_placement_date = fellow.placements;
-      if (curr_placement_date[0] !== undefined) {
+      if ((fellow.placements && fellow.placements.length > 0)) {
         var curr_date = new Date();
-        var fellowavailabilityweeks = Math.ceil(new Date(curr_placement_date[0].end_date).getTime() - curr_date.getTime())/(oneday *7);
+        var fellowavailabilityweeks = Math.ceil(new Date(fellow.placements[0].end_date).getTime() - curr_date.getTime())/(oneday *7);
         console.log(Math.ceil(fellowavailabilityweeks));
         if (fellowavailabilityweeks <= 0) {
           return 0;
