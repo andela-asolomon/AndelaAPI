@@ -2,6 +2,49 @@
   <div class="container" data-ng-show="user.role === 'admin'">
     <ng-include src='"/modules/admin/views/admin.sidebar.html"'></ng-include>
 
+    <!-- <div class="admin-view">
+    <div class="page-header text-center">
+      <h2 style="text-transform: capitalize">{{appt.role}} Details</h2>
+    </div>
+
+    <div style="margin-left: 100px;" class="row text-center">
+      <div>
+        <div class="col-sm-2 col-md-2">
+            <img src="http://i1.wp.com/www.traveloca.com/image/dummy/avatar_dummy.jpg"
+            alt="" class="img-rounded img-responsive" />
+        </div>
+        <div class="col-sm-6 col-md-6 viewuser info-center">
+            <p><span><i class="glyphicon glyphicon-user"></i></span>Name: {{appt.firstName}} {{appt.lastName}}</p>
+            <p><span><i class="glyphicon glyphicon-envelope"></i></span>{{appt.email}}</p>
+              
+            <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-gift"></i></span>Test score: {{appt.testScore}}</p>
+
+            <p data-ng-show="appt.role == 'applicant'"><span><i class="glyphicon glyphicon-calendar"></i></span>Status: {{user_profile.status.name || 'Pending'}}</p>
+
+            <p data-ng-show="appt.role == 'trainee'"><span><i class="glyphicon glyphicon-gift"></i></span>{{appt.assessment}}</p>
+
+            <p data-ng-show="appt.role == 'fellow'"><span data-ng-hide="appt.skillSets.length === 0"><i class="glyphicon glyphicon-certificate"></i>   Skillsets</span>
+              <strong data-ng-repeat="skill in appt.skillSets">
+                <i><b data-ng-bind="skill.skill"></b>: <b data-ng-bind="skill.rating"></b></i> 
+              </strong>
+            </p>
+
+            <p data-ng-show="appt.role == 'fellow'">
+              <span data-ng-hide="appt.placements.length === 0"><i class="glyphicon glyphicon-gift"></i>   Work History</span>
+              <strong data-ng-repeat="placement in appt.placements">
+                <b>Company: {{placement.company}}</b><br>
+                <b>Job Description: {{placement.jobDescription}}</b><br>
+                <b>From: {{placement.start_date | date : longDate}}</b><br>
+                <b>To: {{placement.end_date | date : longDate}}</b>  
+              </strong>
+            </p>
+              <br><br>
+      <p data-ng-show="appt.role == 'fellow'"><a class="btn btn-danger btn-xs" ng-href="/#!/fellows/{{appt._id}}/rate">Edit Fellow</a> </p>
+    </table>
+    </div>
+  </div>
+  </div> -->
+
   <div class="container" data-ng-show="user.role !== 'admin'">
     <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
@@ -24,7 +67,10 @@
             <span>Status: </span> {{user_profile.status || 'Pending'}} </p>
           <p class="setting" data-ng-show="appt.role == 'trainee'">
             <span>Assessment: </span> {{appt.assessment}} </p>
-        <section id="bio">
+          
+        </section>
+
+        <section>
           <div class="setting">
             <p data-ng-show="appt.role === 'fellow'">
               <span data-ng-hide="appt.skillSet.length === 0"><i>Skills:</i></span>
@@ -39,16 +85,16 @@
           <div class="setting">
                 <p data-ng-show="appt.role == 'fellow'">
                   <span data-ng-hide="appt.placements.length === 0"><i class="glyphicon glyphicon-gift"></i> Work History</span>
-                  <span class="pull-right" data-ng-repeat="placement in appt.placements">
+                  <span data-ng-repeat="placement in appt.placements">
                     <b>Company: {{placement.company}}</b><br>
                     <b>Job Description: {{placement.jobDescription}}</b><br>
                     <b>From: {{placement.start_date | date : longDate}}</b><br>
                     <b>To: {{placement.end_date | date : longDate}}</b>  
                   </span>
                 </p>
-                <p style="position: relative; top: 7em;" data-ng-show="appt.role == 'fellow'">
+                <p data-ng-show="appt.role == 'fellow'">
                 <a class="btn btn-danger btn-xs" ng-href="/#!/fellows/{{appt._id}}/rate">Edit Fellow</a>
-                </p>
+              </p>
           </div>
         </section>
       </div>
@@ -56,4 +102,3 @@
    </div>
 </div>
 </section>
-

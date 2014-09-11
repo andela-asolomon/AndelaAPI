@@ -411,15 +411,9 @@ span.tags
     -moz-border-radius:8px;
     -webkit-border-radius:8px;  
     border-radius:8px;  
-}*/
-
-fieldset {
-  margin-top: 20px !important;
-  border: 1px solid red !important;
-  border-radius: 10px !important;
-  width: 50%;
-  text-align: center;
 }
+*/
+
 /* Styles go here */
 
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
@@ -509,6 +503,67 @@ img { border: 0; max-width: 100%; }
 }
 #topbar a:hover {
   opacity: 1;
+}
+
+/** typography **/
+h1 {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 2.5em;
+  line-height: 1.5em;
+  letter-spacing: -0.05em;
+  margin-bottom: 20px;
+  padding: .1em 0;
+  /*color: #444;*/
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+}
+h1:before,
+h1:after {
+  content: "";
+  position: relative;
+  display: inline-block;
+  width: 50%;
+  height: 1px;
+  vertical-align: middle;
+  background: #f0f0f0;
+}
+h1:before {    
+  left: -.5em;
+  margin: 0 0 0 -50%;
+}
+h1:after {    
+  left: .5em;
+  margin: 0 -50% 0 0;
+}
+h1 > span {
+  display: inline-block;
+  vertical-align: middle;
+  white-space: normal;
+}
+
+
+h2 {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 2.1em;
+  line-height: 1.4em;
+  letter-spacing: normal;
+  margin-bottom: 20px;
+  padding: .1em 0;
+  /*color: #444;*/
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+}
+
+p {
+  display: block;
+  font-size: 1.4em;
+  line-height: 1.55em;
+  margin-bottom: 22px;
+  /*color: #555;*/
 }
 
 a { color: #5a9352; text-decoration: none; }
@@ -601,7 +656,7 @@ a:hover { text-decoration: underline; }
 }
 
 .setting {
-  display: inline-block;
+  display: block;
   font-weight: normal;
   padding: 7px 3px;
   border-top: 1px solid #d6d1af;
