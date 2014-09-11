@@ -550,14 +550,24 @@ angular.module('admin').controller('AdminController', [
         console.log($scope.error);
       });
     };
+    $scope.getSkillLevel = function (val) {
+      val = parseInt(val);
+      if (val <= 2) {
+        return 'beginner';
+      } else if (val <= 4) {
+        return 'junior';
+      } else if (val <= 6) {
+        return 'intermediate';
+      } else if (val <= 8) {
+        return 'senior';
+      } else {
+        return 'expert';
+      }
+    };
     $scope.listFellows = function () {
       $http.get('/admin/fellows').success(function (response) {
         // If successful show success message and clear form
         $scope.fellows = response;
-        console.log('Fellows');
-        console.log($scope.fellows);
-        $scope.success = true;
-        console.log('Success - Done', response);
       }).error(function (response) {
         $scope.error = response.message;
         console.log('Error - can not');

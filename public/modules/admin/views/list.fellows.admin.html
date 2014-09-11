@@ -51,8 +51,8 @@
           <td>
               <a ng-href="/#!/admin/appt/{{fellow._id}}" ng-repeat="(key, val) in fellow.skillSummary" 
               >
-               <svg height="45px" width= "45px" viewBox="0 0 32 32">
-                <use ng-class="{'beginner':{{val <= 2}}, 'junior': {{val > 2 && val <= 4}}, 'intermediate': {{val > 4 && val <= 6}}, 'senior': {{val > 6 && val <= 8}}, 'expert': {{val > 8  && val <= 10}} }" xlink:href="{{ '#' + key}}"></use>
+               <svg height="45px" width= "45px" viewBox="0 0 32 32" tooltip="{{key + ', ' + getSkillLevel(val) | uppercase}}">
+                <use class="{{getSkillLevel(val)}}" xlink:href="{{ '#' + key}}"></use>
                </svg>
 
               </a>
