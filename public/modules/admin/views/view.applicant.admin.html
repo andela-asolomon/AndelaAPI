@@ -28,8 +28,8 @@
           <div class="setting">
             <p data-ng-show="appt.role === 'fellow'">
               <span data-ng-hide="appt.skillSet.length === 0"><i>Skills:</i></span>
-              <span class="pull-right" ng-repeat="skill in appt.skillSet">
-                <b>{{skill.skill.name}}: {{skill.rating}}</b><br>
+              <span ng-repeat="skill in appt.skillSet" class="pull-right">
+                &nbsp;&nbsp;<b>{{skill.skill.name}}: {{skill.rating}}</b><br>
               </span>
             </p>
           </div>

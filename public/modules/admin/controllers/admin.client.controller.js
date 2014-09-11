@@ -522,7 +522,10 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.IsFellowUnavailable = function(fellow) {
       var weeks = parseInt($scope.weeks);
       var date = moment().add(weeks, 'weeks');
-      if(fellow.placements.length === 0 || weeks === 0){
+      if(!fellow.placements){
+        return true;
+      }
+      if((fellow.placements && fellow.placements.length === 0) || weeks === 0){
         return true;
       }
       else if(moment(fellow.placements[0].end_date) > date){
@@ -534,25 +537,25 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     };
 
     $scope.get_availability_date = function(fellow){
-      if(fellow.placements.length === 0){
-        return "Now";
-      }
-      else{
+      if((fellow.placements && fellow.placements.length > 0)){
         if(moment(fellow.placements[0].end_date) > moment()){
           return moment(fellow.placements[0].end_date).format("LL");
         }
         else{
           return "Now";
         }
+        
+      }
+      else{
+        return "Now";
       }
     };
 
     $scope.get_fellow_work_days = function(fellow) {
       var oneday = 24*3600*1000;
-      var curr_placement_date = fellow.placements;
-      if (curr_placement_date[0] !== undefined) {
+      if ((fellow.placements && fellow.placements.length > 0)) {
         var curr_date = new Date();
-        var fellowavailabilityweeks = Math.ceil(new Date(curr_placement_date[0].end_date).getTime() - curr_date.getTime())/(oneday *7);
+        var fellowavailabilityweeks = Math.ceil(new Date(fellow.placements[0].end_date).getTime() - curr_date.getTime())/(oneday *7);
         console.log(Math.ceil(fellowavailabilityweeks));
         if (fellowavailabilityweeks <= 0) {
           return 0;

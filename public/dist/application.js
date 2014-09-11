@@ -319,6 +319,7 @@ angular.module('admin').controller('AdminController', [
         $scope.data = {};
         $scope.success = true;
         $scope.appt = response;
+        $scope.skillSet = response.skillSet;
         $scope.currPlacementEditorEnabled = false;
         $scope.editableCurrCompany = '';
         $scope.startDateEditorEnabled = false;
@@ -332,7 +333,7 @@ angular.module('admin').controller('AdminController', [
         $scope.editableSkillName = [];
         $scope.editableSkillScore = [];
         $score.editableDetails = [];
-        for (var i in $scope.appt.skillSets) {
+        for (var i in $scope.appt.skillSet) {
           $scope.skillNameEditorEnabled[i] = false;
           $scope.skillScoreEditorEnabled[i] = false;
           $scope.editableSkillName[i] = '';
@@ -565,7 +566,10 @@ angular.module('admin').controller('AdminController', [
     $scope.IsFellowUnavailable = function (fellow) {
       var weeks = parseInt($scope.weeks);
       var date = moment().add(weeks, 'weeks');
-      if (fellow.placements.length === 0 || weeks === 0) {
+      if (!fellow.placements) {
+        return true;
+      }
+      if (fellow.placements && fellow.placements.length === 0 || weeks === 0) {
         return true;
       } else if (moment(fellow.placements[0].end_date) > date) {
         return false;
@@ -574,22 +578,21 @@ angular.module('admin').controller('AdminController', [
       }
     };
     $scope.get_availability_date = function (fellow) {
-      if (fellow.placements.length === 0) {
-        return 'Now';
-      } else {
+      if (fellow.placements && fellow.placements.length > 0) {
         if (moment(fellow.placements[0].end_date) > moment()) {
           return moment(fellow.placements[0].end_date).format('LL');
         } else {
           return 'Now';
         }
+      } else {
+        return 'Now';
       }
     };
     $scope.get_fellow_work_days = function (fellow) {
       var oneday = 24 * 3600 * 1000;
-      var curr_placement_date = fellow.placements;
-      if (curr_placement_date[0] !== undefined) {
+      if (fellow.placements && fellow.placements.length > 0) {
         var curr_date = new Date();
-        var fellowavailabilityweeks = Math.ceil(new Date(curr_placement_date[0].end_date).getTime() - curr_date.getTime()) / (oneday * 7);
+        var fellowavailabilityweeks = Math.ceil(new Date(fellow.placements[0].end_date).getTime() - curr_date.getTime()) / (oneday * 7);
         console.log(Math.ceil(fellowavailabilityweeks));
         if (fellowavailabilityweeks <= 0) {
           return 0;
@@ -937,7 +940,7 @@ angular.module('admin').controller('AdminController', [
 ]);'use strict';
 // Please note that $modalInstance represents a modal window (instance) dependency.
 // It is not the same as the $modal service used above.
-var ModalInstanceCtrl = function ($http, $scope, $modalInstance, categories) {
+var ModalInstanceCtrl = function ($http, $scope, $route, $modalInstance, categories) {
   $scope.categories = categories;
   $scope.data = {};
   $scope.data.category = categories[0];
@@ -960,7 +963,7 @@ var ModalInstanceCtrl = function ($http, $scope, $modalInstance, categories) {
   $scope.createSkill = function () {
     var url = '/admin/skillCategories/' + $scope.data.category._id + '/skills';
     $http.post(url, $scope.data).success(function (response) {
-      $modalInstance.close('close');
+      $route.reload();
     }).error(function (response) {
       $scope.error = response.message;
     });
