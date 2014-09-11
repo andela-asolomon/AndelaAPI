@@ -60,7 +60,7 @@ ApplicationConfiguration.registerModule('users');'use strict';
 angular.module('admin').config([
   '$stateProvider',
   function ($stateProvider) {
-    // Lists state routing
+    // Lists state routes
     $stateProvider.state('signInUser', {
       url: '/admin',
       templateUrl: 'modules/admin/views/admin.signin.view.html'
@@ -159,6 +159,8 @@ angular.module('admin').controller('AdminController', [
     $scope.answered = false;
     $scope.answeredTwo = false;
     $scope.camp_options = [];
+    $scope.formData = {};
+    $scope.data = {};
     $scope.setShow = function (val) {
       $scope.selected = val;
     };
@@ -246,26 +248,36 @@ angular.module('admin').controller('AdminController', [
     $scope.viewcamp = function () {
       $http.get('/admin/camp/' + $stateParams.campId).success(function (response) {
         $scope.camp = response;
-        $scope.editorEnabled = false;
-        $scope.enableEditor = function () {
-          $scope.editorEnabled = true;
-          $scope.editableFirstName = $scope.camp.applicants.firstName;
-          console.log('$scope.camp.applicants.firstName:' + $scope.camp.applicants.email);
-          $scope.editableLastName = $scope.camp.applicants.lastName;
-          $scope.editableEmail = $scope.camp.applicants.email;
-        };
-        $scope.disableEditor = function () {
-          $scope.editorEnabled = false;
-        };
-        $scope.save = function () {
-          $scope.camp.applicants.firstName = $scope.editableFirstName;
-          $scope.camp.applicants.lastName = $scope.editableLastName;
-          $scope.camp.applicants.email = $scope.editableEmail;
-          $scope.disableEditor();
-        };  // If successful show success message and clear form
+        $scope.editorEnabled = false;  // If successful show success message and clear form
       }).error(function (response) {
         $scope.error = response.message;
       });
+    };
+    $scope.enableApplicantEditor = function (index) {
+      $scope.editorEnabled = true;
+      $scope.formData.editableFirstName = $scope.camp.applicants[index].firstName;
+      $scope.formData.editableLastName = $scope.camp.applicants[index].lastName;
+      $scope.formData.editableEmail = $scope.camp.applicants[index].email;
+    };
+    $scope.disableApplicantEditor = function () {
+      $scope.editorEnabled = false;
+    };
+    $scope.saveApplicant = function (index) {
+      $scope.camp.applicants[index].firstName = $scope.formData.editableFirstName;
+      $scope.camp.applicants[index].lastName = $scope.formData.editableLastName;
+      $scope.camp.applicants[index].email = $scope.formData.editableEmail;
+      var url = 'users/' + $scope.camp.applicants[index]._id;
+      var data = {
+          firstName: $scope.formData.editableFirstName,
+          lastName: $scope.formData.editableLastName,
+          email: $scope.formData.editableEmail
+        };
+      $http.put(url, data).success(function (response) {
+        console.log('success');
+      }).error(function (response) {
+        $scope.error = response.message;
+      });
+      $scope.disableApplicantEditor();
     };
     $scope.listcamps = function () {
       $http.get('/admin/camp').success(function (response) {
@@ -647,8 +659,6 @@ angular.module('admin').controller('AdminController', [
       });
     };
     $scope.changeRoleToFellow = function (trainee_id, index) {
-      console.log(trainee_id);
-      console.log($scope.role[index]);
       $scope.trainees.splice(index, 1);
       $http.put('/admin/appt/' + trainee_id + '/role', { role: $scope.role[index] }).success(function (response) {
         // If successful show success message and clear form
@@ -657,6 +667,27 @@ angular.module('admin').controller('AdminController', [
         $scope.error = response.message;
         console.log('Error - can not');
       });
+    };
+    $scope.changeApplicantStatusInline = function (apptId, index) {
+      if ($scope.data.status.name === 'fellow') {
+        $http.put('/admin/appt/' + apptId + '/role', { role: 'fellow' }).success(function (response) {
+          // If successful show success message and clear form
+          $scope.success = true;
+          $scope.camp.applicants[index].status.name = 'Andela Fellow';
+        }).error(function (response) {
+          $scope.error = response.message;
+          console.log('Error - can not');
+        });
+      } else {
+        $http.put('/admin/appt/' + apptId, $scope.data).success(function (response) {
+          // If successful show success message and clear form
+          $scope.success = true;
+          $scope.camp.applicants[index].status.name = $scope.data.status.name;
+        }).error(function (response) {
+          $scope.error = response.message;
+          console.log('Error - can not');
+        });
+      }
     };
     $scope.viewInstructor = function (instrId) {
       $http.get('/admin/appt/' + instrId).success(function (response) {
