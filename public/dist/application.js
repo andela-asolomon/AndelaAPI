@@ -564,7 +564,7 @@ angular.module('admin').controller('AdminController', [
     };
     $scope.IsFellowUnavailable = function (fellow) {
       var weeks = parseInt($scope.weeks);
-      var date = moment().add('weeks', weeks);
+      var date = moment().add(weeks, 'weeks');
       if (fellow.placements.length === 0 || weeks === 0) {
         return true;
       } else if (moment(fellow.placements[0].end_date) > date) {
@@ -683,6 +683,8 @@ angular.module('admin').controller('AdminController', [
           // If successful show success message and clear form
           $scope.success = true;
           $scope.camp.applicants[index].status.name = $scope.data.status.name;
+          $scope.camp.applicants[index].status.reason = $scope.data.status.reason;
+          $scope.data.status.name = '';
         }).error(function (response) {
           $scope.error = response.message;
           console.log('Error - can not');
@@ -914,6 +916,21 @@ angular.module('admin').controller('AdminController', [
       }).error(function (response) {
         $scope.error = response.message;
         $location.path('/admin/welcome');
+      });
+    };
+    /*DELETE CATEGORY*/
+    $scope.deleteSkillCategory = function (catId, index) {
+      console.log('message: ' + $scope.skills);
+      $scope.skills.splice(index, 1);
+      console.log('after delete: ' + $scope.skills);
+      $http.delete('/admin/skillCategories/' + catId).success(function (response) {
+        // If successful show success message and clear form
+        $scope.success = true;
+        // $scope.appt = response;
+        console.log('Success - Done', response);
+      }).error(function (response) {
+        $scope.error = response.message;
+        console.log($scope.error);
       });
     };
   }

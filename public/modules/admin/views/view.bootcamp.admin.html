@@ -20,6 +20,7 @@
                 <th ng-hide="editorEnabled"></th>
                 <th ng-hide="editorEnabled"></th>
                 <th ng-hide="!editorEnabled"></th>
+                <th ng-hide="!editorEnabled"></th>
               </tr>
             </thead>
             <tbody>
@@ -45,18 +46,24 @@
                 <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.testScore}}</a></td>
                 <td><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.created | date : longDate}}</a></td>
 
-                <td style="text-transform: capitalize"><a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.status.name}}<b style="display: block; font-size: 0.9em" data-ng-show="applicant.status.name === 'rejected'">Reason: {{applicant.status.reason}}</b></a></td>
+                <td style="text-transform: capitalize">
+                  <a ng-href="/#!/admin/appt/{{applicant._id}}">{{applicant.status.name}}
+                    <b style="display: block; font-size: 0.9em" data-ng-show="applicant.status.name === 'rejected'">  Reason: {{applicant.status.reason}}
+                    </b>
+                  </a>
+                </td>
 
                 <td ng-hide="editorEnabled" class="change_status">
                   <form data-ng-submit='changeApplicantStatusInline(applicant._id, $index)' class="form_trainee  signin form-horizontal" autocomplete="off">
                     <fieldset>
                       <div class="form-group">
-                        <select data-ng-model="data.status.name" id="category">
+                        <select data-ng-model="data.status.name" id="category" required>
                           <option value="pending">Pending</option>
                           <option value="rejected">Rejected</option>
                           <option value="selected for bootcamp">Selected for bootcamp</option>
                           <option value="selected for interview">Selected for interview</option>
                           <option value="fellow">Selected for Fellowship</option>
+                          <input ng-model="data.status.reason" style="display: block; font-size: 0.5em; height: 1.5em;" type="text" ng-if="data.status.name === 'rejected'" Placeholder="Reason for rejection">
                         </select>
                       </div>
                       <div class="form-group">

@@ -850,6 +850,20 @@ exports.createSkill = function(req, res){
   });
 };
 
+exports.deleteSkillCategory = function(req, res) {
+    SkillCategory.remove(function(err, category) {
+        if (err) {
+            return res.send(400, {
+                message: 'Couldn\'t delete category'
+            });
+        } else {
+                  res.jsonp(category);
+                 }
+            });
+};
+
+
+
 
 
 /****************************** MIDDLEWARE ******************************************/

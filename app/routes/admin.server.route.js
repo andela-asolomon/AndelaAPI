@@ -84,7 +84,8 @@ module.exports = function(app) {
     //edit and delete skill categories
     app.route('/admin/skillCategories/:skillCategoryId')
         .get(users.requiresLogin, admin.checkPermission, admin.getSkillCategory)
-        .put(users.requiresLogin, admin.checkPermission, admin.updateSkillCategory);
+        .put(users.requiresLogin, admin.checkPermission, admin.updateSkillCategory)
+        .delete(users.requiresLogin, admin.checkPermission, admin.deleteSkillCategory);
         //.delete(users.requiresLogin, admin.checkPermission, admin.deleteSkillCategory);
 
     //Skills API
@@ -94,6 +95,7 @@ module.exports = function(app) {
     app.route('/admin/skillCategories/:skillCategoryId/skills')
         .get(users.requiresLogin, admin.checkPermission, admin.listSkillsByCategory)
         .post(users.requiresLogin, admin.checkPermission, admin.createSkill);
+        
 
     //add a skill rating to fellows
     app.route('/admin/trainee/:traineeId/skills/:skillId')

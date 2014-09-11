@@ -6,6 +6,7 @@
     <div class="admin-view">
         <div class="page-header text-center">
           <h1>Skills</h1>
+          {{skills.category}}
         </div>
         <div class="pull-right" data-ng-init="getSkillCategories()">
             <button class="btn btn-xs btn-primary" ng-click="openSkillModal()">Add New Skill</button>
@@ -17,12 +18,16 @@
                   <tr>
                     <th>Skill</th>
                     <th>Category</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                       <tr data-ng-repeat="skill in skills">
                         <td data-ng-bind="skill.name"></td>                      
                         <td data-ng-bind="skill.category.name"></td>
+                        <td>
+                            <a class="fixbtn btn btn-danger btn-xs" data-ng-click="deleteSkillCategory(skill.category._id, $index)">Delete Skill Category</a>
+                        </td>
                     </tr>               
                 </tbody>
             </table>

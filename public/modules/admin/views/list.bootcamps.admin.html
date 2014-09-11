@@ -26,7 +26,11 @@
                         <td><a ng-href="/#!/admin/camps/{{camp._id}}">{{camp.camp_name}}</a></td>
                         <td data-ng-bind="camp.start_date | date"></td>                      
                         <td data-ng-bind="camp.applicants.length"></td>
-                        <td><a class="fixbtn btn btn-danger btn-xs" data-ng-click="deleteCamp(camp._id, $index)">Delete</a></td>
+                        <td>
+                            <a class="fixbtn btn btn-danger btn-xs" data-ng-click="deleteCamp(camp._id, $index)">
+                                Delete
+                            </a>
+                        </td>
                     </tr>               
                 </tbody>
             </table>
