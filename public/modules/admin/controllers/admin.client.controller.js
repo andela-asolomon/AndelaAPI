@@ -520,6 +520,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.IsFellowUnavailable = function(fellow) {
       var weeks = parseInt($scope.weeks);
       var date = moment().add(weeks, 'weeks');
+      if(!fellow.placements){
+        return true;
+      }
       if((fellow.placements && fellow.placements.length === 0) || weeks === 0){
         return true;
       }
