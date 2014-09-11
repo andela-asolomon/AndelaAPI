@@ -575,14 +575,14 @@ angular.module('admin').controller('AdminController', [
       }
     };
     $scope.get_availability_date = function (fellow) {
-      if (fellow.placements && fellow.placements.length === 0) {
-        return 'Now';
-      } else {
+      if (fellow.placements && fellow.placements.length > 0) {
         if (moment(fellow.placements[0].end_date) > moment()) {
           return moment(fellow.placements[0].end_date).format('LL');
         } else {
           return 'Now';
         }
+      } else {
+        return 'Now';
       }
     };
     $scope.get_fellow_work_days = function (fellow) {
