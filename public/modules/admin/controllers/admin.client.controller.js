@@ -167,8 +167,10 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
     $scope.listcamps = function() {
         $http.get('/admin/camp').success(function(response) {
+
           // If successful show success message and clear form
             $scope.camps = response;
+            console.log('success: ' + $scope.camps);
             for(var i = 0; i < response.length; i++){
                 $scope.camp_options.push(response[i].camp_name);
             }
