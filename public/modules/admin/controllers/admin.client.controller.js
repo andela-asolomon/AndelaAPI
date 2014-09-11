@@ -20,6 +20,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
     $scope.answeredTwo = false;
     $scope.camp_options = [];
     $scope.formData = {};
+    $scope.data = {};
 
     $scope.setShow = function(val) {
         $scope.selected = val;
@@ -631,8 +632,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
 
     $scope.changeRoleToFellow = function(trainee_id, index) {
       
-      console.log(trainee_id);
-      console.log($scope.role[index]);
       $scope.trainees.splice(index, 1);
       
       $http.put('/admin/appt/' + trainee_id + '/role', {role: $scope.role[index]}).success(function(response) {
@@ -643,7 +642,34 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', 'Authe
         $scope.error = response.message;
         console.log('Error - can not');
       });
-    }; 
+    };
+
+    $scope.changeApplicantStatusInline = function(apptId, index){
+
+      if($scope.data.status.name === 'fellow'){
+        $http.put('/admin/appt/' + apptId + '/role', {role: 'fellow'}).success(function(response) {
+          // If successful show success message and clear form
+          $scope.success = true;
+          $scope.camp.applicants[index].status.name = "Andela Fellow";
+          
+        }).error(function(response) {
+          $scope.error = response.message;
+          console.log('Error - can not');
+        });
+      }
+      else{
+        $http.put('/admin/appt/' + apptId, $scope.data).success(function(response) {
+          // If successful show success message and clear form
+          $scope.success = true;
+          $scope.camp.applicants[index].status.name = $scope.data.status.name;
+
+        }).error(function(response) {
+          $scope.error = response.message;
+          console.log('Error - can not');
+        });
+      }
+
+    } 
 
     $scope.viewInstructor = function(instrId) {
       $http.get('/admin/appt/' + instrId).success(function(response) {

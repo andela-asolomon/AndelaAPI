@@ -149,8 +149,13 @@ exports.changeRole = function(req, res) {
              applicant.status.reason = '';
           }
 
-          if (role === 'trainee' || role === 'fellow') {
+          if (role === 'trainee') {
              applicant.status.name = 'selected for bootcamp';
+             applicant.status.reason = '';
+          }
+
+          if (role === 'fellow') {
+             applicant.status.name = 'Andela Fellow';
              applicant.status.reason = '';
           }
           
