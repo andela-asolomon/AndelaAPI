@@ -3,7 +3,7 @@
 //Setting up route
 angular.module('admin').config(['$stateProvider',
   function($stateProvider) {
-    // Lists state routing
+    // Lists state routes
     $stateProvider.
     state('signInUser', {
       url: '/admin',
