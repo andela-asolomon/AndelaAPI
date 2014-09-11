@@ -366,7 +366,14 @@ span.tags
     left: 50%;
     margin-left: -10px;
     z-index: 10;
-    }
+}
+
+.icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+}
 
 .CSS {
   background: url(/modules/admin/img/css1.svg) no-repeat center center;
@@ -385,11 +392,6 @@ span.tags
   background-size: contain;
 }
 
-.FEWD {
-  background: url(/modules/admin/img/html3.svg) no-repeat center center;
-  background-size: contain;
-}
-
 .hide_text {
    opacity: 0.0;
   font-size: 0px;
@@ -397,23 +399,23 @@ span.tags
 }
 
 .beginner {
-  background-color: grey;
+  fill:grey;
 }
 
 .junior {
-  background-color: yellow;
+  fill: yellow;
 }
 
 .intermediate {
-  background-color: green;
+  fill: green;
 }
 
 .senior {
-  background-color: red;
+  fill: red;
 }
 
 .expert {
-  background-color: black;
+  fill: black;
 }
 
 .td {

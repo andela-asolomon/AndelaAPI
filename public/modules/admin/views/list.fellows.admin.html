@@ -4,6 +4,8 @@
         <a class="btn btn-xs btn-primary pull-right" href="/#!/admin/welcome">Back To Admin Home</a>
     </div>
     <ng-include src='"/modules/admin/views/admin.sidebar.html"'></ng-include>
+    <ng-include src='"/modules/admin/views/skills_svg.html"'></ng-include>
+
 
     <div class="admin-view">
     <div class="page-header text-center">
@@ -46,8 +48,15 @@
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.firstName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.lastName}}</a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}">{{fellow.email}}</a></td>
-          <td><a ng-href="/#!/admin/appt/{{fellow._id}}" ng-repeat="(key, val) in fellow.skillSummary" ng-class="{'beginner':{{val > 0 && val <= 2}}, 'junior': {{val > 2 && val <= 4}}, 'intermediate': {{val > 4 && val <= 6}}, 'senior': {{val > 6 && val <= 8}}, 'expert': {{val > 8  && val <= 10}} }"
-          ><span class="{{key}}"><i class="hide_text">{{key}} = {{val}}</i></span></a></td>
+          <td>
+              <a ng-href="/#!/admin/appt/{{fellow._id}}" ng-repeat="(key, val) in fellow.skillSummary" 
+              >
+               <svg height="45px" width= "45px" viewBox="0 0 32 32">
+                <use ng-class="{'beginner':{{val <= 2}}, 'junior': {{val > 2 && val <= 4}}, 'intermediate': {{val > 4 && val <= 6}}, 'senior': {{val > 6 && val <= 8}}, 'expert': {{val > 8  && val <= 10}} }" xlink:href="{{ '#' + key}}"></use>
+               </svg>
+
+              </a>
+          </td>
           <td data-ng-bind="fellow.available"><a ng-href="/#!/admin/appt/{{fellow._id}}"></a></td>
           <td><a ng-href="/#!/admin/appt/{{fellow._id}}"></a>{{get_availability_date(fellow) | date}}</td>
            <td><button ng-click="deleteFellow(fellow._id, $index)" class="btn btn-danger btn-xs">Delete User</button></td>
