@@ -213,8 +213,11 @@ li div{
   width: 27%;
 }
 .basic-grey.placement{
-  width: 34%;
+  width: 54%;
+  position: relative;
+  left: 1%;
 }
+
 .basic-grey.skill, .basic-grey.placement{
   margin-left:0;
   margin-right:10px;

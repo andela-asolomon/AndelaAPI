@@ -1,110 +1,115 @@
 <section data-ng-controller="AdminController" data-ng-init="viewApplicant()" class="pad">
   <div class="container" data-ng-show="user.role === 'admin'">
-    <div class="my_wrapper">
-      <ng-include src='"/modules/admin/views/admin.sidebar.html"'></ng-include>
+      <div class="my_wrapper">
+        <ng-include src='"/modules/admin/views/admin.sidebar.html"'></ng-include>
 
-      <div class="admin-view">
-      <h3>Fellow Details</h3>
-      <ul class="fellow-edit">
-        <li>Name: <b data-ng-bind="appt.firstName"></b>
-        <b data-ng-bind="appt.lastName"></b></li>
-        <li>Email: <b data-ng-bind="appt.email"></b></li>
-        <li>Username: <b data-ng-bind="appt.username"></b></li>
-        <!-- <li ng-repeat="summary in appt.skillSummary">Skills Summary: <b>{{summary}}</b></li> -->
-        
-        <li data-ng-show="appt.skillSet">Skillset(s): 
-          <div>
-            <table class="list list-link">
-              <thead>
-                <tr>
-                  <th>Skill</th>
-                  <th>Rating</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-              <tr data-ng-repeat="skillObject in appt.skillSet">
-                  <td>{{skillObject.skill.name}}</td>
-                  <td>{{skillObject.rating}}</td>
-                  <td>
-                    <form data-ng-submit='rateFellow(appt._id, skillObject.skill._id, skillObject.updatedRating)' class="form_trainee signin form-horizontal" autocomplete="off">
-                      <fieldset>
-                        <div class="form-group">
-                          <select data-ng-model="skillObject.updatedRating" id="rating">
-                            <option ng-repeat="n in [] | range:11:1" value="{{$index}}">{{$index}}</option>
-                          </select>
-                        </div>
-                        <div class="form-group">
-                        <button type="submit" class="btn btn-xs btn-primary">Update Rating</button>
-                        </div>
-                      </fieldset>
-                    </form>
-                  </td>
-              </tr>
-            </table>
+      <div class="container">
+        <div id="w">
+          <div id="content" class="clearfix">
+              <section id="settings">
+                <h3>Fellow Details</h3>
+                <p class="setting">
+                  <span>Name: </span> {{appt.firstName}} {{appt.lastName}} </p>
+                <p class="setting">
+                  <span>E-mail Address</span> {{appt.email}}  </p>
+                <p class="setting">
+                  <span>Username</span> {{appt.username}}  </p>
+              </section>
+              <section>
+                <div>
+                  <p class="setting" data-ng-show="appt.skillSet">
+                    <span>Skillset(s):</span></p>
+                  <div>
+                    <table class="list list-link">
+                      <thead>
+                        <tr>
+                          <th>Skill</th>
+                          <th>Rating</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr data-ng-repeat="skillObject in appt.skillSet">
+                          <td>{{skillObject.skill.name}}</td>
+                          <td>{{skillObject.rating}}</td>
+                          <td>
+                            <form data-ng-submit='rateFellow(appt._id, skillObject.skill._id, skillObject.updatedRating)' class="form_trainee signin form-horizontal" autocomplete="off">
+                              <fieldset>
+                                <div class="form-group">
+                                  <select data-ng-model="skillObject.updatedRating" id="rating">
+                                    <option ng-repeat="n in [] | range:11:1" value="{{$index}}">{{$index}}</option>
+                                  </select>
+                                </div>
+                                <div class="form-group">
+                                <button type="submit" class="btn btn-xs btn-primary">Update Rating</button>
+                                </div>
+                              </fieldset>
+                            </form>
+                          </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </section>
+              <section id="bio">
+                <div class="setting">
+                      <p data-ng-show="appt.role == 'fellow'">
+                        <span data-ng-hide="appt.placements.length === 0"><i class="glyphicon glyphicon-gift"></i> Work History</span>&nbsp;&nbsp;
+                        <span data-ng-repeat="placement in appt.placements">
+                          <b>Company: {{placement.company}}</b><br>
+                          <b>Job Description: {{placement.jobDescription}}</b><br>
+                          <b>From: {{placement.start_date | date : longDate}}</b><br>
+                          <b>To: {{placement.end_date | date : longDate}}</b>  
+                        </span>
+                      </p>
+                </div>
+              </section>
+              <section>
+                <form data-ng-submit='addPlacement()' class="basic-grey placement" autocomplete="off">
+                  <fieldset>
+                    <p>
+                      <span>Add Work Placement</span>
+                    </p>
+                    <label class="company">
+                        <span>Company:</span>
+                        <input type="text" data-ng-model="data.company" id="company" required>
+                    </label>
+
+                    <label class="jobDescription">
+                        <span>Job Description:</span>
+                        <input type="text" data-ng-model="data.jobDescription" id="jobDescription" required>
+                    </label>
+
+                    <div class="from">
+                    <label class="startDate">
+                        <span>From:</span>
+                        <input type="text" data-ng-model="data.start_date" id="from" placeholder="M/DD/YY" required>
+                    </label>
+                    </div>
+
+                    <div class="to">
+                    <label class="endDate">
+                        <span>To:</span>
+                        <input type="text" data-ng-model="data.end_date" id="to" placeholder="M/DD/YY" required>
+                    </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-xs btn-primary">Submit</button>
+
+                    <div data-ng-show="error" class="text-center text-danger">
+                        <strong data-ng-bind="error"></strong>
+                    </div>
+
+                  </fieldset>
+                </form>
+              </section>
           </div>
-        </li>
-
-        
-
-        <li>
-          <p>Work History:</p>
-          
-          <ol>
-            <li data-ng-repeat="placement in appt.placements">
-              <b>Company: {{placement.company}}</b><br>
-              <b>Job Description: {{placement.jobDescription}}</b><br>
-              <b>From: {{placement.start_date | date : longDate}}</b><br>
-              <b>To: {{placement.end_date | date : longDate}}</b>
-            </li>
-          </ol>
-        </li>
-      </ul>
-
-
-      <form data-ng-submit='addPlacement()' class="basic-grey placement" autocomplete="off">
-        <fieldset>
-          <p>
-            <span>Add Work Placement</span>
-          </p>
-          <label class="company">
-              <span>Company:</span>
-              <input type="text" data-ng-model="data.company" id="company" required>
-          </label>
-
-          <label class="jobDescription">
-              <span>Job Description:</span>
-              <input type="text" data-ng-model="data.jobDescription" id="jobDescription" required>
-          </label>
-
-          <div class="from">
-          <label class="startDate">
-              <span>From:</span>
-              <input type="text" data-ng-model="data.start_date" id="from" placeholder="M/DD/YY" required>
-          </label>
-          </div>
-
-          <div class="to">
-          <label class="endDate">
-              <span>To:</span>
-              <input type="text" data-ng-model="data.end_date" id="to" placeholder="M/DD/YY" required>
-          </label>
-          </div>
-
-          <button type="submit" class="btn btn-xs btn-primary">Submit</button>
-
-          <div data-ng-show="error" class="text-center text-danger">
-              <strong data-ng-bind="error"></strong>
-          </div>
-
-        </fieldset>
-      </form>
-
+        </div>
+      </div>
 
     </div>  
   </div>
-  </div>
-
+  <!-- </div> -->
   <div class="container" data-ng-show="user.role !== 'admin'">
     <b class="reqLogin">You have no access to this page. You need to <a href="/#!/admin">signin</a> as an admin.</b>
   </div>
